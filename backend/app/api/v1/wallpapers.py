@@ -1,0 +1,146 @@
+from datetime import datetime, timezone
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import func, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.database import get_db
+from app.models import Player, Team, User, Wallpaper
+from app.schemas.wallpaper import WallpaperCreate, WallpaperResponse
+from app.utils.auth import get_current_user
+
+DAILY_WALLPAPER_LIMIT = 5
+
+router = APIRouter()
+
+
+def _build_prompt(style: str, team: Team | None, player: Player | None) -> str:
+    """Build an AI generation prompt from the given style and subject."""
+    subject = "World Cup 2026"
+    if team and player:
+        subject = f"{player.name} ({player.name_en or ''}) from {team.name} ({team.name_en or ''})"
+    elif team:
+        subject = f"{team.name} ({team.name_en or ''}) national football team"
+    elif player:
+        subject = f"football player {player.name} ({player.name_en or ''})"
+
+    style_prompts = {
+        "cyberpunk": f"Cyberpunk style digital art of {subject}, neon lights, futuristic stadium, high detail, 4K",
+        "ink": f"Traditional Chinese ink painting style of {subject}, elegant brushstrokes, minimalist, artistic",
+        "comic": f"Comic book style illustration of {subject}, bold lines, vibrant colors, dynamic pose, action scene",
+        "minimal": f"Minimalist modern design of {subject}, clean lines, geometric shapes, team colors, wallpaper",
+    }
+    return style_prompts.get(style, f"{style} style art of {subject}, high quality, 4K wallpaper")
+
+
+@router.post("/generate", response_model=WallpaperResponse, status_code=status.HTTP_201_CREATED)
+async def generate_wallpaper(
+    payload: WallpaperCreate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Generate a wallpaper (authenticated, daily limit enforced).
+
+    Creates a wallpaper record with status='pending'. The actual image
+    generation is handled asynchronously by a background task (Celery).
+    """
+    # Check daily limit
+    today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+    count_stmt = select(func.count()).where(
+        Wallpaper.user_id == current_user.id,
+        Wallpaper.created_at >= today_start,
+    )
+    count_result = await db.execute(count_stmt)
+    today_count = count_result.scalar_one()
+
+    if today_count >= DAILY_WALLPAPER_LIMIT:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"每日生成上限为 {DAILY_WALLPAPER_LIMIT} 张，今日已用完",
+        )
+
+    # Validate team_id if provided
+    team: Team | None = None
+    if payload.team_id:
+        team_result = await db.execute(select(Team).where(Team.id == payload.team_id))
+        team = team_result.scalar_one_or_none()
+        if not team:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="球队不存在",
+            )
+
+    # Validate player_id if provided
+    player: Player | None = None
+    if payload.player_id:
+        player_result = await db.execute(select(Player).where(Player.id == payload.player_id))
+        player = player_result.scalar_one_or_none()
+        if not player:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="球员不存在",
+            )
+
+    # Build prompt
+    prompt = _build_prompt(payload.style, team, player)
+
+    wallpaper = Wallpaper(
+        user_id=current_user.id,
+        team_id=payload.team_id,
+        player_id=payload.player_id,
+        style=payload.style,
+        prompt=prompt,
+        status="pending",
+    )
+    db.add(wallpaper)
+    await db.flush()
+    await db.refresh(wallpaper)
+
+    # TODO: dispatch Celery task to generate the wallpaper image
+    # from app.tasks.wallpaper import generate_wallpaper_task
+    # generate_wallpaper_task.delay(wallpaper.id, prompt)
+
+    return wallpaper
+
+
+@router.get("/my", response_model=list[WallpaperResponse])
+async def get_my_wallpapers(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=100),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Get the current user's wallpapers (authenticated)."""
+    stmt = (
+        select(Wallpaper)
+        .where(Wallpaper.user_id == current_user.id)
+        .order_by(Wallpaper.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+    )
+    result = await db.execute(stmt)
+    wallpapers = result.scalars().all()
+    return wallpapers
+
+
+@router.get("/gallery", response_model=list[WallpaperResponse])
+async def get_wallpaper_gallery(
+    style: str | None = Query(None, description="Filter by style: cyberpunk, ink, comic, minimal"),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=100),
+    db: AsyncSession = Depends(get_db),
+):
+    """Public wallpaper gallery showing completed wallpapers, paginated."""
+    stmt = (
+        select(Wallpaper)
+        .where(Wallpaper.status == "done")
+        .order_by(Wallpaper.created_at.desc())
+    )
+
+    if style:
+        stmt = stmt.where(Wallpaper.style == style)
+
+    stmt = stmt.offset(skip).limit(limit)
+    result = await db.execute(stmt)
+    wallpapers = result.scalars().all()
+    return wallpapers

@@ -1,0 +1,20 @@
+{
+  "name": "worldcup-scout-pro-mp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev:mp-weixin": "uni -p mp-weixin",
+    "build:mp-weixin": "uni build -p mp-weixin"
+  },
+  "dependencies": {
+    "@dcloudio/uni-app": "^3.0.0",
+    "@dcloudio/uni-components": "^3.0.0",
+    "@dcloudio/uni-mp-weixin": "^3.0.0",
+    "vue": "^3.5.0",
+    "pinia": "^2.2.0"
+  },
+  "devDependencies": {
+    "@dcloudio/uni-cli-vite": "^3.0.0",
+    "typescript": "~5.6.0"
+  }
+}

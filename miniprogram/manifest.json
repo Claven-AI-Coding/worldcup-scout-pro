@@ -1,0 +1,22 @@
+{
+  "name": "球探Pro",
+  "appid": "",
+  "description": "世界杯全能助手",
+  "versionName": "0.1.0",
+  "versionCode": "100",
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "postcss": true,
+      "minified": true
+    },
+    "usingComponents": true,
+    "permission": {
+      "scope.userLocation": {
+        "desc": "获取位置信息"
+      }
+    }
+  }
+}
