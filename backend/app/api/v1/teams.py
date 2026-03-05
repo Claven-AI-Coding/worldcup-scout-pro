@@ -12,7 +12,9 @@ router = APIRouter()
 
 @router.get("/", response_model=TeamListResponse)
 async def list_teams(
-    group: str | None = Query(None, description="Filter by group (A-H)"),
+    group: str | None = Query(None, description="Filter by group (A-L)"),
+    confederation: str | None = Query(None, description="Filter by confederation (UEFA/CONMEBOL/CONCACAF/CAF/AFC/OFC)"),
+    search: str | None = Query(None, description="Search by team name"),
     db: AsyncSession = Depends(get_db),
 ):
     """List all teams with optional group filter."""
@@ -20,6 +22,13 @@ async def list_teams(
 
     if group:
         stmt = stmt.where(Team.group_name == group.upper())
+    if confederation:
+        # 按大洲联盟筛选（存储在 stats JSONB 中）
+        stmt = stmt.where(Team.stats["confederation"].astext == confederation.upper())
+    if search:
+        stmt = stmt.where(
+            Team.name.ilike(f"%{search}%") | Team.name_en.ilike(f"%{search}%")
+        )
 
     count_stmt = select(func.count()).select_from(stmt.subquery())
     total_result = await db.execute(count_stmt)

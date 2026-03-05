@@ -14,3 +14,6 @@ export const commentOnPost = (postId: number, content: string) =>
 
 export const getComments = (postId: number) =>
   api.get(`/community/posts/${postId}/comments`)
+
+export const getHotPosts = (params?: { skip?: number; limit?: number }) =>
+  api.get('/community/hot', { params })

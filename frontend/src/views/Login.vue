@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
 
 const isLoginMode = ref(true)
 const username = ref('')
 const password = ref('')
+const agreedTerms = ref(false)
 const loading = ref(false)
 const errorMsg = ref('')
 
@@ -25,9 +27,16 @@ async function handleSubmit() {
     if (isLoginMode.value) {
       await userStore.login(username.value, password.value)
     } else {
+      if (!agreedTerms.value) {
+        errorMsg.value = '请阅读并同意用户协议和隐私政策'
+        loading.value = false
+        return
+      }
       await userStore.register(username.value, password.value)
     }
-    router.push({ name: 'home' })
+    // 登录成功后跳转到来源页面或首页
+    const redirect = (route.query.redirect as string) || '/'
+    router.push(redirect)
   } catch (err: unknown) {
     const error = err as { response?: { data?: { detail?: string } } }
     errorMsg.value = error.response?.data?.detail || (isLoginMode.value ? '登录失败，请检查用户名或密码' : '注册失败，请重试')
@@ -107,6 +116,21 @@ function toggleMode() {
                 autocomplete="current-password"
               />
             </div>
+          </div>
+
+          <!-- 注册时需同意协议 -->
+          <div v-if="!isLoginMode" class="flex items-start gap-2">
+            <input
+              v-model="agreedTerms"
+              type="checkbox"
+              class="mt-0.5 rounded border-gray-300 text-green-600 focus:ring-green-500"
+            />
+            <span class="text-xs text-gray-500">
+              我已阅读并同意
+              <a href="/api/v1/legal/user-agreement" target="_blank" class="text-green-600 hover:underline">用户协议</a>
+              和
+              <a href="/api/v1/legal/privacy-policy" target="_blank" class="text-green-600 hover:underline">隐私政策</a>
+            </span>
           </div>
 
           <!-- Submit button -->

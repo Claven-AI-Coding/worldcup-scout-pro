@@ -46,6 +46,34 @@ const positionClass = computed(() => {
   return map[player.value.position] || 'bg-gray-100 text-gray-600'
 })
 
+// 世界杯数据中文标签
+const statsLabelMap: Record<string, string> = {
+  goals: '进球', assists: '助攻', appearances: '出场',
+  yellow_cards: '黄牌', red_cards: '红牌',
+  shots: '射门', passes: '传球', minutes_played: '出场时间(分钟)',
+}
+
+// 核心数据（进球/助攻/出场）
+const coreStats = computed(() => {
+  if (!player.value?.stats) return []
+  const s = player.value.stats as Record<string, number>
+  return [
+    { key: 'goals', label: '进球', value: s.goals ?? 0, color: 'text-red-500' },
+    { key: 'assists', label: '助攻', value: s.assists ?? 0, color: 'text-blue-500' },
+    { key: 'appearances', label: '出场', value: s.appearances ?? 0, color: 'text-green-600' },
+  ]
+})
+
+// 详细数据（其余字段）
+const detailStats = computed(() => {
+  if (!player.value?.stats) return []
+  const s = player.value.stats as Record<string, unknown>
+  const coreKeys = new Set(['goals', 'assists', 'appearances'])
+  return Object.entries(s)
+    .filter(([k]) => !coreKeys.has(k))
+    .map(([k, v]) => ({ key: k, label: statsLabelMap[k] || k, value: v }))
+})
+
 onMounted(async () => {
   loading.value = true
   try {
@@ -140,20 +168,30 @@ onMounted(async () => {
           </div>
         </section>
 
-        <!-- Stats table -->
+        <!-- 世界杯数据统计 -->
         <section v-if="player.stats && Object.keys(player.stats).length > 0">
           <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <h2 class="text-sm font-bold text-gray-700 px-4 py-3 bg-gray-50 border-b border-gray-100">
-              数据统计
+              世界杯数据
             </h2>
+
+            <!-- 核心数据卡片 -->
+            <div class="grid grid-cols-3 gap-px bg-gray-100">
+              <div v-for="item in coreStats" :key="item.key" class="bg-white p-3 text-center">
+                <p class="text-xl font-bold" :class="item.color">{{ item.value }}</p>
+                <p class="text-xs text-gray-400 mt-1">{{ item.label }}</p>
+              </div>
+            </div>
+
+            <!-- 详细数据 -->
             <div class="divide-y divide-gray-50">
               <div
-                v-for="(value, key) in player.stats"
-                :key="String(key)"
+                v-for="item in detailStats"
+                :key="item.key"
                 class="flex items-center justify-between px-4 py-3"
               >
-                <span class="text-sm text-gray-500">{{ String(key) }}</span>
-                <span class="text-sm font-medium text-gray-800">{{ value }}</span>
+                <span class="text-sm text-gray-500">{{ item.label }}</span>
+                <span class="text-sm font-medium text-gray-800">{{ item.value }}</span>
               </div>
             </div>
           </div>

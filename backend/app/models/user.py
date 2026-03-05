@@ -1,6 +1,7 @@
-from datetime import datetime
+from datetime import date, datetime
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -21,6 +22,21 @@ class User(Base):
     points: Mapped[int] = mapped_column(Integer, default=1000)
     win_streak: Mapped[int] = mapped_column(Integer, default=0)
     title: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    # 会员相关字段
+    phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    is_member: Mapped[bool] = mapped_column(Boolean, default=False)
+    member_expire_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    member_type: Mapped[str | None] = mapped_column(
+        String(20), nullable=True
+    )  # monthly/quarterly/yearly
+    daily_sign_in: Mapped[date | None] = mapped_column(Date, nullable=True)  # 最后签到日期
+    sign_in_streak: Mapped[int] = mapped_column(Integer, default=0)  # 连续签到天数
+    badges: Mapped[list | None] = mapped_column(
+        JSONB, server_default="[]"
+    )  # 勋章列表
+    agreed_terms: Mapped[bool] = mapped_column(Boolean, default=False)  # 是否同意协议
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
@@ -30,6 +46,9 @@ class User(Base):
     predictions = relationship("Prediction", back_populates="user")
     reminders = relationship("Reminder", back_populates="user")
     wallpapers = relationship("Wallpaper", back_populates="user")
+    point_records = relationship("PointRecord", back_populates="user")
+    tasks = relationship("UserTask", back_populates="user")
+    reports = relationship("Report", back_populates="reporter")
 
 
 class Reminder(Base):

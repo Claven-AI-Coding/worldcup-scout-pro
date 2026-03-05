@@ -1,24 +1,36 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCountdown } from '@/composables/useCountdown'
 import { useMatchStore } from '@/stores/matches'
 import { useTeamStore } from '@/stores/teams'
 import MatchCard from '@/components/match/MatchCard.vue'
 import TeamCard from '@/components/team/TeamCard.vue'
-import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
+import SkeletonLoader from '@/components/common/SkeletonLoader.vue'
 
 const router = useRouter()
 const matchStore = useMatchStore()
 const teamStore = useTeamStore()
+const loadError = ref(false)
 
 // World Cup 2026 starts June 11, 2026
 const { days, hours, minutes, seconds, expired, start } = useCountdown('2026-06-11T00:00:00Z')
 
+async function loadData() {
+  loadError.value = false
+  try {
+    await Promise.all([
+      matchStore.fetchMatches({ date: new Date().toISOString().split('T')[0] }),
+      teamStore.fetchTeams(),
+    ])
+  } catch {
+    loadError.value = true
+  }
+}
+
 onMounted(() => {
   start()
-  matchStore.fetchMatches({ date: new Date().toISOString().split('T')[0] })
-  teamStore.fetchTeams()
+  loadData()
 })
 
 interface MatchObject {
@@ -145,7 +157,13 @@ const quickLinks: QuickLink[] = [
           </router-link>
         </div>
 
-        <LoadingSpinner v-if="matchStore.loading" text="加载中..." />
+        <!-- 加载失败重试 -->
+        <div v-if="loadError" class="text-center py-8">
+          <p class="text-sm text-gray-400 mb-3">加载失败</p>
+          <button class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg" @click="loadData">重新加载</button>
+        </div>
+
+        <SkeletonLoader v-else-if="matchStore.loading" type="card" :count="2" />
 
         <div
           v-else-if="matchStore.matches.length > 0"
@@ -171,7 +189,7 @@ const quickLinks: QuickLink[] = [
           <h2 class="text-lg font-bold text-gray-800">热门球队</h2>
         </div>
 
-        <LoadingSpinner v-if="teamStore.loading" text="加载中..." />
+        <SkeletonLoader v-if="teamStore.loading" type="grid" :count="6" />
 
         <div
           v-else-if="teamStore.teams.length > 0"

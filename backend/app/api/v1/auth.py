@@ -35,6 +35,13 @@ async def login(payload: UserLogin, db: AsyncSession = Depends(get_db)):
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def register(payload: UserCreate, db: AsyncSession = Depends(get_db)):
     """Register a new user with username and password."""
+    # 注册需同意用户协议和隐私政策
+    if not payload.agreed_terms:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="注册需同意用户协议和隐私政策",
+        )
+
     result = await db.execute(select(User).where(User.username == payload.username))
     existing = result.scalar_one_or_none()
 
@@ -48,6 +55,7 @@ async def register(payload: UserCreate, db: AsyncSession = Depends(get_db)):
         username=payload.username,
         password_hash=hash_password(payload.password),
         nickname=payload.username,
+        agreed_terms=True,
     )
     db.add(user)
     await db.flush()

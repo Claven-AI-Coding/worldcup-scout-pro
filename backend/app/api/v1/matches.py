@@ -7,6 +7,7 @@ from sqlalchemy.orm import selectinload
 
 from app.database import get_db
 from app.models import Match, MatchEvent, Reminder, Team, User
+from app.services.ai_analysis import generate_match_prediction
 from app.schemas.match import (
     MatchEventResponse,
     MatchListResponse,
@@ -21,22 +22,34 @@ router = APIRouter()
 
 @router.get("/", response_model=MatchListResponse)
 async def list_matches(
-    stage: str | None = Query(None, description="Filter by stage: group, round_16, quarter, semi, final"),
+    stage: str | None = Query(None, description="Filter by stage: group, round_32, round_16, quarter, semi, third_place, final"),
+    group: str | None = Query(None, description="Filter by group (A-L)"),
+    team_id: int | None = Query(None, description="Filter by team ID"),
     date_filter: date | None = Query(None, alias="date", description="Filter by date (YYYY-MM-DD)"),
     match_status: str | None = Query(None, alias="status", description="Filter by status: upcoming, live, finished"),
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
 ):
-    """List matches with optional filters for stage, date, and status."""
+    """List matches with optional filters for stage, group, team, date, and status."""
     stmt = (
         select(Match)
-        .options(selectinload(Match.home_team), selectinload(Match.away_team))
+        .options(
+            selectinload(Match.home_team),
+            selectinload(Match.away_team),
+            selectinload(Match.events),
+        )
         .order_by(Match.start_time)
     )
 
     if stage:
         stmt = stmt.where(Match.stage == stage)
+    if group:
+        stmt = stmt.where(Match.group_name == group.upper())
+    if team_id:
+        stmt = stmt.where(
+            (Match.home_team_id == team_id) | (Match.away_team_id == team_id)
+        )
     if date_filter:
         stmt = stmt.where(func.date(Match.start_time) == date_filter)
     if match_status:
@@ -56,7 +69,7 @@ async def list_matches(
 
 @router.get("/standings")
 async def get_standings(
-    group: str | None = Query(None, description="Filter by group (A-H)"),
+    group: str | None = Query(None, description="Filter by group (A-L)"),
     db: AsyncSession = Depends(get_db),
 ):
     """Get group standings calculated from match results.
@@ -256,3 +269,87 @@ async def set_reminder(
     await db.flush()
     await db.refresh(reminder)
     return reminder
+
+
+@router.post("/subscribe-team/{team_id}", status_code=status.HTTP_201_CREATED)
+async def subscribe_team_matches(
+    team_id: int,
+    remind_before_minutes: int = Query(30, ge=5, le=1440, description="提醒提前分钟数"),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """一键订阅球队所有未开始比赛的提醒"""
+    # 验证球队存在
+    team_result = await db.execute(select(Team).where(Team.id == team_id))
+    team = team_result.scalar_one_or_none()
+    if not team:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="球队不存在")
+
+    # 查询该球队所有未结束的比赛
+    match_stmt = select(Match).where(
+        ((Match.home_team_id == team_id) | (Match.away_team_id == team_id)),
+        Match.status != "finished",
+    )
+    match_result = await db.execute(match_stmt)
+    matches = match_result.scalars().all()
+
+    if not matches:
+        return {"message": "该球队暂无未来赛事", "subscribed_count": 0}
+
+    # 查询已有的提醒
+    existing_stmt = select(Reminder.match_id).where(
+        Reminder.user_id == current_user.id,
+        Reminder.match_id.in_([m.id for m in matches]),
+    )
+    existing_result = await db.execute(existing_stmt)
+    existing_match_ids = set(existing_result.scalars().all())
+
+    # 批量创建提醒
+    new_count = 0
+    for match in matches:
+        if match.id not in existing_match_ids:
+            db.add(Reminder(
+                user_id=current_user.id,
+                match_id=match.id,
+                remind_before_minutes=remind_before_minutes,
+            ))
+            new_count += 1
+
+    await db.flush()
+    return {
+        "message": f"已订阅 {team.name} 全部赛事提醒",
+        "team_name": team.name,
+        "subscribed_count": new_count,
+        "already_subscribed": len(existing_match_ids),
+        "total_matches": len(matches),
+    }
+
+
+@router.get("/{match_id}/prediction")
+async def get_match_prediction(
+    match_id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    """获取比赛 AI 赛果预测（胜率 + 比分区间）"""
+    from fastapi import Request
+
+    stmt = (
+        select(Match)
+        .options(selectinload(Match.home_team), selectinload(Match.away_team))
+        .where(Match.id == match_id)
+    )
+    result = await db.execute(stmt)
+    match = result.scalar_one_or_none()
+
+    if not match:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="比赛不存在")
+
+    prediction = await generate_match_prediction(
+        home_team=match.home_team.name,
+        away_team=match.away_team.name,
+        home_stats=match.home_team.stats,
+        away_stats=match.away_team.stats,
+        match_id=match_id,
+    )
+
+    return prediction

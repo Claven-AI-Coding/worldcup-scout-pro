@@ -5,11 +5,23 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.models import Player, Team, User, Wallpaper
+from app.models import Player, PointRecord, Team, User, Wallpaper
 from app.schemas.wallpaper import WallpaperCreate, WallpaperResponse
 from app.utils.auth import get_current_user
 
 DAILY_WALLPAPER_LIMIT = 5
+
+# 固定模板壁纸（无需 AI 生成）
+TEMPLATE_WALLPAPERS = [
+    {"id": "tpl_1", "name": "世界杯 2026 主视觉", "style": "official", "preview_url": "/static/templates/wc2026_main.jpg", "points_cost": 0},
+    {"id": "tpl_2", "name": "赛程日历壁纸", "style": "calendar", "preview_url": "/static/templates/wc2026_calendar.jpg", "points_cost": 0},
+    {"id": "tpl_3", "name": "球队配色壁纸", "style": "team_color", "preview_url": "/static/templates/wc2026_team_color.jpg", "points_cost": 50},
+    {"id": "tpl_4", "name": "复古风格海报", "style": "retro", "preview_url": "/static/templates/wc2026_retro.jpg", "points_cost": 50},
+]
+
+# 积分消耗：普通 50 分，高清 100 分，会员免费
+DOWNLOAD_COST_NORMAL = 50
+DOWNLOAD_COST_HD = 100
 
 router = APIRouter()
 
@@ -121,6 +133,52 @@ async def get_my_wallpapers(
     result = await db.execute(stmt)
     wallpapers = result.scalars().all()
     return wallpapers
+
+
+@router.get("/templates")
+async def get_template_wallpapers():
+    """获取固定模板壁纸列表（无需 AI 生成，即时可用）"""
+    return TEMPLATE_WALLPAPERS
+
+
+@router.post("/{wallpaper_id}/download")
+async def download_wallpaper(
+    wallpaper_id: int,
+    hd: bool = Query(False, description="是否高清版本"),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """下载壁纸（消耗积分，会员免费）"""
+    # 验证壁纸存在
+    wp_result = await db.execute(select(Wallpaper).where(Wallpaper.id == wallpaper_id))
+    wallpaper = wp_result.scalar_one_or_none()
+    if not wallpaper:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="壁纸不存在")
+
+    # 会员免费
+    if current_user.is_member:
+        return {"message": "会员免费下载", "image_url": wallpaper.image_url}
+
+    # 计算消耗积分
+    cost = DOWNLOAD_COST_HD if hd else DOWNLOAD_COST_NORMAL
+    if current_user.points < cost:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"积分不足，需要 {cost} 分，当前 {current_user.points} 分",
+        )
+
+    # 扣除积分
+    current_user.points -= cost
+    record = PointRecord(
+        user_id=current_user.id,
+        amount=-cost,
+        reason="exchange",
+        detail=f"下载壁纸 #{wallpaper_id}" + (" (高清)" if hd else ""),
+    )
+    db.add(record)
+    await db.flush()
+
+    return {"message": f"下载成功，消耗 {cost} 积分", "image_url": wallpaper.image_url}
 
 
 @router.get("/gallery", response_model=list[WallpaperResponse])

@@ -13,13 +13,51 @@ from app.schemas.post import (
     PostResponse,
 )
 from app.utils.auth import get_current_user
+from app.utils.content_filter import check_content
 
 router = APIRouter()
+
+
+@router.get("/hot", response_model=PostListResponse)
+async def list_hot_posts(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=50),
+    db: AsyncSession = Depends(get_db),
+):
+    """全站热门帖子，按热度算法排序（点赞*3 + 评论*5 + 时间衰减）"""
+    from sqlalchemy import case, cast, Float
+    from datetime import datetime, timedelta
+
+    # 热度 = likes*3 + comments_count*5，24小时内发布的帖子额外加权
+    now = datetime.utcnow()
+    recent_cutoff = now - timedelta(hours=24)
+
+    hot_score = (
+        Post.likes * 3 + Post.comments_count * 5
+        + case((Post.created_at > recent_cutoff, 10), else_=0)
+    )
+
+    stmt = (
+        select(Post)
+        .options(selectinload(Post.author))
+        .order_by(hot_score.desc(), Post.created_at.desc())
+    )
+
+    count_stmt = select(func.count()).select_from(Post)
+    total_result = await db.execute(count_stmt)
+    total = total_result.scalar_one()
+
+    stmt = stmt.offset(skip).limit(limit)
+    result = await db.execute(stmt)
+    posts = result.scalars().all()
+
+    return PostListResponse(items=posts, total=total)
 
 
 @router.get("/{team_id}/posts", response_model=PostListResponse)
 async def list_team_posts(
     team_id: int,
+    sort: str = Query("latest", description="排序方式: latest(最新), hot(热门)"),
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
@@ -37,8 +75,11 @@ async def list_team_posts(
         select(Post)
         .options(selectinload(Post.author))
         .where(Post.team_id == team_id)
-        .order_by(Post.created_at.desc())
     )
+    if sort == "hot":
+        stmt = stmt.order_by((Post.likes * 3 + Post.comments_count * 5).desc(), Post.created_at.desc())
+    else:
+        stmt = stmt.order_by(Post.created_at.desc())
 
     count_stmt = select(func.count()).select_from(stmt.subquery())
     total_result = await db.execute(count_stmt)
@@ -58,6 +99,14 @@ async def create_post(
     db: AsyncSession = Depends(get_db),
 ):
     """Create a new post in a team circle (authenticated)."""
+    # 内容过滤
+    content_check = await check_content(payload.content, db)
+    if not content_check["is_clean"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"内容包含违规词汇，请修改后重试",
+        )
+
     # Verify team exists
     team_result = await db.execute(select(Team).where(Team.id == payload.team_id))
     if not team_result.scalar_one_or_none():
@@ -116,6 +165,14 @@ async def create_comment(
     db: AsyncSession = Depends(get_db),
 ):
     """Comment on a post (authenticated)."""
+    # 评论内容过滤
+    content_check = await check_content(payload.content, db)
+    if not content_check["is_clean"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="评论包含违规词汇，请修改后重试",
+        )
+
     # Verify post exists
     post_result = await db.execute(select(Post).where(Post.id == post_id))
     post = post_result.scalar_one_or_none()

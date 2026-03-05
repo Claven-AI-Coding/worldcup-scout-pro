@@ -1,0 +1,74 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { setReminder } from '@/api/matches'
+
+const props = defineProps<{
+  matchId: number
+}>()
+
+const emit = defineEmits<{
+  success: []
+}>()
+
+const selectedMinutes = ref(30)
+const loading = ref(false)
+const done = ref(false)
+const error = ref('')
+
+const options = [
+  { value: 30, label: '30 分钟前' },
+  { value: 60, label: '1 小时前' },
+  { value: 120, label: '2 小时前' },
+]
+
+async function handleSubmit() {
+  loading.value = true
+  error.value = ''
+  try {
+    await setReminder(props.matchId, selectedMinutes.value)
+    done.value = true
+    emit('success')
+  } catch (e: any) {
+    error.value = e?.response?.data?.detail || '设置失败，请重试'
+  } finally {
+    loading.value = false
+  }
+}
+</script>
+
+<template>
+  <div class="bg-white rounded-xl p-4">
+    <h3 class="text-sm font-bold text-gray-700 mb-3">赛前提醒</h3>
+
+    <div v-if="done" class="text-center py-4">
+      <div class="text-green-500 text-2xl mb-2">✓</div>
+      <p class="text-sm text-gray-600">提醒已设置</p>
+    </div>
+
+    <template v-else>
+      <div class="flex gap-2 mb-4">
+        <button
+          v-for="opt in options"
+          :key="opt.value"
+          class="flex-1 py-2 text-xs rounded-lg border transition-colors"
+          :class="selectedMinutes === opt.value
+            ? 'border-green-500 bg-green-50 text-green-700'
+            : 'border-gray-200 text-gray-500 hover:border-gray-300'"
+          @click="selectedMinutes = opt.value"
+        >
+          {{ opt.label }}
+        </button>
+      </div>
+
+      <button
+        class="w-full py-2.5 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+        :disabled="loading"
+        @click="handleSubmit"
+      >
+        {{ loading ? '设置中...' : '设置提醒' }}
+      </button>
+
+      <p v-if="error" class="text-xs text-red-500 mt-2 text-center">{{ error }}</p>
+    </template>
+  </div>
+</template>

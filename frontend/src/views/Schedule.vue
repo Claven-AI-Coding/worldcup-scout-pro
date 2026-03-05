@@ -4,12 +4,12 @@ import { useMatchStore } from '@/stores/matches'
 import { getStandings } from '@/api/matches'
 import MatchCard from '@/components/match/MatchCard.vue'
 import StandingsTable from '@/components/match/StandingsTable.vue'
-import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
+import SkeletonLoader from '@/components/common/SkeletonLoader.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 
 const matchStore = useMatchStore()
 
-// Stage filter
+// 赛事阶段筛选（新增 round_32 和 third_place）
 interface StageTab {
   value: string
   label: string
@@ -18,31 +18,39 @@ interface StageTab {
 const stages: StageTab[] = [
   { value: '', label: '全部' },
   { value: 'group', label: '小组赛' },
+  { value: 'round_32', label: '32强' },
   { value: 'round_16', label: '16强' },
-  { value: 'quarter', label: '8强' },
+  { value: 'quarter', label: '1/4决赛' },
   { value: 'semi', label: '半决赛' },
   { value: 'final', label: '决赛' },
 ]
 
 const activeStage = ref('')
+const activeGroup = ref('')  // 小组筛选 A-L
 const showStandings = ref(false)
 
-// Date navigation
-const currentDate = ref(new Date().toISOString().split('T')[0])
+// 12 组
+const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
 
-function prevDate() {
-  const d = new Date(currentDate.value)
-  d.setDate(d.getDate() - 1)
-  currentDate.value = d.toISOString().split('T')[0]
-}
+// 日期导航：今日/明日/全部
+type DateMode = 'today' | 'tomorrow' | 'all' | 'custom'
+const dateMode = ref<DateMode>('today')
+const customDate = ref(new Date().toISOString().split('T')[0])
 
-function nextDate() {
-  const d = new Date(currentDate.value)
-  d.setDate(d.getDate() + 1)
-  currentDate.value = d.toISOString().split('T')[0]
-}
+const currentDate = computed(() => {
+  const today = new Date()
+  if (dateMode.value === 'today') return today.toISOString().split('T')[0]
+  if (dateMode.value === 'tomorrow') {
+    const tm = new Date(today)
+    tm.setDate(tm.getDate() + 1)
+    return tm.toISOString().split('T')[0]
+  }
+  if (dateMode.value === 'custom') return customDate.value
+  return undefined // 'all' 不按日期筛选
+})
 
 const formattedDate = computed(() => {
+  if (!currentDate.value) return '全部日期'
   const d = new Date(currentDate.value)
   const month = d.getMonth() + 1
   const day = d.getDate()
@@ -51,7 +59,7 @@ const formattedDate = computed(() => {
   return `${month}月${day}日 周${weekday}`
 })
 
-// Matches grouped by date
+// 按日期分组比赛列表
 interface MatchObject {
   id: number
   stage: string
@@ -66,21 +74,21 @@ interface MatchObject {
 }
 
 const groupedMatches = computed(() => {
-  const groups: Record<string, MatchObject[]> = {}
+  const grouped: Record<string, MatchObject[]> = {}
   for (const match of matchStore.matches) {
     const dateKey = match.start_time.split('T')[0]
-    if (!groups[dateKey]) groups[dateKey] = []
-    groups[dateKey].push(match)
+    if (!grouped[dateKey]) grouped[dateKey] = []
+    grouped[dateKey].push(match)
   }
-  return groups
+  return grouped
 })
 
-// Standings
+// 积分榜
 interface StandingEntry {
-  position: number
   team_id: number
   team_name: string
   team_code: string
+  flag_url: string | null
   played: number
   won: number
   drawn: number
@@ -89,29 +97,17 @@ interface StandingEntry {
   goals_against: number
   goal_difference: number
   points: number
-  group_name: string
 }
 
 const standings = ref<Record<string, StandingEntry[]>>({})
 const standingsLoading = ref(false)
+const activeStandingsGroup = ref('A')
 
 async function fetchStandings() {
   standingsLoading.value = true
   try {
     const res = await getStandings()
-    const data = res.data as StandingEntry[] | Record<string, StandingEntry[]>
-    if (Array.isArray(data)) {
-      // Group by group_name
-      const grouped: Record<string, StandingEntry[]> = {}
-      for (const entry of data) {
-        const g = entry.group_name || 'Unknown'
-        if (!grouped[g]) grouped[g] = []
-        grouped[g].push(entry)
-      }
-      standings.value = grouped
-    } else {
-      standings.value = data
-    }
+    standings.value = res.data as Record<string, StandingEntry[]>
   } catch {
     standings.value = {}
   } finally {
@@ -122,11 +118,13 @@ async function fetchStandings() {
 function loadMatches() {
   matchStore.fetchMatches({
     stage: activeStage.value || undefined,
+    group: activeGroup.value || undefined,
     date: currentDate.value,
+    limit: 50,
   })
 }
 
-watch([activeStage, currentDate], () => {
+watch([activeStage, activeGroup, dateMode, customDate], () => {
   loadMatches()
 })
 
@@ -145,7 +143,7 @@ function toggleStandings() {
 <template>
   <div class="min-h-screen bg-gray-50">
     <div class="max-w-screen-lg mx-auto">
-      <!-- Stage filter tabs -->
+      <!-- 阶段筛选 -->
       <div class="bg-white border-b border-gray-100 sticky top-14 z-40">
         <div class="flex overflow-x-auto px-4 py-2 gap-1 scrollbar-hide">
           <button
@@ -153,42 +151,61 @@ function toggleStandings() {
             :key="stage.value"
             class="flex-shrink-0 px-4 py-1.5 text-sm font-medium rounded-full transition-colors"
             :class="activeStage === stage.value
-              ? 'bg-primary-500 text-white'
+              ? 'bg-green-600 text-white'
               : 'text-gray-500 hover:bg-gray-100'"
             @click="activeStage = stage.value"
           >
             {{ stage.label }}
           </button>
         </div>
+
+        <!-- 小组赛时显示小组筛选 -->
+        <div v-if="activeStage === 'group'" class="flex overflow-x-auto px-4 pb-2 gap-1 scrollbar-hide">
+          <button
+            class="flex-shrink-0 px-3 py-1 text-xs font-medium rounded-full transition-colors"
+            :class="activeGroup === '' ? 'bg-green-100 text-green-700' : 'text-gray-400 hover:bg-gray-50'"
+            @click="activeGroup = ''"
+          >
+            全部
+          </button>
+          <button
+            v-for="g in groups"
+            :key="g"
+            class="flex-shrink-0 px-3 py-1 text-xs font-medium rounded-full transition-colors"
+            :class="activeGroup === g ? 'bg-green-100 text-green-700' : 'text-gray-400 hover:bg-gray-50'"
+            @click="activeGroup = g"
+          >
+            {{ g }}组
+          </button>
+        </div>
       </div>
 
       <div class="px-4 py-4">
-        <!-- Date navigation -->
+        <!-- 日期切换：今日 / 明日 / 全部 -->
         <div class="flex items-center justify-between mb-4">
-          <button
-            class="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors"
-            @click="prevDate"
-          >
-            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <span class="text-sm font-medium text-gray-700">{{ formattedDate }}</span>
-          <button
-            class="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors"
-            @click="nextDate"
-          >
-            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+          <div class="flex gap-2">
+            <button
+              v-for="mode in [
+                { value: 'today' as DateMode, label: '今日' },
+                { value: 'tomorrow' as DateMode, label: '明日' },
+                { value: 'all' as DateMode, label: '全部' },
+              ]"
+              :key="mode.value"
+              class="px-3 py-1 text-sm rounded-lg transition-colors"
+              :class="dateMode === mode.value ? 'bg-green-600 text-white' : 'bg-white text-gray-600 border border-gray-200'"
+              @click="dateMode = mode.value"
+            >
+              {{ mode.label }}
+            </button>
+          </div>
+          <span class="text-sm text-gray-500">{{ formattedDate }}</span>
         </div>
 
-        <!-- Standings toggle -->
+        <!-- 积分榜切换 -->
         <div class="flex justify-end mb-4">
           <button
             class="text-sm flex items-center gap-1 px-3 py-1.5 rounded-lg transition-colors"
-            :class="showStandings ? 'bg-primary-50 text-primary-600' : 'text-gray-500 hover:bg-gray-100'"
+            :class="showStandings ? 'bg-green-50 text-green-600' : 'text-gray-500 hover:bg-gray-100'"
             @click="toggleStandings"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -198,26 +215,35 @@ function toggleStandings() {
           </button>
         </div>
 
-        <!-- Standings -->
-        <div v-if="showStandings" class="space-y-4 mb-6">
-          <LoadingSpinner v-if="standingsLoading" text="加载积分榜..." />
-          <template v-else>
+        <!-- 积分榜展示（12 组 Tab 切换） -->
+        <div v-if="showStandings" class="mb-6">
+          <SkeletonLoader v-if="standingsLoading" type="list" :count="4" />
+          <template v-else-if="Object.keys(standings).length > 0">
+            <!-- 小组 Tab -->
+            <div class="flex overflow-x-auto gap-1 mb-3 scrollbar-hide">
+              <button
+                v-for="g in groups"
+                :key="g"
+                class="flex-shrink-0 px-3 py-1 text-xs font-medium rounded-full transition-colors"
+                :class="activeStandingsGroup === g ? 'bg-green-600 text-white' : 'text-gray-400 bg-gray-100'"
+                @click="activeStandingsGroup = g"
+              >
+                {{ g }}组
+              </button>
+            </div>
             <StandingsTable
-              v-for="(entries, groupName) in standings"
-              :key="groupName"
-              :standings="entries"
-              :group-name="String(groupName)"
+              v-if="standings[activeStandingsGroup]"
+              :standings="standings[activeStandingsGroup]"
+              :group-name="activeStandingsGroup"
             />
+            <EmptyState v-else message="该组暂无数据" />
           </template>
-          <EmptyState
-            v-if="!standingsLoading && Object.keys(standings).length === 0"
-            message="暂无积分数据"
-          />
+          <EmptyState v-else message="暂无积分数据" />
         </div>
 
-        <!-- Match list -->
+        <!-- 比赛列表 -->
         <div v-if="!showStandings">
-          <LoadingSpinner v-if="matchStore.loading" text="加载赛程..." />
+          <SkeletonLoader v-if="matchStore.loading" type="card" :count="3" />
 
           <template v-else-if="Object.keys(groupedMatches).length > 0">
             <div
@@ -236,7 +262,7 @@ function toggleStandings() {
             </div>
           </template>
 
-          <EmptyState v-else message="该日期暂无比赛" />
+          <EmptyState v-else message="暂无比赛" />
         </div>
       </div>
     </div>
