@@ -11,6 +11,9 @@ interface User {
   fav_team_id: number | null
   win_streak: number
   title: string | null
+  is_member: boolean
+  member_type?: string
+  member_expire_at?: string
 }
 
 export const useUserStore = defineStore('user', () => {

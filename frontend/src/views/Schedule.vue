@@ -85,6 +85,7 @@ const groupedMatches = computed(() => {
 
 // 积分榜
 interface StandingEntry {
+  position: number
   team_id: number
   team_name: string
   team_code: string
