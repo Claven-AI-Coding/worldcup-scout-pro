@@ -1,0 +1,120 @@
+#!/bin/bash
+# Pre-commit hook - 在提交前检查代码质量
+
+set -e
+
+echo "🧪 运行 pre-commit 检查..."
+echo ""
+
+# 颜色定义
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+FAILED=0
+
+# ============================================================
+# 1. 前端检查
+# ============================================================
+echo "📝 检查前端代码..."
+
+if [ -d "frontend" ]; then
+    cd frontend
+    
+    # 检查 Lint
+    if npm run lint > /dev/null 2>&1; then
+        echo -e "${GREEN}✅ 前端 Lint 检查通过${NC}"
+    else
+        echo -e "${RED}❌ 前端 Lint 检查失败${NC}"
+        npm run lint
+        FAILED=1
+    fi
+    
+    # 检查格式
+    if npm run format:check > /dev/null 2>&1; then
+        echo -e "${GREEN}✅ 前端格式检查通过${NC}"
+    else
+        echo -e "${RED}❌ 前端格式检查失败${NC}"
+        echo "运行 npm run format 来修复格式问题"
+        FAILED=1
+    fi
+    
+    cd ..
+else
+    echo -e "${YELLOW}⚠️  前端目录不存在${NC}"
+fi
+
+echo ""
+
+# ============================================================
+# 2. 后端检查
+# ============================================================
+echo "📝 检查后端代码..."
+
+if [ -d "backend" ]; then
+    cd backend
+    
+    # 检查语法
+    if python3 -m py_compile app/**/*.py > /dev/null 2>&1; then
+        echo -e "${GREEN}✅ 后端语法检查通过${NC}"
+    else
+        echo -e "${RED}❌ 后端语法检查失败${NC}"
+        python3 -m py_compile app/**/*.py
+        FAILED=1
+    fi
+    
+    # 检查 Ruff
+    if python3 -m ruff check . > /dev/null 2>&1; then
+        echo -e "${GREEN}✅ 后端 Ruff 检查通过${NC}"
+    else
+        echo -e "${RED}❌ 后端 Ruff 检查失败${NC}"
+        python3 -m ruff check .
+        FAILED=1
+    fi
+    
+    cd ..
+else
+    echo -e "${YELLOW}⚠️  后端目录不存在${NC}"
+fi
+
+echo ""
+
+# ============================================================
+# 3. 提交信息检查
+# ============================================================
+echo "📝 检查提交信息..."
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# 检查是否使用了 Conventional Commits 格式
+if [[ $COMMIT_MSG =~ ^(feat|fix|docs|style|refactor|perf|test|chore|ci|build)(\(.+\))?!?:\ .+ ]]; then
+    echo -e "${GREEN}✅ 提交信息格式正确${NC}"
+else
+    echo -e "${RED}❌ 提交信息格式不符合 Conventional Commits${NC}"
+    echo ""
+    echo "正确格式示例："
+    echo "  feat: 添加新功能"
+    echo "  fix: 修复 bug"
+    echo "  docs: 更新文档"
+    echo "  refactor: 重构代码"
+    echo ""
+    FAILED=1
+fi
+
+echo ""
+
+# ============================================================
+# 4. 结果
+# ============================================================
+if [ $FAILED -eq 0 ]; then
+    echo -e "${GREEN}✅ 所有检查通过，允许提交${NC}"
+    exit 0
+else
+    echo -e "${RED}❌ 检查失败，请修复问题后重试${NC}"
+    echo ""
+    echo "如果需要跳过检查，使用："
+    echo "  git commit --no-verify"
+    exit 1
+fi
