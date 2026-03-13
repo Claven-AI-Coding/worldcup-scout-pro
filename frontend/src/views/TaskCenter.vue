@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getDailyTasks, signIn, completeTask } from '@/api/tasks'
+import { getDailyTasks, signIn } from '@/api/tasks'
 import { useUserStore } from '@/stores/user'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 

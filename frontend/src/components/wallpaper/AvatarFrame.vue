@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-const props = defineProps<{
+defineProps<{
   teamCode?: string
   teamName?: string
   avatarUrl?: string

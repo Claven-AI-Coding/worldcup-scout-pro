@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTeamStore } from '@/stores/teams'
 import SkeletonLoader from '@/components/common/SkeletonLoader.vue'
