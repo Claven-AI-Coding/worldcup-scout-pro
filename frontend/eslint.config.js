@@ -1,7 +1,8 @@
 import js from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
+import tseslint from '@typescript-eslint/eslint-plugin'
+import tsparser from '@typescript-eslint/parser'
 import * as parserVue from 'vue-eslint-parser'
-import * as parserTypeScript from '@typescript-eslint/parser'
 
 export default [
   js.configs.recommended,
@@ -11,10 +12,13 @@ export default [
     languageOptions: {
       parser: parserVue,
       parserOptions: {
-        parser: parserTypeScript,
+        parser: tsparser,
         ecmaVersion: 'latest',
         sourceType: 'module',
       },
+    },
+    plugins: {
+      '@typescript-eslint': tseslint,
     },
     rules: {
       // Vue 规则
@@ -22,7 +26,6 @@ export default [
       'vue/no-v-html': 'warn',
       'vue/require-default-prop': 'off',
       'vue/require-explicit-emits': 'warn',
-      'vue/component-api-style': ['error', ['script-setup']],
       
       // TypeScript 规则
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
@@ -34,6 +37,6 @@ export default [
     },
   },
   {
-    ignores: ['dist', 'node_modules', '*.config.js'],
+    ignores: ['dist', 'node_modules', '*.config.js', '*.config.ts'],
   },
 ]
