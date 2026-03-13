@@ -37,6 +37,11 @@ class User(Base):
         JSONB, server_default="[]"
     )  # 勋章列表
     agreed_terms: Mapped[bool] = mapped_column(Boolean, default=False)  # 是否同意协议
+    # 封禁相关字段
+    is_banned: Mapped[bool] = mapped_column(Boolean, default=False)  # 是否被封禁
+    ban_until: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )  # 封禁到期时间（None 表示永久封禁）
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
@@ -49,6 +54,7 @@ class User(Base):
     point_records = relationship("PointRecord", back_populates="user")
     tasks = relationship("UserTask", back_populates="user")
     reports = relationship("Report", back_populates="reporter")
+    violations = relationship("UserViolation", back_populates="user")
 
 
 class Reminder(Base):

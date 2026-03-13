@@ -8,6 +8,7 @@ from app.models.report import Report
 from app.models.team import Team
 from app.models.user import Reminder, User
 from app.models.user_task import UserTask
+from app.models.user_violation import UserViolation
 from app.models.wallpaper import Wallpaper
 
 __all__ = [
@@ -25,4 +26,5 @@ __all__ = [
     "UserTask",
     "Report",
     "BannedWord",
+    "UserViolation",
 ]
