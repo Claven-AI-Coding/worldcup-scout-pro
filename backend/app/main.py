@@ -4,7 +4,7 @@ import redis.asyncio as aioredis
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1 import ai_prediction, auth, community, compliance, legal, matches, players, points, predictions, rankings, reports, tasks, teams, wallpapers
+from app.api.v1 import ai_prediction, auth, community, compliance, legal, matches, membership, players, points, predictions, rankings, reports, tasks, teams, wallpapers
 from app.api.websocket import router as ws_router
 from app.config import settings
 
@@ -45,6 +45,7 @@ app.include_router(points.router, prefix="/api/v1/points", tags=["积分"])
 app.include_router(reports.router, prefix="/api/v1/reports", tags=["举报"])
 app.include_router(compliance.router, prefix="/api/v1", tags=["合规管理"])
 app.include_router(ai_prediction.router, prefix="/api/v1", tags=["AI 预测"])
+app.include_router(membership.router, prefix="/api/v1", tags=["会员体系"])
 app.include_router(legal.router, prefix="/api/v1/legal", tags=["法律文本"])
 app.include_router(ws_router, prefix="/api/v1/ws", tags=["WebSocket"])
 
