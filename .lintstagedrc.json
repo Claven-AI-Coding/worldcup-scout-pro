@@ -1,0 +1,13 @@
+{
+  "*.{js,ts,vue}": [
+    "cd frontend && eslint --fix",
+    "cd frontend && prettier --write"
+  ],
+  "*.{json,md,css}": [
+    "cd frontend && prettier --write"
+  ],
+  "*.py": [
+    "cd backend && ruff check --fix",
+    "cd backend && ruff format"
+  ]
+}
