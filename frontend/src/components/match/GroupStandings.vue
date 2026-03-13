@@ -10,6 +10,7 @@ const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
 const activeGroup = ref('A')
 
 interface StandingEntry {
+  position: number
   team_id: number
   team_name: string
   team_code: string

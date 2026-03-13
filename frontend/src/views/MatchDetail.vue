@@ -180,7 +180,7 @@ onMounted(loadData)
         </div>
 
         <!-- 直播比分 -->
-        <LiveScore v-if="match.status === 'live'" :match-id="match.id" class="px-4 pt-4" />
+        <LiveScore v-if="match.status === 'live'" :match="match" class="px-4 pt-4" />
 
         <!-- 操作区域 -->
         <div class="px-4 py-4 space-y-4">
