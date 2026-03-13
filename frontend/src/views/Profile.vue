@@ -124,10 +124,10 @@ onMounted(fetchPointRecords)
         <div class="flex border-b border-gray-100">
           <button
             v-for="tab in ([
-              { key: 'points', label: '积分记录' },
-              { key: 'predictions', label: '竞猜记录' },
-              { key: 'posts', label: '发布记录' },
-            ] as { key: RecordTab; label: string }[])"
+              { key: 'points' as const, label: '积分记录' },
+              { key: 'predictions' as const, label: '竞猜记录' },
+              { key: 'posts' as const, label: '发布记录' },
+            ])"
             :key="tab.key"
             class="flex-1 py-3 text-xs font-medium transition-colors"
             :class="activeTab === tab.key ? 'text-primary-600 border-b-2 border-primary-500' : 'text-gray-400'"
