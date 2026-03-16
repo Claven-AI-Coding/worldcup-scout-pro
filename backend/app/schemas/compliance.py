@@ -12,7 +12,7 @@ class BannedWordCreate(BaseModel):
 
 
 class BannedWordBatchCreate(BaseModel):
-    words: list[str] = Field(..., min_items=1, max_items=1000)
+    words: list[str] = Field(..., min_length=1, max_length=1000)
     category: str | None = None
 
 

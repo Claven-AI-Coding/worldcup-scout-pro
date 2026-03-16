@@ -1,5 +1,11 @@
 """测试配置 — 使用 SQLite 内存数据库进行隔离测试"""
 
+import os
+
+# 必须在导入 app 之前设置环境变量
+os.environ.setdefault("DATABASE_URL", "sqlite+aiosqlite:///:memory:")
+os.environ.setdefault("REDIS_URL", "redis://localhost:6379/0")
+
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
