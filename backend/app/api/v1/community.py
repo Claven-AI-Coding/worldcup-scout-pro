@@ -25,12 +25,12 @@ async def list_hot_posts(
     db: AsyncSession = Depends(get_db),
 ):
     """全站热门帖子，按热度算法排序（点赞*3 + 评论*5 + 时间衰减）"""
-    from datetime import datetime, timedelta
+    from datetime import datetime, timedelta, timezone
 
     from sqlalchemy import case
 
     # 热度 = likes*3 + comments_count*5，24小时内发布的帖子额外加权
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     recent_cutoff = now - timedelta(hours=24)
 
     hot_score = (

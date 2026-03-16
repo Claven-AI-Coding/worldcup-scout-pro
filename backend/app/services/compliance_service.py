@@ -1,6 +1,6 @@
 """合规管理服务层"""
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -105,7 +105,7 @@ class ComplianceService:
             return None
 
         report.status = review.status
-        report.reviewed_at = datetime.utcnow()
+        report.reviewed_at = datetime.now(timezone.utc)
 
         # 执行处理动作
         if review.action and review.status == "reviewed":
@@ -144,7 +144,7 @@ class ComplianceService:
                     violation_type="reported",
                     severity="serious" if action == "ban_user" else "warning",
                     action_taken="temp_ban" if ban_days else "warned",
-                    ban_until=(datetime.utcnow() + timedelta(days=ban_days) if ban_days else None),
+                    ban_until=(datetime.now(timezone.utc) + timedelta(days=ban_days) if ban_days else None),
                     notes=notes,
                 )
                 self.db.add(violation)
@@ -155,7 +155,7 @@ class ComplianceService:
                     user = user_result.scalar_one_or_none()
                     if user:
                         user.is_banned = True
-                        user.ban_until = datetime.utcnow() + timedelta(days=ban_days)
+                        user.ban_until = datetime.now(timezone.utc) + timedelta(days=ban_days)
 
     async def _get_user_id_from_target(self, target_type: str, target_id: int) -> int | None:
         """从目标获取用户 ID"""
@@ -171,7 +171,7 @@ class ComplianceService:
         """创建违规记录"""
         ban_until = None
         if data.ban_days:
-            ban_until = datetime.utcnow() + timedelta(days=data.ban_days)
+            ban_until = datetime.now(timezone.utc) + timedelta(days=data.ban_days)
 
         violation = UserViolation(
             user_id=data.user_id,
@@ -219,7 +219,7 @@ class ComplianceService:
 
         # 检查临时封禁是否过期
         if user.is_banned and user.ban_until:
-            if datetime.utcnow() > user.ban_until:
+            if datetime.now(timezone.utc) > user.ban_until:
                 user.is_banned = False
                 user.ban_until = None
                 await self.db.commit()
