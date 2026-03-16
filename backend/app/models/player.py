@@ -20,8 +20,6 @@ class Player(Base):
     club: Mapped[str | None] = mapped_column(String(64), nullable=True)
     photo_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
     stats: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     team = relationship("Team", back_populates="players")

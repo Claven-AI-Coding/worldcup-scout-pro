@@ -9,7 +9,6 @@ from app.models.match import Match
 from app.models.team import Team
 from app.schemas.schedule_filter import (
     MatchResponse,
-    MatchStage,
     MatchStatus,
     ScheduleFilterRequest,
     ScheduleStatsResponse,
@@ -63,9 +62,7 @@ class ScheduleFilterService:
         # Get total count
         count_result = await self.db.execute(
             select(Match).where(
-                *[c for c in query.whereclause.clauses]
-                if query.whereclause is not None
-                else []
+                *[c for c in query.whereclause.clauses] if query.whereclause is not None else []
             )
         )
         total = len(count_result.scalars().all())
@@ -80,14 +77,10 @@ class ScheduleFilterService:
         responses = []
         for match in matches:
             # Get team names
-            team1_result = await self.db.execute(
-                select(Team).where(Team.id == match.team1_id)
-            )
+            team1_result = await self.db.execute(select(Team).where(Team.id == match.team1_id))
             team1 = team1_result.scalar_one_or_none()
 
-            team2_result = await self.db.execute(
-                select(Team).where(Team.id == match.team2_id)
-            )
+            team2_result = await self.db.execute(select(Team).where(Team.id == match.team2_id))
             team2 = team2_result.scalar_one_or_none()
 
             now = datetime.now(timezone.utc)

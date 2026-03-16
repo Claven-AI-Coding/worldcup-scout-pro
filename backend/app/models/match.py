@@ -20,9 +20,7 @@ class Match(Base):
     start_time: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     venue: Mapped[str | None] = mapped_column(String(128), nullable=True)
     matchday: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     home_team = relationship("Team", foreign_keys=[home_team_id], back_populates="home_matches")
     away_team = relationship("Team", foreign_keys=[away_team_id], back_populates="away_matches")
@@ -38,12 +36,8 @@ class MatchEvent(Base):
     match_id: Mapped[int] = mapped_column(Integer, ForeignKey("matches.id"), index=True)
     event_type: Mapped[str] = mapped_column(String(16))  # goal, card, substitution
     minute: Mapped[int] = mapped_column(Integer)
-    player_id: Mapped[int | None] = mapped_column(
-        Integer, ForeignKey("players.id"), nullable=True
-    )
+    player_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("players.id"), nullable=True)
     detail: Mapped[str | None] = mapped_column(String(256), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     match = relationship("Match", back_populates="events")

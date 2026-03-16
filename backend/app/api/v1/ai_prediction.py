@@ -15,9 +15,7 @@ router = APIRouter(prefix="/ai", tags=["ai-prediction"])
 
 
 @router.post("/predict-match", response_model=MatchPredictionResponse)
-async def predict_match(
-    data: MatchPredictionRequest, db: AsyncSession = Depends(get_db)
-):
+async def predict_match(data: MatchPredictionRequest, db: AsyncSession = Depends(get_db)):
     """预测比赛结果（使用 AI 分析）"""
     service = AIPredictionService(db)
     try:

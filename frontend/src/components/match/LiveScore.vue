@@ -100,12 +100,15 @@ function eventIcon(type: string): string {
         <span
           class="w-2 h-2 rounded-full"
           :class="connected ? 'bg-green-400 animate-pulse' : 'bg-gray-500'"
-        ></span>
+        />
         <span class="text-xs text-gray-400">
           {{ connected ? '实时连接中' : '未连接' }}
         </span>
       </div>
-      <span v-if="matchMinute" class="text-xs font-mono text-green-400 animate-pulse">
+      <span
+        v-if="matchMinute"
+        class="text-xs font-mono text-green-400 animate-pulse"
+      >
         {{ matchMinute }}'
       </span>
     </div>
@@ -120,8 +123,11 @@ function eventIcon(type: string): string {
             :src="props.match.home_team.flag_url"
             :alt="props.match.home_team.name"
             class="w-full h-full object-cover"
-          />
-          <span v-else class="text-lg font-bold text-white/60">{{ props.match.home_team.code }}</span>
+          >
+          <span
+            v-else
+            class="text-lg font-bold text-white/60"
+          >{{ props.match.home_team.code }}</span>
         </div>
         <span class="text-sm font-medium text-gray-300">{{ props.match.home_team.name }}</span>
       </div>
@@ -145,16 +151,24 @@ function eventIcon(type: string): string {
             :src="props.match.away_team.flag_url"
             :alt="props.match.away_team.name"
             class="w-full h-full object-cover"
-          />
-          <span v-else class="text-lg font-bold text-white/60">{{ props.match.away_team.code }}</span>
+          >
+          <span
+            v-else
+            class="text-lg font-bold text-white/60"
+          >{{ props.match.away_team.code }}</span>
         </div>
         <span class="text-sm font-medium text-gray-300">{{ props.match.away_team.name }}</span>
       </div>
     </div>
 
     <!-- Recent events -->
-    <div v-if="recentEvents.length > 0" class="mt-4 pt-4 border-t border-white/10">
-      <p class="text-xs text-gray-500 mb-2">最近事件</p>
+    <div
+      v-if="recentEvents.length > 0"
+      class="mt-4 pt-4 border-t border-white/10"
+    >
+      <p class="text-xs text-gray-500 mb-2">
+        最近事件
+      </p>
       <div class="space-y-1.5">
         <div
           v-for="(event, index) in recentEvents"

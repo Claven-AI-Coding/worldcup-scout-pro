@@ -188,33 +188,35 @@ async def generate_match_prediction(
     # 构建 prompt
     context_parts = []
     if home_stats:
-        context_parts.append(f"主队数据: FIFA排名#{home_stats.get('fifa_ranking', '?')}, "
-                             f"大洲={home_stats.get('confederation', '?')}, "
-                             f"历史最佳={home_stats.get('best_result', '?')}")
+        context_parts.append(
+            f"主队数据: FIFA排名#{home_stats.get('fifa_ranking', '?')}, "
+            f"大洲={home_stats.get('confederation', '?')}, "
+            f"历史最佳={home_stats.get('best_result', '?')}"
+        )
     if away_stats:
-        context_parts.append(f"客队数据: FIFA排名#{away_stats.get('fifa_ranking', '?')}, "
-                             f"大洲={away_stats.get('confederation', '?')}, "
-                             f"历史最佳={away_stats.get('best_result', '?')}")
+        context_parts.append(
+            f"客队数据: FIFA排名#{away_stats.get('fifa_ranking', '?')}, "
+            f"大洲={away_stats.get('confederation', '?')}, "
+            f"历史最佳={away_stats.get('best_result', '?')}"
+        )
 
     user_message = (
-        f"请预测世界杯比赛结果，严格以 JSON 格式返回：\n\n"
-        f"主队: {home_team}\n"
-        f"客队: {away_team}\n"
+        f"请预测世界杯比赛结果，严格以 JSON 格式返回：\n\n主队: {home_team}\n客队: {away_team}\n"
     )
     if context_parts:
         user_message += "\n" + "\n".join(context_parts) + "\n"
 
     user_message += (
         "\n请返回以下 JSON 格式（不要包含 markdown 代码块标记）：\n"
-        '{\n'
+        "{\n"
         '  "home_win_pct": <主胜概率>,\n'
         '  "draw_pct": <平局概率>,\n'
         '  "away_win_pct": <客胜概率>,\n'
         '  "predicted_scores": [\n'
         '    {"score": "<比分>", "probability": <概率>}\n'
-        '  ],\n'
+        "  ],\n"
         '  "analysis": "<50字以内简短分析>"\n'
-        '}\n'
+        "}\n"
         "注意: 三个概率之和必须等于 100.0，predicted_scores 给出 5 个最可能的比分。"
     )
 
@@ -261,7 +263,9 @@ async def generate_match_prediction(
 
     # 写入 Redis 缓存
     if redis_client and cache_key:
-        await redis_client.setex(cache_key, PREDICTION_CACHE_TTL, json.dumps(prediction, ensure_ascii=False))
+        await redis_client.setex(
+            cache_key, PREDICTION_CACHE_TTL, json.dumps(prediction, ensure_ascii=False)
+        )
         logger.info("Cached prediction: %s", cache_key)
 
     return prediction

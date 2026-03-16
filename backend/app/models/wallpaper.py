@@ -11,18 +11,14 @@ class Wallpaper(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), index=True)
-    team_id: Mapped[int | None] = mapped_column(
-        Integer, ForeignKey("teams.id"), nullable=True
-    )
-    player_id: Mapped[int | None] = mapped_column(
-        Integer, ForeignKey("players.id"), nullable=True
-    )
+    team_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("teams.id"), nullable=True)
+    player_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("players.id"), nullable=True)
     style: Mapped[str] = mapped_column(String(32))  # cyberpunk, ink, comic, minimal
     prompt: Mapped[str] = mapped_column(Text)
     image_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
-    status: Mapped[str] = mapped_column(String(16), default="pending")  # pending/generating/done/failed
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    status: Mapped[str] = mapped_column(
+        String(16), default="pending"
+    )  # pending/generating/done/failed
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="wallpapers")

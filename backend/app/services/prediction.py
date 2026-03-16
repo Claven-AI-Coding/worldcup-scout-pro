@@ -18,10 +18,10 @@ CORRECT_RESULT_MULTIPLIER = 1.5
 
 # Win-streak title thresholds
 TITLE_THRESHOLDS: list[tuple[int, str]] = [
-    (10, "预言帝"),      # 10+ streak
-    (7, "神算子"),       # 7-9 streak
-    (5, "竞猜达人"),     # 5-6 streak
-    (3, "小有所成"),     # 3-4 streak
+    (10, "预言帝"),  # 10+ streak
+    (7, "神算子"),  # 7-9 streak
+    (5, "竞猜达人"),  # 5-6 streak
+    (3, "小有所成"),  # 3-4 streak
 ]
 
 

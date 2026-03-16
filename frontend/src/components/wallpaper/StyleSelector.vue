@@ -58,7 +58,7 @@ function selectStyle(value: string) {
       <div
         class="h-24 bg-gradient-to-br"
         :class="style.gradient"
-      ></div>
+      />
 
       <!-- Label overlay -->
       <div class="absolute inset-0 flex items-end">
@@ -72,8 +72,18 @@ function selectStyle(value: string) {
         v-if="props.modelValue === style.value"
         class="absolute top-2 right-2 w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center"
       >
-        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        <svg
+          class="w-4 h-4 text-white"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M5 13l4 4L19 7"
+          />
         </svg>
       </div>
     </div>

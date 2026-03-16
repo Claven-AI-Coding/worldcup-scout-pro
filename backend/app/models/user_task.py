@@ -18,12 +18,8 @@ class UserTask(Base):
     )  # daily_sign_in/view_schedule/share/join_circle/predict
     completed: Mapped[bool] = mapped_column(Boolean, default=False)
     points_reward: Mapped[int] = mapped_column(Integer, nullable=False)
-    completed_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     date: Mapped[date] = mapped_column(Date, nullable=False)  # 任务所属日期
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="tasks")

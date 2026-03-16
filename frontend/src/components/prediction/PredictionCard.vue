@@ -87,7 +87,10 @@ function handleSubmit() {
     <!-- Match info header -->
     <div class="flex items-center justify-between mb-4">
       <span class="text-xs text-gray-400">{{ formattedTime }}</span>
-      <span v-if="props.match.venue" class="text-xs text-gray-400">{{ props.match.venue }}</span>
+      <span
+        v-if="props.match.venue"
+        class="text-xs text-gray-400"
+      >{{ props.match.venue }}</span>
     </div>
 
     <!-- Teams -->
@@ -99,8 +102,11 @@ function handleSubmit() {
             :src="props.match.home_team.flag_url"
             :alt="props.match.home_team.name"
             class="w-full h-full object-cover"
-          />
-          <span v-else class="text-xs font-bold text-gray-400">{{ props.match.home_team.code }}</span>
+          >
+          <span
+            v-else
+            class="text-xs font-bold text-gray-400"
+          >{{ props.match.home_team.code }}</span>
         </div>
         <span class="text-sm font-medium text-gray-700">{{ props.match.home_team.name }}</span>
       </div>
@@ -113,8 +119,11 @@ function handleSubmit() {
             :src="props.match.away_team.flag_url"
             :alt="props.match.away_team.name"
             class="w-full h-full object-cover"
-          />
-          <span v-else class="text-xs font-bold text-gray-400">{{ props.match.away_team.code }}</span>
+          >
+          <span
+            v-else
+            class="text-xs font-bold text-gray-400"
+          >{{ props.match.away_team.code }}</span>
         </div>
       </div>
     </div>
@@ -161,7 +170,7 @@ function handleSubmit() {
           max="20"
           class="w-12 h-9 text-center text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           placeholder="-"
-        />
+        >
         <span class="text-gray-300">:</span>
         <input
           v-model.number="awayScore"
@@ -170,7 +179,7 @@ function handleSubmit() {
           max="20"
           class="w-12 h-9 text-center text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           placeholder="-"
-        />
+        >
       </div>
     </div>
 
@@ -187,7 +196,7 @@ function handleSubmit() {
         max="100"
         step="10"
         class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary-500"
-      />
+      >
       <div class="flex justify-between text-xs text-gray-400 mt-1">
         <span>10</span>
         <span>100</span>

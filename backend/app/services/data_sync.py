@@ -1,7 +1,7 @@
 """Data synchronization service -- sync matches, teams, and live scores from Football-Data.org."""
 
 import logging
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any
 
 from sqlalchemy import select

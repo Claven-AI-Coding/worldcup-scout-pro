@@ -1,6 +1,6 @@
 """合规管理 API 路由"""
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -29,9 +29,7 @@ router = APIRouter(prefix="/compliance", tags=["compliance"])
     response_model=BannedWordResponse,
     dependencies=[Depends(require_admin)],
 )
-async def add_banned_word(
-    data: BannedWordCreate, db: AsyncSession = Depends(get_db)
-):
+async def add_banned_word(data: BannedWordCreate, db: AsyncSession = Depends(get_db)):
     """添加违禁词（管理员）"""
     service = ComplianceService(db)
     word = await service.add_banned_word(data)
@@ -42,9 +40,7 @@ async def add_banned_word(
     "/banned-words/batch",
     dependencies=[Depends(require_admin)],
 )
-async def add_banned_words_batch(
-    data: BannedWordBatchCreate, db: AsyncSession = Depends(get_db)
-):
+async def add_banned_words_batch(data: BannedWordBatchCreate, db: AsyncSession = Depends(get_db)):
     """批量添加违禁词（管理员）"""
     service = ComplianceService(db)
     count = await service.add_banned_words_batch(data.words, data.category)
@@ -99,9 +95,7 @@ async def create_report(
     response_model=list[ReportResponse],
     dependencies=[Depends(require_admin)],
 )
-async def get_pending_reports(
-    skip: int = 0, limit: int = 50, db: AsyncSession = Depends(get_db)
-):
+async def get_pending_reports(skip: int = 0, limit: int = 50, db: AsyncSession = Depends(get_db)):
     """获取待审核举报（管理员）"""
     service = ComplianceService(db)
     reports = await service.get_pending_reports(skip, limit)
@@ -113,9 +107,7 @@ async def get_pending_reports(
     response_model=ReportResponse,
     dependencies=[Depends(require_admin)],
 )
-async def review_report(
-    report_id: int, review: ReportReview, db: AsyncSession = Depends(get_db)
-):
+async def review_report(report_id: int, review: ReportReview, db: AsyncSession = Depends(get_db)):
     """审核举报（管理员）"""
     service = ComplianceService(db)
     report = await service.review_report(report_id, review)
@@ -130,9 +122,7 @@ async def review_report(
     response_model=UserViolationResponse,
     dependencies=[Depends(require_admin)],
 )
-async def create_violation(
-    data: UserViolationCreate, db: AsyncSession = Depends(get_db)
-):
+async def create_violation(data: UserViolationCreate, db: AsyncSession = Depends(get_db)):
     """创建违规记录（管理员）"""
     service = ComplianceService(db)
     violation = await service.create_violation(data)
@@ -167,9 +157,7 @@ async def check_ban_status(user_id: int, db: AsyncSession = Depends(get_db)):
 
 # ============ 内容检查工具 ============
 @router.post("/check-content", response_model=ContentCheckResponse)
-async def check_content_api(
-    data: ContentCheckRequest, db: AsyncSession = Depends(get_db)
-):
+async def check_content_api(data: ContentCheckRequest, db: AsyncSession = Depends(get_db)):
     """检查内容是否包含违禁词（公开，用于前端实时检查）"""
     service = ComplianceService(db)
     result = await service.check_text_content(data.text)

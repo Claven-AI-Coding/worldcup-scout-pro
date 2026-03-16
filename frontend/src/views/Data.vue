@@ -67,7 +67,7 @@ onMounted(() => {
           type="text"
           placeholder="搜索球队..."
           class="w-full px-4 py-2 bg-gray-50 rounded-lg text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-        />
+        >
       </div>
 
       <div class="px-4 py-4">
@@ -77,21 +77,27 @@ onMounted(() => {
             class="flex-1 bg-white rounded-xl p-3 border border-gray-100 hover:shadow-md transition-shadow text-center"
             @click="goRankings"
           >
-            <div class="text-lg mb-1">🏆</div>
+            <div class="text-lg mb-1">
+              🏆
+            </div>
             <span class="text-xs text-gray-600">射手榜</span>
           </button>
           <button
             class="flex-1 bg-white rounded-xl p-3 border border-gray-100 hover:shadow-md transition-shadow text-center"
             @click="goRankings"
           >
-            <div class="text-lg mb-1">🎯</div>
+            <div class="text-lg mb-1">
+              🎯
+            </div>
             <span class="text-xs text-gray-600">助攻榜</span>
           </button>
           <button
             class="flex-1 bg-white rounded-xl p-3 border border-gray-100 hover:shadow-md transition-shadow text-center"
             @click="filterMode = filterMode === 'group' ? 'confederation' : 'group'"
           >
-            <div class="text-lg mb-1">🌍</div>
+            <div class="text-lg mb-1">
+              🌍
+            </div>
             <span class="text-xs text-gray-600">{{ filterMode === 'group' ? '按大洲' : '按小组' }}</span>
           </button>
         </div>
@@ -103,33 +109,50 @@ onMounted(() => {
               class="flex-shrink-0 px-3 py-1 text-xs rounded-full transition-colors"
               :class="activeGroup === '' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-500'"
               @click="activeGroup = ''"
-            >全部</button>
+            >
+              全部
+            </button>
             <button
-              v-for="g in groups" :key="g"
+              v-for="g in groups"
+              :key="g"
               class="flex-shrink-0 px-3 py-1 text-xs rounded-full transition-colors"
               :class="activeGroup === g ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-500'"
               @click="activeGroup = g"
-            >{{ g }}组</button>
+            >
+              {{ g }}组
+            </button>
           </template>
           <template v-else>
             <button
               class="flex-shrink-0 px-3 py-1 text-xs rounded-full transition-colors"
               :class="activeConfederation === '' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-500'"
               @click="activeConfederation = ''"
-            >全部</button>
+            >
+              全部
+            </button>
             <button
-              v-for="c in confederations" :key="c.value"
+              v-for="c in confederations"
+              :key="c.value"
               class="flex-shrink-0 px-3 py-1 text-xs rounded-full transition-colors"
               :class="activeConfederation === c.value ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-500'"
               @click="activeConfederation = c.value"
-            >{{ c.label }}</button>
+            >
+              {{ c.label }}
+            </button>
           </template>
         </div>
 
         <!-- 球队列表 -->
-        <SkeletonLoader v-if="teamStore.loading" type="grid" :count="8" />
+        <SkeletonLoader
+          v-if="teamStore.loading"
+          type="grid"
+          :count="8"
+        />
 
-        <div v-else-if="filteredTeams.length > 0" class="grid grid-cols-2 gap-3">
+        <div
+          v-else-if="filteredTeams.length > 0"
+          class="grid grid-cols-2 gap-3"
+        >
           <div
             v-for="team in filteredTeams"
             :key="team.id"
@@ -141,17 +164,27 @@ onMounted(() => {
                 <span class="text-sm font-bold text-gray-500">{{ team.code }}</span>
               </div>
               <div class="min-w-0">
-                <p class="text-sm font-medium text-gray-800 truncate">{{ team.name }}</p>
-                <p class="text-xs text-gray-400">{{ team.group_name }}组 · {{ team.stats?.confederation || '' }}</p>
+                <p class="text-sm font-medium text-gray-800 truncate">
+                  {{ team.name }}
+                </p>
+                <p class="text-xs text-gray-400">
+                  {{ team.group_name }}组 · {{ team.stats?.confederation || '' }}
+                </p>
               </div>
             </div>
-            <div v-if="team.stats?.fifa_ranking" class="mt-2 text-xs text-gray-400">
+            <div
+              v-if="team.stats?.fifa_ranking"
+              class="mt-2 text-xs text-gray-400"
+            >
               FIFA 排名：#{{ team.stats.fifa_ranking }}
             </div>
           </div>
         </div>
 
-        <EmptyState v-else message="未找到球队" />
+        <EmptyState
+          v-else
+          message="未找到球队"
+        />
       </div>
     </div>
   </div>

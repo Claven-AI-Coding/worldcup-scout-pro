@@ -2,7 +2,6 @@
 
 import pytest
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy import JSON, event
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.database import Base, get_db
@@ -10,15 +9,8 @@ from app.main import app
 from app.models import (
     BannedWord,
     Match,
-    MatchEvent,
-    Player,
-    PointRecord,
-    Post,
-    Report,
     Team,
     User,
-    UserTask,
-    Wallpaper,
 )
 from app.utils.auth import create_access_token, hash_password
 from app.utils.content_filter import reset_cache

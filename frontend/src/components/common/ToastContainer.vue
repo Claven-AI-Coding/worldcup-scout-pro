@@ -35,8 +35,18 @@ const typeIcons: Record<string, string> = {
           class="pointer-events-auto max-w-sm w-full rounded-lg shadow-lg px-4 py-3 flex items-center gap-3"
           :class="typeClasses[toast.type]"
         >
-          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" :d="typeIcons[toast.type]" />
+          <svg
+            class="w-5 h-5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              :d="typeIcons[toast.type]"
+            />
           </svg>
           <span class="text-sm font-medium">{{ toast.message }}</span>
         </div>

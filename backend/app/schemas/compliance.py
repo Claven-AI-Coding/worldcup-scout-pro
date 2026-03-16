@@ -49,9 +49,7 @@ class ReportResponse(BaseModel):
 
 class ReportReview(BaseModel):
     status: str = Field(..., pattern="^(reviewed|dismissed)$")
-    action: str | None = Field(
-        None, pattern="^(none|delete_content|warn_user|ban_user)$"
-    )
+    action: str | None = Field(None, pattern="^(none|delete_content|warn_user|ban_user)$")
     ban_days: int | None = Field(None, ge=1, le=365)
     notes: str | None = Field(None, max_length=500)
 
@@ -59,14 +57,10 @@ class ReportReview(BaseModel):
 # ============ 用户违规 ============
 class UserViolationCreate(BaseModel):
     user_id: int
-    violation_type: str = Field(
-        ..., pattern="^(spam|profanity|harassment|illegal)$"
-    )
+    violation_type: str = Field(..., pattern="^(spam|profanity|harassment|illegal)$")
     severity: str = Field("warning", pattern="^(warning|serious|severe)$")
     content: str | None = None
-    action_taken: str | None = Field(
-        None, pattern="^(warned|temp_ban|permanent_ban)$"
-    )
+    action_taken: str | None = Field(None, pattern="^(warned|temp_ban|permanent_ban)$")
     ban_days: int | None = Field(None, ge=1, le=365)
     notes: str | None = None
 

@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.models import User
-from app.schemas.task import SignInResponse, TaskListResponse, TaskResponse
+from app.schemas.task import TaskListResponse, TaskResponse
 from app.services.task_service import complete_task, get_or_create_daily_tasks, sign_in
 from app.utils.auth import get_current_user
 

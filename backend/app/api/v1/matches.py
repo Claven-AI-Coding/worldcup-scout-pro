@@ -7,7 +7,6 @@ from sqlalchemy.orm import selectinload
 
 from app.database import get_db
 from app.models import Match, MatchEvent, Reminder, Team, User
-from app.services.ai_analysis import generate_match_prediction
 from app.schemas.match import (
     MatchEventResponse,
     MatchListResponse,
@@ -15,6 +14,7 @@ from app.schemas.match import (
     ReminderCreate,
     ReminderResponse,
 )
+from app.services.ai_analysis import generate_match_prediction
 from app.utils.auth import get_current_user
 
 router = APIRouter()
@@ -22,11 +22,16 @@ router = APIRouter()
 
 @router.get("/", response_model=MatchListResponse)
 async def list_matches(
-    stage: str | None = Query(None, description="Filter by stage: group, round_32, round_16, quarter, semi, third_place, final"),
+    stage: str | None = Query(
+        None,
+        description="Filter by stage: group, round_32, round_16, quarter, semi, third_place, final",
+    ),
     group: str | None = Query(None, description="Filter by group (A-L)"),
     team_id: int | None = Query(None, description="Filter by team ID"),
     date_filter: date | None = Query(None, alias="date", description="Filter by date (YYYY-MM-DD)"),
-    match_status: str | None = Query(None, alias="status", description="Filter by status: upcoming, live, finished"),
+    match_status: str | None = Query(
+        None, alias="status", description="Filter by status: upcoming, live, finished"
+    ),
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
@@ -47,9 +52,7 @@ async def list_matches(
     if group:
         stmt = stmt.where(Match.group_name == group.upper())
     if team_id:
-        stmt = stmt.where(
-            (Match.home_team_id == team_id) | (Match.away_team_id == team_id)
-        )
+        stmt = stmt.where((Match.home_team_id == team_id) | (Match.away_team_id == team_id))
     if date_filter:
         stmt = stmt.where(func.date(Match.start_time) == date_filter)
     if match_status:
@@ -213,17 +216,15 @@ async def get_match_events(match_id: int, db: AsyncSession = Depends(get_db)):
             detail="比赛不存在",
         )
 
-    stmt = (
-        select(MatchEvent)
-        .where(MatchEvent.match_id == match_id)
-        .order_by(MatchEvent.minute)
-    )
+    stmt = select(MatchEvent).where(MatchEvent.match_id == match_id).order_by(MatchEvent.minute)
     result = await db.execute(stmt)
     events = result.scalars().all()
     return events
 
 
-@router.post("/{match_id}/remind", response_model=ReminderResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/{match_id}/remind", response_model=ReminderResponse, status_code=status.HTTP_201_CREATED
+)
 async def set_reminder(
     match_id: int,
     payload: ReminderCreate,
@@ -308,11 +309,13 @@ async def subscribe_team_matches(
     new_count = 0
     for match in matches:
         if match.id not in existing_match_ids:
-            db.add(Reminder(
-                user_id=current_user.id,
-                match_id=match.id,
-                remind_before_minutes=remind_before_minutes,
-            ))
+            db.add(
+                Reminder(
+                    user_id=current_user.id,
+                    match_id=match.id,
+                    remind_before_minutes=remind_before_minutes,
+                )
+            )
             new_count += 1
 
     await db.flush()
@@ -331,7 +334,6 @@ async def get_match_prediction(
     db: AsyncSession = Depends(get_db),
 ):
     """获取比赛 AI 赛果预测（胜率 + 比分区间）"""
-    from fastapi import Request
 
     stmt = (
         select(Match)

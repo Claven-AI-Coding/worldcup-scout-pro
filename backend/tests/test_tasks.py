@@ -4,13 +4,12 @@ from datetime import date, timedelta
 
 import pytest
 
-from app.models.user import User
 from app.services.task_service import (
+    DAILY_TASKS,
     complete_task,
     get_or_create_daily_tasks,
     grant_points,
     sign_in,
-    DAILY_TASKS,
 )
 
 
@@ -125,6 +124,7 @@ async def test_grant_points(db_session, test_user):
 
 
 # ---- API 测试 ----
+
 
 @pytest.mark.asyncio
 async def test_daily_tasks_api(client, auth_headers):

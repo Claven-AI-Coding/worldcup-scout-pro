@@ -6,9 +6,9 @@ Create Date: 2026-03-13 12:30:00
 
 """
 
-from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "003"
@@ -19,7 +19,9 @@ depends_on = None
 
 def upgrade() -> None:
     # 添加用户封禁字段
-    op.add_column("users", sa.Column("is_banned", sa.Boolean(), server_default="false", nullable=False))
+    op.add_column(
+        "users", sa.Column("is_banned", sa.Boolean(), server_default="false", nullable=False)
+    )
     op.add_column("users", sa.Column("ban_until", sa.DateTime(timezone=True), nullable=True))
 
     # 创建用户违规记录表
@@ -33,11 +35,18 @@ def upgrade() -> None:
         sa.Column("action_taken", sa.String(length=50), nullable=True),
         sa.Column("ban_until", sa.DateTime(timezone=True), nullable=True),
         sa.Column("notes", sa.Text(), nullable=True),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column(
+            "created_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
         sa.ForeignKeyConstraint(["user_id"], ["users.id"]),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index(op.f("ix_user_violations_user_id"), "user_violations", ["user_id"], unique=False)
+    op.create_index(
+        op.f("ix_user_violations_user_id"), "user_violations", ["user_id"], unique=False
+    )
 
 
 def downgrade() -> None:

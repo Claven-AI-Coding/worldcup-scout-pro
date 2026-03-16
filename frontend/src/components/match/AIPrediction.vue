@@ -50,9 +50,15 @@ onMounted(loadPrediction)
       <span>🤖</span> AI 赛果预测
     </h3>
 
-    <LoadingSpinner v-if="loading" text="AI 分析中..." />
+    <LoadingSpinner
+      v-if="loading"
+      text="AI 分析中..."
+    />
 
-    <div v-else-if="error" class="text-center py-4 text-sm text-gray-400">
+    <div
+      v-else-if="error"
+      class="text-center py-4 text-sm text-gray-400"
+    >
       {{ error }}
     </div>
 
@@ -95,8 +101,13 @@ onMounted(loadPrediction)
       </div>
 
       <!-- 比分预测 -->
-      <div v-if="prediction.predicted_scores.length > 0" class="mb-4">
-        <p class="text-xs text-gray-400 mb-2">预测比分</p>
+      <div
+        v-if="prediction.predicted_scores.length > 0"
+        class="mb-4"
+      >
+        <p class="text-xs text-gray-400 mb-2">
+          预测比分
+        </p>
         <div class="flex flex-wrap gap-2">
           <span
             v-for="(s, idx) in prediction.predicted_scores"
@@ -110,7 +121,10 @@ onMounted(loadPrediction)
       </div>
 
       <!-- 分析摘要 -->
-      <p v-if="prediction.analysis" class="text-xs text-gray-500 mb-3">
+      <p
+        v-if="prediction.analysis"
+        class="text-xs text-gray-500 mb-3"
+      >
         {{ prediction.analysis }}
       </p>
 

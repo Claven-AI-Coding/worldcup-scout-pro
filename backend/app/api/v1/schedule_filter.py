@@ -5,7 +5,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.schemas.schedule_filter import (
-    MatchResponse,
     ScheduleFilterRequest,
     ScheduleStatsResponse,
 )
@@ -15,9 +14,7 @@ router = APIRouter(prefix="/schedule", tags=["schedule"])
 
 
 @router.post("/filter", response_model=dict)
-async def filter_matches(
-    request: ScheduleFilterRequest, db: AsyncSession = Depends(get_db)
-):
+async def filter_matches(request: ScheduleFilterRequest, db: AsyncSession = Depends(get_db)):
     """Filter matches with various criteria"""
     service = ScheduleFilterService(db)
     matches, total = await service.filter_matches(request)

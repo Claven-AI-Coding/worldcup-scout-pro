@@ -161,7 +161,10 @@ function toggleStandings() {
         </div>
 
         <!-- 小组赛时显示小组筛选 -->
-        <div v-if="activeStage === 'group'" class="flex overflow-x-auto px-4 pb-2 gap-1 scrollbar-hide">
+        <div
+          v-if="activeStage === 'group'"
+          class="flex overflow-x-auto px-4 pb-2 gap-1 scrollbar-hide"
+        >
           <button
             class="flex-shrink-0 px-3 py-1 text-xs font-medium rounded-full transition-colors"
             :class="activeGroup === '' ? 'bg-green-100 text-green-700' : 'text-gray-400 hover:bg-gray-50'"
@@ -209,16 +212,32 @@ function toggleStandings() {
             :class="showStandings ? 'bg-green-50 text-green-600' : 'text-gray-500 hover:bg-gray-100'"
             @click="toggleStandings"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" d="M3 10h18M3 14h18M3 18h18M3 6h18" />
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                d="M3 10h18M3 14h18M3 18h18M3 6h18"
+              />
             </svg>
             积分榜
           </button>
         </div>
 
         <!-- 积分榜展示（12 组 Tab 切换） -->
-        <div v-if="showStandings" class="mb-6">
-          <SkeletonLoader v-if="standingsLoading" type="list" :count="4" />
+        <div
+          v-if="showStandings"
+          class="mb-6"
+        >
+          <SkeletonLoader
+            v-if="standingsLoading"
+            type="list"
+            :count="4"
+          />
           <template v-else-if="Object.keys(standings).length > 0">
             <!-- 小组 Tab -->
             <div class="flex overflow-x-auto gap-1 mb-3 scrollbar-hide">
@@ -237,14 +256,24 @@ function toggleStandings() {
               :standings="standings[activeStandingsGroup]"
               :group-name="activeStandingsGroup"
             />
-            <EmptyState v-else message="该组暂无数据" />
+            <EmptyState
+              v-else
+              message="该组暂无数据"
+            />
           </template>
-          <EmptyState v-else message="暂无积分数据" />
+          <EmptyState
+            v-else
+            message="暂无积分数据"
+          />
         </div>
 
         <!-- 比赛列表 -->
         <div v-if="!showStandings">
-          <SkeletonLoader v-if="matchStore.loading" type="card" :count="3" />
+          <SkeletonLoader
+            v-if="matchStore.loading"
+            type="card"
+            :count="3"
+          />
 
           <template v-else-if="Object.keys(groupedMatches).length > 0">
             <div
@@ -252,7 +281,9 @@ function toggleStandings() {
               :key="dateKey"
               class="mb-6"
             >
-              <h3 class="text-xs text-gray-400 font-medium mb-2 uppercase">{{ dateKey }}</h3>
+              <h3 class="text-xs text-gray-400 font-medium mb-2 uppercase">
+                {{ dateKey }}
+              </h3>
               <div class="space-y-3">
                 <MatchCard
                   v-for="match in matches"
@@ -263,7 +294,10 @@ function toggleStandings() {
             </div>
           </template>
 
-          <EmptyState v-else message="暂无比赛" />
+          <EmptyState
+            v-else
+            message="暂无比赛"
+          />
         </div>
       </div>
     </div>

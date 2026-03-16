@@ -24,7 +24,9 @@ const frameClass = computed(() => {
 
 <template>
   <div class="bg-white rounded-xl p-4">
-    <h3 class="text-sm font-bold text-gray-700 mb-3">球队头像框</h3>
+    <h3 class="text-sm font-bold text-gray-700 mb-3">
+      球队头像框
+    </h3>
 
     <!-- 预览 -->
     <div class="flex justify-center mb-4">
@@ -36,13 +38,21 @@ const frameClass = computed(() => {
           v-if="avatarUrl"
           :src="avatarUrl"
           class="w-full h-full rounded-full object-cover"
-        />
-        <span v-else class="text-2xl font-bold text-gray-400">{{ teamCode || '?' }}</span>
+        >
+        <span
+          v-else
+          class="text-2xl font-bold text-gray-400"
+        >{{ teamCode || '?' }}</span>
       </div>
     </div>
 
     <!-- 球队名 -->
-    <p v-if="teamName" class="text-xs text-center text-gray-500 mb-3">{{ teamName }}</p>
+    <p
+      v-if="teamName"
+      class="text-xs text-center text-gray-500 mb-3"
+    >
+      {{ teamName }}
+    </p>
 
     <!-- 颜色选择 -->
     <div class="flex justify-center gap-3">

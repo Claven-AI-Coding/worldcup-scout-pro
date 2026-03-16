@@ -129,7 +129,10 @@ onMounted(loadData)
 <template>
   <div class="min-h-screen bg-gray-50">
     <div class="max-w-screen-lg mx-auto">
-      <LoadingSpinner v-if="loading" text="加载比赛详情..." />
+      <LoadingSpinner
+        v-if="loading"
+        text="加载比赛详情..."
+      />
 
       <template v-else-if="match">
         <!-- 顶部比赛信息 -->
@@ -140,7 +143,10 @@ onMounted(loadData)
 
           <!-- 双方球队和比分 -->
           <div class="flex items-center justify-between mt-4">
-            <div class="flex flex-col items-center flex-1 cursor-pointer" @click="goTeam(match.home_team.id)">
+            <div
+              class="flex flex-col items-center flex-1 cursor-pointer"
+              @click="goTeam(match.home_team.id)"
+            >
               <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mb-2">
                 <span class="text-2xl font-bold">{{ match.home_team.code }}</span>
               </div>
@@ -158,7 +164,10 @@ onMounted(loadData)
               </template>
             </div>
 
-            <div class="flex flex-col items-center flex-1 cursor-pointer" @click="goTeam(match.away_team.id)">
+            <div
+              class="flex flex-col items-center flex-1 cursor-pointer"
+              @click="goTeam(match.away_team.id)"
+            >
               <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mb-2">
                 <span class="text-2xl font-bold">{{ match.away_team.code }}</span>
               </div>
@@ -173,14 +182,21 @@ onMounted(loadData)
           </div>
 
           <div class="text-center mt-3">
-            <span class="inline-flex items-center text-xs px-3 py-1 rounded-full" :class="statusConfig.class">
+            <span
+              class="inline-flex items-center text-xs px-3 py-1 rounded-full"
+              :class="statusConfig.class"
+            >
               {{ statusConfig.label }}
             </span>
           </div>
         </div>
 
         <!-- 直播比分 -->
-        <LiveScore v-if="match.status === 'live'" :match="match" class="px-4 pt-4" />
+        <LiveScore
+          v-if="match.status === 'live'"
+          :match="match"
+          class="px-4 pt-4"
+        />
 
         <!-- 操作区域 -->
         <div class="px-4 py-4 space-y-4">
@@ -195,8 +211,13 @@ onMounted(loadData)
           <AIPrediction :match-id="match.id" />
 
           <!-- 比赛事件时间线 -->
-          <div v-if="allEvents.length > 0" class="bg-white rounded-xl p-4">
-            <h3 class="text-sm font-bold text-gray-700 mb-3">比赛事件</h3>
+          <div
+            v-if="allEvents.length > 0"
+            class="bg-white rounded-xl p-4"
+          >
+            <h3 class="text-sm font-bold text-gray-700 mb-3">
+              比赛事件
+            </h3>
             <div class="space-y-3">
               <div
                 v-for="event in allEvents"
@@ -211,7 +232,10 @@ onMounted(loadData)
           </div>
 
           <!-- 暂无事件 -->
-          <div v-else class="bg-white rounded-xl p-6 text-center text-gray-400 text-sm">
+          <div
+            v-else
+            class="bg-white rounded-xl p-6 text-center text-gray-400 text-sm"
+          >
             暂无比赛事件
           </div>
         </div>

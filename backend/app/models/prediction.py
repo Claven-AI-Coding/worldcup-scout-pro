@@ -18,9 +18,7 @@ class Prediction(Base):
     points_wagered: Mapped[int] = mapped_column(Integer, default=100)
     points_earned: Mapped[int | None] = mapped_column(Integer, nullable=True)
     settled: Mapped[bool] = mapped_column(default=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="predictions")
     match = relationship("Match", back_populates="predictions")

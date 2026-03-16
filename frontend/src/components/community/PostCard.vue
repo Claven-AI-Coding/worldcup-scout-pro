@@ -62,19 +62,30 @@ const imageGridClass = computed(() => {
           :src="props.post.author.avatar"
           :alt="props.post.author.nickname"
           class="w-full h-full object-cover"
-        />
-        <svg v-else class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+        >
+        <svg
+          v-else
+          class="w-5 h-5 text-gray-400"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
         </svg>
       </div>
       <div class="min-w-0 flex-1">
-        <p class="text-sm font-medium text-gray-800 truncate">{{ props.post.author.nickname }}</p>
-        <p class="text-xs text-gray-400">{{ timeAgo }}</p>
+        <p class="text-sm font-medium text-gray-800 truncate">
+          {{ props.post.author.nickname }}
+        </p>
+        <p class="text-xs text-gray-400">
+          {{ timeAgo }}
+        </p>
       </div>
     </div>
 
     <!-- Content -->
-    <p class="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap mb-3">{{ props.post.content }}</p>
+    <p class="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap mb-3">
+      {{ props.post.content }}
+    </p>
 
     <!-- Image grid -->
     <div
@@ -87,7 +98,11 @@ const imageGridClass = computed(() => {
         :key="index"
         class="aspect-square rounded-lg bg-gray-100 overflow-hidden"
       >
-        <img :src="image" alt="" class="w-full h-full object-cover" />
+        <img
+          :src="image"
+          alt=""
+          class="w-full h-full object-cover"
+        >
       </div>
     </div>
 
@@ -99,8 +114,18 @@ const imageGridClass = computed(() => {
         :class="props.post.liked ? 'text-red-500' : 'text-gray-400 hover:text-red-400'"
         @click="emit('like', props.post.id)"
       >
-        <svg class="w-5 h-5" :fill="props.post.liked ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+        <svg
+          class="w-5 h-5"
+          :fill="props.post.liked ? 'currentColor' : 'none'"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"
+          />
         </svg>
         <span>{{ props.post.like_count }}</span>
       </button>
@@ -110,8 +135,18 @@ const imageGridClass = computed(() => {
         class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-primary-500 transition-colors"
         @click="emit('comment', props.post.id)"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" />
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"
+          />
         </svg>
         <span>{{ props.post.comment_count }}</span>
       </button>

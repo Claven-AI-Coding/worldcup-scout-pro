@@ -6,11 +6,14 @@ import pytest
 @pytest.mark.asyncio
 async def test_register_success(client):
     """注册成功"""
-    resp = await client.post("/api/v1/auth/register", json={
-        "username": "newuser",
-        "password": "password123",
-        "agreed_terms": True,
-    })
+    resp = await client.post(
+        "/api/v1/auth/register",
+        json={
+            "username": "newuser",
+            "password": "password123",
+            "agreed_terms": True,
+        },
+    )
     assert resp.status_code == 201
     data = resp.json()
     assert data["username"] == "newuser"
@@ -20,11 +23,14 @@ async def test_register_success(client):
 @pytest.mark.asyncio
 async def test_register_without_agreeing_terms(client):
     """注册未同意协议应被拒绝"""
-    resp = await client.post("/api/v1/auth/register", json={
-        "username": "noterms",
-        "password": "password123",
-        "agreed_terms": False,
-    })
+    resp = await client.post(
+        "/api/v1/auth/register",
+        json={
+            "username": "noterms",
+            "password": "password123",
+            "agreed_terms": False,
+        },
+    )
     assert resp.status_code == 400
     assert "同意" in resp.json()["detail"]
 
@@ -47,21 +53,27 @@ async def test_register_duplicate_username(client):
 @pytest.mark.asyncio
 async def test_register_short_password(client):
     """密码过短应返回 422"""
-    resp = await client.post("/api/v1/auth/register", json={
-        "username": "shortpw",
-        "password": "123",
-        "agreed_terms": True,
-    })
+    resp = await client.post(
+        "/api/v1/auth/register",
+        json={
+            "username": "shortpw",
+            "password": "123",
+            "agreed_terms": True,
+        },
+    )
     assert resp.status_code == 422
 
 
 @pytest.mark.asyncio
 async def test_login_success(client, test_user):
     """登录成功返回 token"""
-    resp = await client.post("/api/v1/auth/login", json={
-        "username": "testuser",
-        "password": "test123456",
-    })
+    resp = await client.post(
+        "/api/v1/auth/login",
+        json={
+            "username": "testuser",
+            "password": "test123456",
+        },
+    )
     assert resp.status_code == 200
     data = resp.json()
     assert "access_token" in data
@@ -71,20 +83,26 @@ async def test_login_success(client, test_user):
 @pytest.mark.asyncio
 async def test_login_wrong_password(client, test_user):
     """密码错误"""
-    resp = await client.post("/api/v1/auth/login", json={
-        "username": "testuser",
-        "password": "wrongpassword",
-    })
+    resp = await client.post(
+        "/api/v1/auth/login",
+        json={
+            "username": "testuser",
+            "password": "wrongpassword",
+        },
+    )
     assert resp.status_code == 401
 
 
 @pytest.mark.asyncio
 async def test_login_nonexistent_user(client):
     """不存在的用户"""
-    resp = await client.post("/api/v1/auth/login", json={
-        "username": "ghostuser",
-        "password": "password123",
-    })
+    resp = await client.post(
+        "/api/v1/auth/login",
+        json={
+            "username": "ghostuser",
+            "password": "password123",
+        },
+    )
     assert resp.status_code == 401
 
 

@@ -96,7 +96,7 @@ function goToDetail() {
         <span
           v-if="statusConfig.pulse"
           class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"
-        ></span>
+        />
         {{ statusConfig.label }}
       </span>
     </div>
@@ -111,8 +111,11 @@ function goToDetail() {
             :src="props.match.home_team.flag_url"
             :alt="props.match.home_team.name"
             class="w-full h-full object-cover"
-          />
-          <span v-else class="text-sm font-bold text-gray-400">{{ props.match.home_team.code }}</span>
+          >
+          <span
+            v-else
+            class="text-sm font-bold text-gray-400"
+          >{{ props.match.home_team.code }}</span>
         </div>
         <span class="text-xs text-gray-700 font-medium truncate w-full text-center">
           {{ props.match.home_team.name }}
@@ -125,11 +128,17 @@ function goToDetail() {
           <span class="text-lg font-bold text-gray-300">VS</span>
         </template>
         <template v-else>
-          <span class="text-2xl font-bold" :class="props.match.status === 'live' ? 'text-red-600' : 'text-gray-800'">
+          <span
+            class="text-2xl font-bold"
+            :class="props.match.status === 'live' ? 'text-red-600' : 'text-gray-800'"
+          >
             {{ props.match.home_score }}
           </span>
           <span class="text-lg text-gray-300">:</span>
-          <span class="text-2xl font-bold" :class="props.match.status === 'live' ? 'text-red-600' : 'text-gray-800'">
+          <span
+            class="text-2xl font-bold"
+            :class="props.match.status === 'live' ? 'text-red-600' : 'text-gray-800'"
+          >
             {{ props.match.away_score }}
           </span>
         </template>
@@ -143,8 +152,11 @@ function goToDetail() {
             :src="props.match.away_team.flag_url"
             :alt="props.match.away_team.name"
             class="w-full h-full object-cover"
-          />
-          <span v-else class="text-sm font-bold text-gray-400">{{ props.match.away_team.code }}</span>
+          >
+          <span
+            v-else
+            class="text-sm font-bold text-gray-400"
+          >{{ props.match.away_team.code }}</span>
         </div>
         <span class="text-xs text-gray-700 font-medium truncate w-full text-center">
           {{ props.match.away_team.name }}
@@ -153,7 +165,10 @@ function goToDetail() {
     </div>
 
     <!-- 场馆 -->
-    <div v-if="props.match.venue" class="mt-3 text-center">
+    <div
+      v-if="props.match.venue"
+      class="mt-3 text-center"
+    >
       <span class="text-xs text-gray-400">{{ props.match.venue }}</span>
     </div>
   </div>

@@ -36,22 +36,33 @@ function goToTeam() {
         :src="props.team.flag_url"
         :alt="props.team.name"
         class="w-full h-full object-cover"
-      />
-      <span v-else class="text-xl font-bold text-gray-300">{{ props.team.code }}</span>
+      >
+      <span
+        v-else
+        class="text-xl font-bold text-gray-300"
+      >{{ props.team.code }}</span>
     </div>
 
     <!-- Name -->
-    <h3 class="text-sm font-bold text-gray-800 text-center truncate">{{ props.team.name }}</h3>
+    <h3 class="text-sm font-bold text-gray-800 text-center truncate">
+      {{ props.team.name }}
+    </h3>
 
     <!-- Group badge -->
-    <div v-if="props.team.group_name" class="mt-2 flex justify-center">
+    <div
+      v-if="props.team.group_name"
+      class="mt-2 flex justify-center"
+    >
       <span class="text-xs px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full font-medium">
         {{ props.team.group_name }}
       </span>
     </div>
 
     <!-- Coach -->
-    <p v-if="props.team.coach" class="mt-2 text-xs text-gray-400 text-center truncate">
+    <p
+      v-if="props.team.coach"
+      class="mt-2 text-xs text-gray-400 text-center truncate"
+    >
       主教练: {{ props.team.coach }}
     </p>
   </div>

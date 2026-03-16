@@ -56,7 +56,7 @@ function handleDownload() {
         :src="props.wallpaper.image_url"
         :alt="displayName"
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-      />
+      >
 
       <!-- Style badge -->
       <span
@@ -72,8 +72,18 @@ function handleDownload() {
           class="flex items-center gap-1.5 px-4 py-2 bg-white/90 backdrop-blur-sm text-gray-800 text-sm font-medium rounded-full shadow-lg hover:bg-white transition-colors"
           @click.stop="handleDownload"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+            />
           </svg>
           下载
         </button>
@@ -82,7 +92,12 @@ function handleDownload() {
 
     <!-- Info -->
     <div class="p-3">
-      <p v-if="displayName" class="text-sm font-medium text-gray-700 truncate">{{ displayName }}</p>
+      <p
+        v-if="displayName"
+        class="text-sm font-medium text-gray-700 truncate"
+      >
+        {{ displayName }}
+      </p>
     </div>
   </div>
 </template>

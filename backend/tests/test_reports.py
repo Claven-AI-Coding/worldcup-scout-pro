@@ -19,11 +19,15 @@ async def test_post_for_report(db_session, test_user, test_teams):
 @pytest.mark.asyncio
 async def test_create_report(client, auth_headers, test_post_for_report):
     """举报帖子"""
-    resp = await client.post("/api/v1/reports/", headers=auth_headers, json={
-        "target_type": "post",
-        "target_id": test_post_for_report.id,
-        "reason": "包含不当内容",
-    })
+    resp = await client.post(
+        "/api/v1/reports/",
+        headers=auth_headers,
+        json={
+            "target_type": "post",
+            "target_id": test_post_for_report.id,
+            "reason": "包含不当内容",
+        },
+    )
     assert resp.status_code == 201
     data = resp.json()
     assert data["target_type"] == "post"
@@ -48,11 +52,15 @@ async def test_duplicate_report(client, auth_headers, test_post_for_report):
 @pytest.mark.asyncio
 async def test_list_my_reports(client, auth_headers, test_post_for_report):
     """我的举报记录"""
-    await client.post("/api/v1/reports/", headers=auth_headers, json={
-        "target_type": "post",
-        "target_id": test_post_for_report.id,
-        "reason": "测试",
-    })
+    await client.post(
+        "/api/v1/reports/",
+        headers=auth_headers,
+        json={
+            "target_type": "post",
+            "target_id": test_post_for_report.id,
+            "reason": "测试",
+        },
+    )
     resp = await client.get("/api/v1/reports/my", headers=auth_headers)
     assert resp.status_code == 200
     data = resp.json()

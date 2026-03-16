@@ -68,7 +68,9 @@ onMounted(loadTasks)
       <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-6 text-white mb-4">
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-lg font-bold">每日签到</h2>
+            <h2 class="text-lg font-bold">
+              每日签到
+            </h2>
             <p class="text-sm text-white/70 mt-1">
               {{ signedIn ? `已获得 ${signInPoints} 积分` : '签到领取积分奖励' }}
             </p>
@@ -89,11 +91,19 @@ onMounted(loadTasks)
 
       <!-- 每日任务列表 -->
       <div class="bg-white rounded-xl p-4">
-        <h3 class="text-sm font-bold text-gray-700 mb-3">每日任务</h3>
+        <h3 class="text-sm font-bold text-gray-700 mb-3">
+          每日任务
+        </h3>
 
-        <LoadingSpinner v-if="loading" text="加载任务..." />
+        <LoadingSpinner
+          v-if="loading"
+          text="加载任务..."
+        />
 
-        <div v-else class="space-y-3">
+        <div
+          v-else
+          class="space-y-3"
+        >
           <div
             v-for="task in tasks"
             :key="task.id"
@@ -102,8 +112,12 @@ onMounted(loadTasks)
             <div class="flex items-center gap-3">
               <span class="text-lg">{{ taskIcons[task.task_type] || '📋' }}</span>
               <div>
-                <p class="text-sm text-gray-700">{{ taskLabels[task.task_type] || task.task_type }}</p>
-                <p class="text-xs text-gray-400">+{{ task.points_reward }} 积分</p>
+                <p class="text-sm text-gray-700">
+                  {{ taskLabels[task.task_type] || task.task_type }}
+                </p>
+                <p class="text-xs text-gray-400">
+                  +{{ task.points_reward }} 积分
+                </p>
               </div>
             </div>
             <span

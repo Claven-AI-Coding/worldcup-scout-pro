@@ -141,8 +141,11 @@ async function handleSubmitPost(data: { content: string; images: string[] }) {
                 :src="team.flag_url"
                 :alt="team.name"
                 class="w-full h-full object-cover"
-              />
-              <span v-else class="text-xs font-bold text-gray-400 bg-gray-100 w-full h-full flex items-center justify-center">
+              >
+              <span
+                v-else
+                class="text-xs font-bold text-gray-400 bg-gray-100 w-full h-full flex items-center justify-center"
+              >
                 {{ team.code }}
               </span>
             </div>
@@ -158,14 +161,25 @@ async function handleSubmitPost(data: { content: string; images: string[] }) {
 
       <div class="px-4 py-4">
         <!-- Selected team header -->
-        <div v-if="selectedTeam" class="mb-4">
-          <h2 class="text-lg font-bold text-gray-800">{{ selectedTeam.name }} 球迷圈</h2>
+        <div
+          v-if="selectedTeam"
+          class="mb-4"
+        >
+          <h2 class="text-lg font-bold text-gray-800">
+            {{ selectedTeam.name }} 球迷圈
+          </h2>
         </div>
 
         <!-- Posts feed -->
-        <LoadingSpinner v-if="loading" text="加载中..." />
+        <LoadingSpinner
+          v-if="loading"
+          text="加载中..."
+        />
 
-        <div v-else-if="posts.length > 0" class="space-y-3">
+        <div
+          v-else-if="posts.length > 0"
+          class="space-y-3"
+        >
           <PostCard
             v-for="post in posts"
             :key="post.id"
@@ -182,7 +196,10 @@ async function handleSubmitPost(data: { content: string; images: string[] }) {
           @action="showPostForm = true"
         />
 
-        <EmptyState v-else message="请选择一支球队" />
+        <EmptyState
+          v-else
+          message="请选择一支球队"
+        />
       </div>
     </div>
 
@@ -192,8 +209,17 @@ async function handleSubmitPost(data: { content: string; images: string[] }) {
       class="fixed bottom-20 right-4 w-14 h-14 bg-primary-500 text-white rounded-full shadow-lg hover:bg-primary-600 active:scale-95 transition-all flex items-center justify-center z-40"
       @click="showPostForm = true"
     >
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" d="M12 5v14m-7-7h14" />
+      <svg
+        class="w-7 h-7"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          d="M12 5v14m-7-7h14"
+        />
       </svg>
     </button>
 
@@ -207,19 +233,30 @@ async function handleSubmitPost(data: { content: string; images: string[] }) {
         <div
           class="absolute inset-0 bg-black/40"
           @click="showPostForm = false"
-        ></div>
+        />
 
         <!-- Modal content -->
         <div class="relative w-full max-w-lg bg-white rounded-t-2xl sm:rounded-2xl mx-0 sm:mx-4 max-h-[80vh] overflow-y-auto">
           <!-- Modal header -->
           <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-            <h3 class="text-base font-bold text-gray-800">发布帖子</h3>
+            <h3 class="text-base font-bold text-gray-800">
+              发布帖子
+            </h3>
             <button
               class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
               @click="showPostForm = false"
             >
-              <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" d="M18 6L6 18M6 6l12 12" />
+              <svg
+                class="w-5 h-5 text-gray-500"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  d="M18 6L6 18M6 6l12 12"
+                />
               </svg>
             </button>
           </div>

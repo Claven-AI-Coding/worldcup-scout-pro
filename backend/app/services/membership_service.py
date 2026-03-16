@@ -85,9 +85,7 @@ class MembershipService:
         """Get all membership plans"""
         return list(MEMBERSHIP_PLANS.values())
 
-    async def subscribe(
-        self, user_id: int, request: SubscribeRequest
-    ) -> SubscribeResponse:
+    async def subscribe(self, user_id: int, request: SubscribeRequest) -> SubscribeResponse:
         """Create subscription order"""
         plan = MEMBERSHIP_PLANS.get(request.plan_id)
         if not plan:
@@ -119,9 +117,7 @@ class MembershipService:
             expires_at=datetime.now(timezone.utc) + timedelta(minutes=30),
         )
 
-    async def activate_membership(
-        self, user_id: int, plan_id: str
-    ) -> MembershipStatus:
+    async def activate_membership(self, user_id: int, plan_id: str) -> MembershipStatus:
         """Activate membership (called after payment success)"""
         plan = MEMBERSHIP_PLANS.get(plan_id)
         if not plan:
@@ -135,9 +131,7 @@ class MembershipService:
         # Update user membership
         user.is_member = True
         user.member_type = plan_id
-        user.member_expire_at = datetime.now(timezone.utc) + timedelta(
-            days=plan.duration_days
-        )
+        user.member_expire_at = datetime.now(timezone.utc) + timedelta(days=plan.duration_days)
 
         await self.db.commit()
         await self.db.refresh(user)
@@ -178,9 +172,7 @@ class MembershipService:
             features=features,
         )
 
-    async def check_feature(
-        self, user_id: int, feature_key: str
-    ) -> MembershipFeature:
+    async def check_feature(self, user_id: int, feature_key: str) -> MembershipFeature:
         """Check if user has access to a feature"""
         status = await self.get_status(user_id)
 
@@ -193,9 +185,7 @@ class MembershipService:
             else:
                 reason = f"Feature not included in {status.member_type} plan"
 
-        return MembershipFeature(
-            feature_key=feature_key, is_available=is_available, reason=reason
-        )
+        return MembershipFeature(feature_key=feature_key, is_available=is_available, reason=reason)
 
     async def cancel_membership(self, user_id: int) -> MembershipStatus:
         """Cancel membership (will expire at the end of current period)"""

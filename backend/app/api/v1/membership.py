@@ -53,9 +53,7 @@ async def activate_membership(
 
 
 @router.get("/status", response_model=MembershipStatus)
-async def get_status(
-    current_user=Depends(get_current_user), db: AsyncSession = Depends(get_db)
-):
+async def get_status(current_user=Depends(get_current_user), db: AsyncSession = Depends(get_db)):
     """Get current membership status"""
     service = MembershipService(db)
     try:

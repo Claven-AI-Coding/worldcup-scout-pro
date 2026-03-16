@@ -87,7 +87,11 @@ const option = computed(() => {
 
 <template>
   <div class="trend-chart-container">
-    <VChart :option="option" :style="{ height: props.height }" autoresize />
+    <VChart
+      :option="option"
+      :style="{ height: props.height }"
+      autoresize
+    />
   </div>
 </template>
 

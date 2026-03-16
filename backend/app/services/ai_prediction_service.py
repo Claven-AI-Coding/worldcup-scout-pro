@@ -23,22 +23,16 @@ class AIPredictionService:
     async def predict_match(self, match_id: int) -> MatchPredictionResponse:
         """预测比赛结果"""
         # 获取比赛信息
-        result = await self.db.execute(
-            select(Match).where(Match.id == match_id)
-        )
+        result = await self.db.execute(select(Match).where(Match.id == match_id))
         match = result.scalar_one_or_none()
         if not match:
             raise ValueError(f"Match {match_id} not found")
 
         # 获取球队信息
-        team1_result = await self.db.execute(
-            select(Team).where(Team.id == match.team1_id)
-        )
+        team1_result = await self.db.execute(select(Team).where(Team.id == match.team1_id))
         team1 = team1_result.scalar_one_or_none()
 
-        team2_result = await self.db.execute(
-            select(Team).where(Team.id == match.team2_id)
-        )
+        team2_result = await self.db.execute(select(Team).where(Team.id == match.team2_id))
         team2 = team2_result.scalar_one_or_none()
 
         if not team1 or not team2:
@@ -71,9 +65,7 @@ class AIPredictionService:
             analysis=prediction_data["analysis"],
         )
 
-    def _build_prediction_prompt(
-        self, match: Match, team1: Team, team2: Team
-    ) -> str:
+    def _build_prediction_prompt(self, match: Match, team1: Team, team2: Team) -> str:
         """构建预测提示词"""
         team1_stats = team1.stats or {}
         team2_stats = team2.stats or {}
@@ -84,20 +76,20 @@ class AIPredictionService:
 - 主队：{team1.name} ({team1.name_en})
 - 客队：{team2.name} ({team2.name_en})
 - 阶段：{match.stage}
-- 场地：{match.venue or '待定'}
+- 场地：{match.venue or "待定"}
 
 {team1.name} 数据：
-- FIFA 排名：{team1_stats.get('fifa_ranking', 'N/A')}
-- 所属联盟：{team1_stats.get('confederation', 'N/A')}
-- 世界杯参赛次数：{team1_stats.get('appearances', 'N/A')}
-- 最好成绩：{team1_stats.get('best_result', 'N/A')}
+- FIFA 排名：{team1_stats.get("fifa_ranking", "N/A")}
+- 所属联盟：{team1_stats.get("confederation", "N/A")}
+- 世界杯参赛次数：{team1_stats.get("appearances", "N/A")}
+- 最好成绩：{team1_stats.get("best_result", "N/A")}
 - 教练：{team1.coach}
 
 {team2.name} 数据：
-- FIFA 排名：{team2_stats.get('fifa_ranking', 'N/A')}
-- 所属联盟：{team2_stats.get('confederation', 'N/A')}
-- 世界杯参赛次数：{team2_stats.get('appearances', 'N/A')}
-- 最好成绩：{team2_stats.get('best_result', 'N/A')}
+- FIFA 排名：{team2_stats.get("fifa_ranking", "N/A")}
+- 所属联盟：{team2_stats.get("confederation", "N/A")}
+- 世界杯参赛次数：{team2_stats.get("appearances", "N/A")}
+- 最好成绩：{team2_stats.get("best_result", "N/A")}
 - 教练：{team2.coach}
 
 请以 JSON 格式返回预测结果：
@@ -133,11 +125,7 @@ class AIPredictionService:
                 data = json.loads(json_str)
 
                 # 验证概率和
-                total_prob = (
-                    data["team1_win_prob"]
-                    + data["draw_prob"]
-                    + data["team2_win_prob"]
-                )
+                total_prob = data["team1_win_prob"] + data["draw_prob"] + data["team2_win_prob"]
                 if abs(total_prob - 1.0) > 0.01:
                     # 归一化
                     data["team1_win_prob"] /= total_prob

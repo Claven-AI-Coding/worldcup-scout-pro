@@ -18,8 +18,6 @@ class PointRecord(Base):
         String(50), nullable=False
     )  # sign_in/prediction/task/exchange
     detail: Mapped[str | None] = mapped_column(String(200), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="point_records")

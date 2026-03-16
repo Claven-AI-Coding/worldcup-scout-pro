@@ -2,7 +2,7 @@
 
 import pytest
 
-from app.models import Post, Team
+from app.models import Post
 
 
 @pytest.fixture
@@ -53,10 +53,14 @@ async def test_hot_posts(client, test_post):
 async def test_create_post(client, auth_headers, test_teams):
     """发帖"""
     team_a, _ = test_teams
-    resp = await client.post("/api/v1/community/posts", headers=auth_headers, json={
-        "team_id": team_a.id,
-        "content": "这是一条新帖子",
-    })
+    resp = await client.post(
+        "/api/v1/community/posts",
+        headers=auth_headers,
+        json={
+            "team_id": team_a.id,
+            "content": "这是一条新帖子",
+        },
+    )
     assert resp.status_code == 201
     data = resp.json()
     assert data["content"] == "这是一条新帖子"
@@ -66,10 +70,14 @@ async def test_create_post(client, auth_headers, test_teams):
 async def test_create_post_with_banned_words(client, auth_headers, test_teams, banned_words):
     """发帖包含违禁词被拦截"""
     team_a, _ = test_teams
-    resp = await client.post("/api/v1/community/posts", headers=auth_headers, json={
-        "team_id": team_a.id,
-        "content": "这里有脏话测试内容",
-    })
+    resp = await client.post(
+        "/api/v1/community/posts",
+        headers=auth_headers,
+        json={
+            "team_id": team_a.id,
+            "content": "这里有脏话测试内容",
+        },
+    )
     assert resp.status_code == 400
     assert "违规" in resp.json()["detail"]
 

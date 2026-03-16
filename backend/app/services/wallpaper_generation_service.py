@@ -1,9 +1,5 @@
 """Wallpaper Generation Service"""
 
-import base64
-import io
-from typing import Any
-
 import httpx
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -29,9 +25,7 @@ class WallpaperGenerationService:
     ) -> WallpaperResponse:
         """Generate wallpaper using AI"""
         # Get team info
-        team_result = await self.db.execute(
-            select(Team).where(Team.id == request.team_id)
-        )
+        team_result = await self.db.execute(select(Team).where(Team.id == request.team_id))
         team = team_result.scalar_one_or_none()
         if not team:
             raise ValueError(f"Team {request.team_id} not found")
@@ -64,9 +58,7 @@ class WallpaperGenerationService:
             created_at=wallpaper.created_at.isoformat(),
         )
 
-    def _build_prompt(
-        self, team: Team, style: WallpaperStyle, custom_text: str | None
-    ) -> str:
+    def _build_prompt(self, team: Team, style: WallpaperStyle, custom_text: str | None) -> str:
         """Build image generation prompt"""
         team_name = team.name
         team_colors = self._get_team_colors(team.name_en)
@@ -131,7 +123,7 @@ Quality: 4K, professional, vibrant
             pass
 
         # Fallback: return placeholder
-        return f"https://via.placeholder.com/1080x1920?text=Wallpaper"
+        return "https://via.placeholder.com/1080x1920?text=Wallpaper"
 
     def _get_team_colors(self, team_code: str) -> str:
         """Get team colors"""
@@ -147,7 +139,6 @@ Quality: 4K, professional, vibrant
             "POR": "red and green",
             "USA": "blue, white and red",
             "MEX": "green, white and red",
-            "ARG": "light blue and white",
         }
         return team_colors.get(team_code, "team colors")
 
@@ -166,9 +157,7 @@ Quality: 4K, professional, vibrant
 
         responses = []
         for wp in wallpapers:
-            team_result = await self.db.execute(
-                select(Team).where(Team.id == wp.team_id)
-            )
+            team_result = await self.db.execute(select(Team).where(Team.id == wp.team_id))
             team = team_result.scalar_one_or_none()
 
             responses.append(
@@ -187,9 +176,7 @@ Quality: 4K, professional, vibrant
     async def toggle_favorite(self, user_id: int, wallpaper_id: int) -> bool:
         """Toggle wallpaper favorite status"""
         result = await self.db.execute(
-            select(Wallpaper).where(
-                Wallpaper.id == wallpaper_id, Wallpaper.user_id == user_id
-            )
+            select(Wallpaper).where(Wallpaper.id == wallpaper_id, Wallpaper.user_id == user_id)
         )
         wallpaper = result.scalar_one_or_none()
         if not wallpaper:

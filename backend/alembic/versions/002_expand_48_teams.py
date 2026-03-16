@@ -25,15 +25,11 @@ def upgrade() -> None:
         "users",
         sa.Column("is_member", sa.Boolean(), nullable=False, server_default="false"),
     )
-    op.add_column(
-        "users", sa.Column("member_expire_at", sa.DateTime(timezone=True), nullable=True)
-    )
+    op.add_column("users", sa.Column("member_expire_at", sa.DateTime(timezone=True), nullable=True))
     op.add_column(
         "users", sa.Column("member_type", sa.String(20), nullable=True)
     )  # monthly/quarterly/yearly
-    op.add_column(
-        "users", sa.Column("daily_sign_in", sa.Date(), nullable=True)
-    )  # 最后签到日期
+    op.add_column("users", sa.Column("daily_sign_in", sa.Date(), nullable=True))  # 最后签到日期
     op.add_column(
         "users",
         sa.Column("sign_in_streak", sa.Integer(), nullable=False, server_default="0"),
@@ -44,9 +40,7 @@ def upgrade() -> None:
     )
     op.add_column(
         "users",
-        sa.Column(
-            "agreed_terms", sa.Boolean(), nullable=False, server_default="false"
-        ),
+        sa.Column("agreed_terms", sa.Boolean(), nullable=False, server_default="false"),
     )
 
     # ---- 积分流水记录 ----
@@ -57,9 +51,7 @@ def upgrade() -> None:
         sa.Column("amount", sa.Integer(), nullable=False),
         sa.Column("reason", sa.String(50), nullable=False),
         sa.Column("detail", sa.String(200), nullable=True),
-        sa.Column(
-            "created_at", sa.DateTime(timezone=True), server_default=sa.func.now()
-        ),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
     )
     op.create_index("ix_point_records_id", "point_records", ["id"])
     op.create_index("ix_point_records_user_id", "point_records", ["user_id"])
@@ -74,9 +66,7 @@ def upgrade() -> None:
         sa.Column("points_reward", sa.Integer(), nullable=False),
         sa.Column("completed_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("date", sa.Date(), nullable=False),
-        sa.Column(
-            "created_at", sa.DateTime(timezone=True), server_default=sa.func.now()
-        ),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
     )
     op.create_index("ix_user_tasks_id", "user_tasks", ["id"])
     op.create_index("ix_user_tasks_user_id", "user_tasks", ["user_id"])
@@ -85,17 +75,13 @@ def upgrade() -> None:
     op.create_table(
         "reports",
         sa.Column("id", sa.Integer(), primary_key=True, autoincrement=True),
-        sa.Column(
-            "reporter_id", sa.Integer(), sa.ForeignKey("users.id"), nullable=False
-        ),
+        sa.Column("reporter_id", sa.Integer(), sa.ForeignKey("users.id"), nullable=False),
         sa.Column("target_type", sa.String(20), nullable=False),
         sa.Column("target_id", sa.Integer(), nullable=False),
         sa.Column("reason", sa.String(200), nullable=True),
         sa.Column("status", sa.String(20), nullable=False, server_default="pending"),
         sa.Column("reviewed_at", sa.DateTime(timezone=True), nullable=True),
-        sa.Column(
-            "created_at", sa.DateTime(timezone=True), server_default=sa.func.now()
-        ),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
     )
     op.create_index("ix_reports_id", "reports", ["id"])
     op.create_index("ix_reports_reporter_id", "reports", ["reporter_id"])
@@ -106,9 +92,7 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), primary_key=True, autoincrement=True),
         sa.Column("word", sa.String(100), unique=True, nullable=False),
         sa.Column("category", sa.String(50), nullable=True),
-        sa.Column(
-            "created_at", sa.DateTime(timezone=True), server_default=sa.func.now()
-        ),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
     )
     op.create_index("ix_banned_words_id", "banned_words", ["id"])
 

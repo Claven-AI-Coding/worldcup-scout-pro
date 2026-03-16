@@ -79,17 +79,40 @@ onMounted(fetchPointRecords)
       <div class="max-w-screen-lg mx-auto">
         <div class="flex items-center gap-4">
           <div class="w-[72px] h-[72px] rounded-full bg-white/20 flex items-center justify-center overflow-hidden flex-shrink-0 ring-2 ring-white/30">
-            <img v-if="user?.avatar" :src="user.avatar" alt="avatar" class="w-full h-full object-cover" />
-            <svg v-else class="w-9 h-9 text-white/60" fill="currentColor" viewBox="0 0 24 24">
+            <img
+              v-if="user?.avatar"
+              :src="user.avatar"
+              alt="avatar"
+              class="w-full h-full object-cover"
+            >
+            <svg
+              v-else
+              class="w-9 h-9 text-white/60"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
             </svg>
           </div>
           <div class="flex-1 min-w-0">
-            <h1 class="text-xl font-bold truncate">{{ user?.nickname || '未登录' }}</h1>
-            <div v-if="user?.title" class="mt-1">
-              <span class="text-xs px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full font-medium" :class="titleColor(user.title)">{{ user.title }}</span>
+            <h1 class="text-xl font-bold truncate">
+              {{ user?.nickname || '未登录' }}
+            </h1>
+            <div
+              v-if="user?.title"
+              class="mt-1"
+            >
+              <span
+                class="text-xs px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full font-medium"
+                :class="titleColor(user.title)"
+              >{{ user.title }}</span>
             </div>
-            <p v-if="user?.is_member" class="text-xs text-primary-200 mt-1">VIP 会员</p>
+            <p
+              v-if="user?.is_member"
+              class="text-xs text-primary-200 mt-1"
+            >
+              VIP 会员
+            </p>
           </div>
         </div>
       </div>
@@ -100,21 +123,38 @@ onMounted(fetchPointRecords)
       <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4">
         <div class="grid grid-cols-3 divide-x divide-gray-100">
           <div class="text-center px-2">
-            <p class="text-2xl font-bold text-gray-800">{{ user?.points ?? 0 }}</p>
-            <p class="text-xs text-gray-400 mt-1">积分</p>
+            <p class="text-2xl font-bold text-gray-800">
+              {{ user?.points ?? 0 }}
+            </p>
+            <p class="text-xs text-gray-400 mt-1">
+              积分
+            </p>
           </div>
           <div class="text-center px-2">
             <div class="flex items-center justify-center gap-1">
-              <p class="text-2xl font-bold text-gray-800">{{ user?.win_streak ?? 0 }}</p>
-              <svg v-if="(user?.win_streak ?? 0) >= 3" class="w-5 h-5 text-orange-500" viewBox="0 0 24 24" fill="currentColor">
+              <p class="text-2xl font-bold text-gray-800">
+                {{ user?.win_streak ?? 0 }}
+              </p>
+              <svg
+                v-if="(user?.win_streak ?? 0) >= 3"
+                class="w-5 h-5 text-orange-500"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
                 <path d="M12 23c-4.97 0-9-3.58-9-8 0-3.07 2.13-5.64 3.5-7.13.39-.42 1.07-.17 1.1.4.12 2.14 1.23 3.8 2.4 4.46V12c0-4.56 3.93-8.86 5.47-10.37.38-.38 1.03-.14 1.08.39.33 3.7 2.88 6.78 3.95 8.48C21.67 12.4 21 14.81 21 15c0 4.42-4.03 8-9 8z" />
               </svg>
             </div>
-            <p class="text-xs text-gray-400 mt-1">连胜</p>
+            <p class="text-xs text-gray-400 mt-1">
+              连胜
+            </p>
           </div>
           <div class="text-center px-2">
-            <p class="text-2xl font-bold text-gray-800">{{ user?.fav_team_id ? '...' : '-' }}</p>
-            <p class="text-xs text-gray-400 mt-1">关注球队</p>
+            <p class="text-2xl font-bold text-gray-800">
+              {{ user?.fav_team_id ? '...' : '-' }}
+            </p>
+            <p class="text-xs text-gray-400 mt-1">
+              关注球队
+            </p>
           </div>
         </div>
       </section>
@@ -132,27 +172,45 @@ onMounted(fetchPointRecords)
             class="flex-1 py-3 text-xs font-medium transition-colors"
             :class="activeTab === tab.key ? 'text-primary-600 border-b-2 border-primary-500' : 'text-gray-400'"
             @click="activeTab = tab.key"
-          >{{ tab.label }}</button>
+          >
+            {{ tab.label }}
+          </button>
         </div>
 
         <div class="p-4 max-h-60 overflow-y-auto">
           <!-- 积分记录 -->
           <template v-if="activeTab === 'points'">
-            <div v-if="pointRecords.length > 0" class="space-y-2">
-              <div v-for="r in pointRecords" :key="r.id" class="flex items-center justify-between text-sm">
+            <div
+              v-if="pointRecords.length > 0"
+              class="space-y-2"
+            >
+              <div
+                v-for="r in pointRecords"
+                :key="r.id"
+                class="flex items-center justify-between text-sm"
+              >
                 <div>
                   <span class="text-gray-700">{{ reasonLabels[r.reason] || r.reason }}</span>
-                  <span v-if="r.detail" class="text-xs text-gray-400 ml-1">{{ r.detail }}</span>
+                  <span
+                    v-if="r.detail"
+                    class="text-xs text-gray-400 ml-1"
+                  >{{ r.detail }}</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <span :class="r.amount > 0 ? 'text-green-600' : 'text-red-500'" class="font-medium">
+                  <span
+                    :class="r.amount > 0 ? 'text-green-600' : 'text-red-500'"
+                    class="font-medium"
+                  >
                     {{ r.amount > 0 ? '+' : '' }}{{ r.amount }}
                   </span>
                   <span class="text-xs text-gray-300">{{ formatTime(r.created_at) }}</span>
                 </div>
               </div>
             </div>
-            <EmptyState v-else message="暂无积分记录" />
+            <EmptyState
+              v-else
+              message="暂无积分记录"
+            />
           </template>
 
           <!-- 竞猜/发布记录占位 -->
@@ -171,9 +229,21 @@ onMounted(fetchPointRecords)
           :class="index < menuItems.length - 1 ? 'border-b border-gray-50' : ''"
           @click="handleMenuClick(item)"
         >
-          <span class="text-sm font-medium" :class="item.action === 'logout' ? 'text-red-500' : 'text-gray-700'">{{ item.label }}</span>
-          <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" d="M9 5l7 7-7 7" />
+          <span
+            class="text-sm font-medium"
+            :class="item.action === 'logout' ? 'text-red-500' : 'text-gray-700'"
+          >{{ item.label }}</span>
+          <svg
+            class="w-4 h-4 text-gray-300"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              d="M9 5l7 7-7 7"
+            />
           </svg>
         </button>
       </section>

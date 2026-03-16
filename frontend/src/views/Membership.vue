@@ -56,7 +56,9 @@ const isMember = ref(userStore.user?.is_member || false)
     <div class="max-w-screen-lg mx-auto px-4 py-4">
       <!-- 会员状态 -->
       <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-xl p-6 text-white mb-6">
-        <h2 class="text-lg font-bold">球探 Pro 会员</h2>
+        <h2 class="text-lg font-bold">
+          球探 Pro 会员
+        </h2>
         <p class="text-sm text-white/80 mt-1">
           {{ isMember ? '您已是会员用户' : '开通会员享受专属权益' }}
         </p>
@@ -64,31 +66,57 @@ const isMember = ref(userStore.user?.is_member || false)
 
       <!-- 会员权益对比 -->
       <div class="bg-white rounded-xl p-4 mb-6">
-        <h3 class="text-sm font-bold text-gray-700 mb-3">会员权益</h3>
+        <h3 class="text-sm font-bold text-gray-700 mb-3">
+          会员权益
+        </h3>
         <div class="grid grid-cols-3 gap-4 text-center">
           <div>
-            <div class="text-2xl mb-1">🚫</div>
-            <p class="text-xs text-gray-600">去广告</p>
+            <div class="text-2xl mb-1">
+              🚫
+            </div>
+            <p class="text-xs text-gray-600">
+              去广告
+            </p>
           </div>
           <div>
-            <div class="text-2xl mb-1">🎨</div>
-            <p class="text-xs text-gray-600">无水印壁纸</p>
+            <div class="text-2xl mb-1">
+              🎨
+            </div>
+            <p class="text-xs text-gray-600">
+              无水印壁纸
+            </p>
           </div>
           <div>
-            <div class="text-2xl mb-1">🤖</div>
-            <p class="text-xs text-gray-600">AI 深度分析</p>
+            <div class="text-2xl mb-1">
+              🤖
+            </div>
+            <p class="text-xs text-gray-600">
+              AI 深度分析
+            </p>
           </div>
           <div>
-            <div class="text-2xl mb-1">🏅</div>
-            <p class="text-xs text-gray-600">专属勋章</p>
+            <div class="text-2xl mb-1">
+              🏅
+            </div>
+            <p class="text-xs text-gray-600">
+              专属勋章
+            </p>
           </div>
           <div>
-            <div class="text-2xl mb-1">💰</div>
-            <p class="text-xs text-gray-600">额外积分</p>
+            <div class="text-2xl mb-1">
+              💰
+            </div>
+            <p class="text-xs text-gray-600">
+              额外积分
+            </p>
           </div>
           <div>
-            <div class="text-2xl mb-1">👑</div>
-            <p class="text-xs text-gray-600">专属称号</p>
+            <div class="text-2xl mb-1">
+              👑
+            </div>
+            <p class="text-xs text-gray-600">
+              专属称号
+            </p>
           </div>
         </div>
       </div>
@@ -104,13 +132,20 @@ const isMember = ref(userStore.user?.is_member || false)
             : 'border-gray-100 hover:border-gray-200'"
           @click="selectPlan(plan.type)"
         >
-          <div v-if="plan.popular" class="absolute -top-2 right-4 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+          <div
+            v-if="plan.popular"
+            class="absolute -top-2 right-4 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full"
+          >
             推荐
           </div>
           <div class="flex items-center justify-between">
             <div>
-              <h4 class="text-sm font-bold text-gray-800">{{ plan.label }}</h4>
-              <p class="text-xs text-gray-400 mt-0.5">{{ plan.perMonth }}</p>
+              <h4 class="text-sm font-bold text-gray-800">
+                {{ plan.label }}
+              </h4>
+              <p class="text-xs text-gray-400 mt-0.5">
+                {{ plan.perMonth }}
+              </p>
             </div>
             <div class="text-right">
               <span class="text-xl font-bold text-green-600">{{ plan.price }}</span>
@@ -126,7 +161,9 @@ const isMember = ref(userStore.user?.is_member || false)
       >
         立即开通
       </button>
-      <p class="text-xs text-gray-400 text-center mt-2">支付功能将在 V1.1 版本上线</p>
+      <p class="text-xs text-gray-400 text-center mt-2">
+        支付功能将在 V1.1 版本上线
+      </p>
     </div>
   </div>
 </template>

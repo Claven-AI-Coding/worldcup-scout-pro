@@ -74,12 +74,18 @@ onMounted(loadData)
       </div>
 
       <div class="px-4 py-4">
-        <LoadingSpinner v-if="loading" text="加载排行榜..." />
+        <LoadingSpinner
+          v-if="loading"
+          text="加载排行榜..."
+        />
 
         <template v-else>
           <!-- 射手榜 -->
           <div v-if="activeTab === 'scorers'">
-            <div v-if="scorers.length > 0" class="bg-white rounded-xl overflow-hidden">
+            <div
+              v-if="scorers.length > 0"
+              class="bg-white rounded-xl overflow-hidden"
+            >
               <div class="grid grid-cols-12 px-4 py-2 bg-gray-50 text-xs text-gray-400 font-medium">
                 <span class="col-span-1">#</span>
                 <span class="col-span-5">球员</span>
@@ -93,7 +99,10 @@ onMounted(loadData)
                 class="grid grid-cols-12 px-4 py-3 border-t border-gray-50 items-center cursor-pointer hover:bg-gray-50"
                 @click="goPlayer(entry.player_id)"
               >
-                <span class="col-span-1 text-sm font-bold" :class="entry.rank <= 3 ? 'text-green-600' : 'text-gray-400'">
+                <span
+                  class="col-span-1 text-sm font-bold"
+                  :class="entry.rank <= 3 ? 'text-green-600' : 'text-gray-400'"
+                >
                   {{ entry.rank }}
                 </span>
                 <span class="col-span-5 text-sm text-gray-800 truncate">{{ entry.player_name }}</span>
@@ -102,12 +111,18 @@ onMounted(loadData)
                 <span class="col-span-2 text-sm font-bold text-green-600 text-center">{{ entry.goals }}</span>
               </div>
             </div>
-            <EmptyState v-else message="暂无射手数据" />
+            <EmptyState
+              v-else
+              message="暂无射手数据"
+            />
           </div>
 
           <!-- 助攻榜 -->
           <div v-if="activeTab === 'assists'">
-            <div v-if="assists.length > 0" class="bg-white rounded-xl overflow-hidden">
+            <div
+              v-if="assists.length > 0"
+              class="bg-white rounded-xl overflow-hidden"
+            >
               <div class="grid grid-cols-12 px-4 py-2 bg-gray-50 text-xs text-gray-400 font-medium">
                 <span class="col-span-1">#</span>
                 <span class="col-span-5">球员</span>
@@ -121,7 +136,10 @@ onMounted(loadData)
                 class="grid grid-cols-12 px-4 py-3 border-t border-gray-50 items-center cursor-pointer hover:bg-gray-50"
                 @click="goPlayer(entry.player_id)"
               >
-                <span class="col-span-1 text-sm font-bold" :class="entry.rank <= 3 ? 'text-green-600' : 'text-gray-400'">
+                <span
+                  class="col-span-1 text-sm font-bold"
+                  :class="entry.rank <= 3 ? 'text-green-600' : 'text-gray-400'"
+                >
                   {{ entry.rank }}
                 </span>
                 <span class="col-span-5 text-sm text-gray-800 truncate">{{ entry.player_name }}</span>
@@ -130,7 +148,10 @@ onMounted(loadData)
                 <span class="col-span-2 text-sm font-bold text-green-600 text-center">{{ entry.assists }}</span>
               </div>
             </div>
-            <EmptyState v-else message="暂无助攻数据" />
+            <EmptyState
+              v-else
+              message="暂无助攻数据"
+            />
           </div>
         </template>
       </div>

@@ -17,9 +17,7 @@ class Post(Base):
     images: Mapped[list | None] = mapped_column(JSONB, nullable=True)
     likes: Mapped[int] = mapped_column(Integer, default=0)
     comments_count: Mapped[int] = mapped_column(Integer, default=0)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     author = relationship("User", back_populates="posts")
     team = relationship("Team", back_populates="posts")
@@ -33,9 +31,7 @@ class Comment(Base):
     post_id: Mapped[int] = mapped_column(Integer, ForeignKey("posts.id"), index=True)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
     content: Mapped[str] = mapped_column(Text)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     post = relationship("Post", back_populates="comments")
     author = relationship("User")

@@ -35,19 +35,13 @@ class ComplianceService:
         reset_cache()  # 重置缓存
         return word
 
-    async def add_banned_words_batch(
-        self, words: list[str], category: str | None = None
-    ) -> int:
+    async def add_banned_words_batch(self, words: list[str], category: str | None = None) -> int:
         """批量添加违禁词"""
-        existing = await self.db.execute(
-            select(BannedWord.word).where(BannedWord.word.in_(words))
-        )
+        existing = await self.db.execute(select(BannedWord.word).where(BannedWord.word.in_(words)))
         existing_words = {w for (w,) in existing.all()}
 
         new_words = [
-            BannedWord(word=w, category=category)
-            for w in words
-            if w not in existing_words
+            BannedWord(word=w, category=category) for w in words if w not in existing_words
         ]
 
         if new_words:
@@ -71,9 +65,7 @@ class ComplianceService:
 
     async def delete_banned_word(self, word_id: int) -> bool:
         """删除违禁词"""
-        result = await self.db.execute(
-            delete(BannedWord).where(BannedWord.id == word_id)
-        )
+        result = await self.db.execute(delete(BannedWord).where(BannedWord.id == word_id))
         await self.db.commit()
         if result.rowcount > 0:
             reset_cache()
@@ -81,9 +73,7 @@ class ComplianceService:
         return False
 
     # ============ 举报管理 ============
-    async def create_report(
-        self, reporter_id: int, data: ReportCreate
-    ) -> Report:
+    async def create_report(self, reporter_id: int, data: ReportCreate) -> Report:
         """创建举报"""
         report = Report(
             reporter_id=reporter_id,
@@ -96,9 +86,7 @@ class ComplianceService:
         await self.db.refresh(report)
         return report
 
-    async def get_pending_reports(
-        self, skip: int = 0, limit: int = 50
-    ) -> list[Report]:
+    async def get_pending_reports(self, skip: int = 0, limit: int = 50) -> list[Report]:
         """获取待审核举报"""
         result = await self.db.execute(
             select(Report)
@@ -109,13 +97,9 @@ class ComplianceService:
         )
         return list(result.scalars().all())
 
-    async def review_report(
-        self, report_id: int, review: ReportReview
-    ) -> Report | None:
+    async def review_report(self, report_id: int, review: ReportReview) -> Report | None:
         """审核举报"""
-        result = await self.db.execute(
-            select(Report).where(Report.id == report_id)
-        )
+        result = await self.db.execute(select(Report).where(Report.id == report_id))
         report = result.scalar_one_or_none()
         if not report:
             return None
@@ -160,42 +144,30 @@ class ComplianceService:
                     violation_type="reported",
                     severity="serious" if action == "ban_user" else "warning",
                     action_taken="temp_ban" if ban_days else "warned",
-                    ban_until=(
-                        datetime.utcnow() + timedelta(days=ban_days)
-                        if ban_days
-                        else None
-                    ),
+                    ban_until=(datetime.utcnow() + timedelta(days=ban_days) if ban_days else None),
                     notes=notes,
                 )
                 self.db.add(violation)
 
                 # 如果是封禁，更新用户状态
                 if action == "ban_user" and ban_days:
-                    user_result = await self.db.execute(
-                        select(User).where(User.id == user_id)
-                    )
+                    user_result = await self.db.execute(select(User).where(User.id == user_id))
                     user = user_result.scalar_one_or_none()
                     if user:
                         user.is_banned = True
                         user.ban_until = datetime.utcnow() + timedelta(days=ban_days)
 
-    async def _get_user_id_from_target(
-        self, target_type: str, target_id: int
-    ) -> int | None:
+    async def _get_user_id_from_target(self, target_type: str, target_id: int) -> int | None:
         """从目标获取用户 ID"""
         if target_type == "user":
             return target_id
         elif target_type == "post":
-            result = await self.db.execute(
-                select(Post.author_id).where(Post.id == target_id)
-            )
+            result = await self.db.execute(select(Post.author_id).where(Post.id == target_id))
             return result.scalar_one_or_none()
         return None
 
     # ============ 用户违规管理 ============
-    async def create_violation(
-        self, data: UserViolationCreate
-    ) -> UserViolation:
+    async def create_violation(self, data: UserViolationCreate) -> UserViolation:
         """创建违规记录"""
         ban_until = None
         if data.ban_days:
@@ -214,9 +186,7 @@ class ComplianceService:
 
         # 如果是封禁，更新用户状态
         if data.action_taken in ("temp_ban", "permanent_ban"):
-            user_result = await self.db.execute(
-                select(User).where(User.id == data.user_id)
-            )
+            user_result = await self.db.execute(select(User).where(User.id == data.user_id))
             user = user_result.scalar_one_or_none()
             if user:
                 user.is_banned = True

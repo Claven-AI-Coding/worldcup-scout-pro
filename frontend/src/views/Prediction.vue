@@ -155,9 +155,15 @@ onMounted(() => {
       <div class="px-4 py-4">
         <!-- Upcoming matches for prediction -->
         <div v-if="activeTab === 'upcoming'">
-          <LoadingSpinner v-if="matchStore.loading" text="加载赛事..." />
+          <LoadingSpinner
+            v-if="matchStore.loading"
+            text="加载赛事..."
+          />
 
-          <div v-else-if="upcomingMatches.length > 0" class="space-y-4">
+          <div
+            v-else-if="upcomingMatches.length > 0"
+            class="space-y-4"
+          >
             <PredictionCard
               v-for="match in upcomingMatches"
               :key="match.id"
@@ -166,21 +172,33 @@ onMounted(() => {
             />
           </div>
 
-          <EmptyState v-else message="暂无可竞猜的比赛" />
+          <EmptyState
+            v-else
+            message="暂无可竞猜的比赛"
+          />
         </div>
 
         <!-- My predictions -->
         <div v-if="activeTab === 'my'">
-          <LoadingSpinner v-if="myPredictionsLoading" text="加载我的竞猜..." />
+          <LoadingSpinner
+            v-if="myPredictionsLoading"
+            text="加载我的竞猜..."
+          />
 
-          <div v-else-if="myPredictions.length > 0" class="space-y-3">
+          <div
+            v-else-if="myPredictions.length > 0"
+            class="space-y-3"
+          >
             <div
               v-for="pred in myPredictions"
               :key="pred.id"
               class="bg-white rounded-xl shadow-sm border border-gray-100 p-4"
             >
               <!-- Match info -->
-              <div v-if="pred.match" class="flex items-center justify-between mb-3">
+              <div
+                v-if="pred.match"
+                class="flex items-center justify-between mb-3"
+              >
                 <span class="text-sm font-medium text-gray-700">
                   {{ pred.match.home_team.name }} vs {{ pred.match.away_team.name }}
                 </span>
@@ -197,7 +215,10 @@ onMounted(() => {
                 <div class="flex items-center gap-3">
                   <span class="text-gray-500">预测:</span>
                   <span class="font-medium text-gray-700">{{ resultLabel(pred.predicted_result) }}</span>
-                  <span v-if="pred.predicted_home_score !== null" class="text-gray-400">
+                  <span
+                    v-if="pred.predicted_home_score !== null"
+                    class="text-gray-400"
+                  >
                     {{ pred.predicted_home_score }} : {{ pred.predicted_away_score }}
                   </span>
                 </div>
@@ -218,7 +239,12 @@ onMounted(() => {
             </div>
           </div>
 
-          <EmptyState v-else message="暂无竞猜记录" action-text="去竞猜" @action="activeTab = 'upcoming'" />
+          <EmptyState
+            v-else
+            message="暂无竞猜记录"
+            action-text="去竞猜"
+            @action="activeTab = 'upcoming'"
+          />
         </div>
 
         <!-- Leaderboard -->
@@ -245,7 +271,10 @@ onMounted(() => {
             </button>
           </div>
 
-          <LoadingSpinner v-if="leaderboardLoading" text="加载排行榜..." />
+          <LoadingSpinner
+            v-if="leaderboardLoading"
+            text="加载排行榜..."
+          />
 
           <div
             v-else-if="leaderboard.length > 0"
@@ -259,7 +288,10 @@ onMounted(() => {
             />
           </div>
 
-          <EmptyState v-else message="暂无排行数据" />
+          <EmptyState
+            v-else
+            message="暂无排行数据"
+          />
         </div>
       </div>
     </div>

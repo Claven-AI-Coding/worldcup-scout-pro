@@ -89,7 +89,10 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <LoadingSpinner v-if="loading" text="加载球员信息..." />
+    <LoadingSpinner
+      v-if="loading"
+      text="加载球员信息..."
+    />
 
     <template v-else-if="player">
       <!-- Player header -->
@@ -100,8 +103,17 @@ onMounted(async () => {
             class="mb-4 flex items-center gap-1 text-sm text-gray-400 hover:text-white transition-colors"
             @click="router.back()"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" d="M15 19l-7-7 7-7" />
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             返回
           </button>
@@ -110,7 +122,11 @@ onMounted(async () => {
             <!-- Photo placeholder -->
             <div class="relative w-24 h-24 flex-shrink-0">
               <div class="w-24 h-24 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center">
-                <svg class="w-12 h-12 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+                <svg
+                  class="w-12 h-12 text-gray-500"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
                 </svg>
               </div>
@@ -123,14 +139,27 @@ onMounted(async () => {
             </div>
 
             <div>
-              <h1 class="text-2xl font-bold">{{ player.name }}</h1>
+              <h1 class="text-2xl font-bold">
+                {{ player.name }}
+              </h1>
               <div class="flex items-center gap-3 mt-2 flex-wrap">
-                <span class="text-xs px-2.5 py-1 rounded-full font-medium" :class="positionClass">
+                <span
+                  class="text-xs px-2.5 py-1 rounded-full font-medium"
+                  :class="positionClass"
+                >
                   {{ positionLabel }}
                 </span>
-                <span v-if="player.age" class="text-sm text-gray-400">{{ player.age }} 岁</span>
+                <span
+                  v-if="player.age"
+                  class="text-sm text-gray-400"
+                >{{ player.age }} 岁</span>
               </div>
-              <p v-if="player.club" class="text-sm text-gray-400 mt-1">{{ player.club }}</p>
+              <p
+                v-if="player.club"
+                class="text-sm text-gray-400 mt-1"
+              >
+                {{ player.club }}
+              </p>
             </div>
           </div>
         </div>
@@ -147,21 +176,33 @@ onMounted(async () => {
               <span class="text-sm text-gray-500">姓名</span>
               <span class="text-sm font-medium text-gray-800">{{ player.name }}</span>
             </div>
-            <div v-if="player.number !== null" class="flex items-center justify-between px-4 py-3">
+            <div
+              v-if="player.number !== null"
+              class="flex items-center justify-between px-4 py-3"
+            >
               <span class="text-sm text-gray-500">球衣号码</span>
               <span class="text-sm font-medium text-gray-800">{{ player.number }}</span>
             </div>
             <div class="flex items-center justify-between px-4 py-3">
               <span class="text-sm text-gray-500">位置</span>
-              <span class="text-sm font-medium" :class="positionClass.replace('bg-', 'text-').split(' ')[1]">
+              <span
+                class="text-sm font-medium"
+                :class="positionClass.replace('bg-', 'text-').split(' ')[1]"
+              >
                 {{ positionLabel }}
               </span>
             </div>
-            <div v-if="player.age" class="flex items-center justify-between px-4 py-3">
+            <div
+              v-if="player.age"
+              class="flex items-center justify-between px-4 py-3"
+            >
               <span class="text-sm text-gray-500">年龄</span>
               <span class="text-sm font-medium text-gray-800">{{ player.age }}</span>
             </div>
-            <div v-if="player.club" class="flex items-center justify-between px-4 py-3">
+            <div
+              v-if="player.club"
+              class="flex items-center justify-between px-4 py-3"
+            >
               <span class="text-sm text-gray-500">所属俱乐部</span>
               <span class="text-sm font-medium text-gray-800">{{ player.club }}</span>
             </div>
@@ -177,9 +218,20 @@ onMounted(async () => {
 
             <!-- 核心数据卡片 -->
             <div class="grid grid-cols-3 gap-px bg-gray-100">
-              <div v-for="item in coreStats" :key="item.key" class="bg-white p-3 text-center">
-                <p class="text-xl font-bold" :class="item.color">{{ item.value }}</p>
-                <p class="text-xs text-gray-400 mt-1">{{ item.label }}</p>
+              <div
+                v-for="item in coreStats"
+                :key="item.key"
+                class="bg-white p-3 text-center"
+              >
+                <p
+                  class="text-xl font-bold"
+                  :class="item.color"
+                >
+                  {{ item.value }}
+                </p>
+                <p class="text-xs text-gray-400 mt-1">
+                  {{ item.label }}
+                </p>
               </div>
             </div>
 
@@ -209,6 +261,11 @@ onMounted(async () => {
       </div>
     </template>
 
-    <EmptyState v-else message="球员不存在" action-text="返回首页" @action="router.push('/')" />
+    <EmptyState
+      v-else
+      message="球员不存在"
+      action-text="返回首页"
+      @action="router.push('/')"
+    />
   </div>
 </template>

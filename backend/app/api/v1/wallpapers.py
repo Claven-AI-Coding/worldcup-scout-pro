@@ -13,10 +13,34 @@ DAILY_WALLPAPER_LIMIT = 5
 
 # 固定模板壁纸（无需 AI 生成）
 TEMPLATE_WALLPAPERS = [
-    {"id": "tpl_1", "name": "世界杯 2026 主视觉", "style": "official", "preview_url": "/static/templates/wc2026_main.jpg", "points_cost": 0},
-    {"id": "tpl_2", "name": "赛程日历壁纸", "style": "calendar", "preview_url": "/static/templates/wc2026_calendar.jpg", "points_cost": 0},
-    {"id": "tpl_3", "name": "球队配色壁纸", "style": "team_color", "preview_url": "/static/templates/wc2026_team_color.jpg", "points_cost": 50},
-    {"id": "tpl_4", "name": "复古风格海报", "style": "retro", "preview_url": "/static/templates/wc2026_retro.jpg", "points_cost": 50},
+    {
+        "id": "tpl_1",
+        "name": "世界杯 2026 主视觉",
+        "style": "official",
+        "preview_url": "/static/templates/wc2026_main.jpg",
+        "points_cost": 0,
+    },
+    {
+        "id": "tpl_2",
+        "name": "赛程日历壁纸",
+        "style": "calendar",
+        "preview_url": "/static/templates/wc2026_calendar.jpg",
+        "points_cost": 0,
+    },
+    {
+        "id": "tpl_3",
+        "name": "球队配色壁纸",
+        "style": "team_color",
+        "preview_url": "/static/templates/wc2026_team_color.jpg",
+        "points_cost": 50,
+    },
+    {
+        "id": "tpl_4",
+        "name": "复古风格海报",
+        "style": "retro",
+        "preview_url": "/static/templates/wc2026_retro.jpg",
+        "points_cost": 50,
+    },
 ]
 
 # 积分消耗：普通 50 分，高清 100 分，会员免费
@@ -189,11 +213,7 @@ async def get_wallpaper_gallery(
     db: AsyncSession = Depends(get_db),
 ):
     """Public wallpaper gallery showing completed wallpapers, paginated."""
-    stmt = (
-        select(Wallpaper)
-        .where(Wallpaper.status == "done")
-        .order_by(Wallpaper.created_at.desc())
-    )
+    stmt = select(Wallpaper).where(Wallpaper.status == "done").order_by(Wallpaper.created_at.desc())
 
     if style:
         stmt = stmt.where(Wallpaper.style == style)

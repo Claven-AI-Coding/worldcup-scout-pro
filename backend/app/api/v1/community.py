@@ -25,15 +25,17 @@ async def list_hot_posts(
     db: AsyncSession = Depends(get_db),
 ):
     """全站热门帖子，按热度算法排序（点赞*3 + 评论*5 + 时间衰减）"""
-    from sqlalchemy import case, cast, Float
     from datetime import datetime, timedelta
+
+    from sqlalchemy import case
 
     # 热度 = likes*3 + comments_count*5，24小时内发布的帖子额外加权
     now = datetime.utcnow()
     recent_cutoff = now - timedelta(hours=24)
 
     hot_score = (
-        Post.likes * 3 + Post.comments_count * 5
+        Post.likes * 3
+        + Post.comments_count * 5
         + case((Post.created_at > recent_cutoff, 10), else_=0)
     )
 
@@ -71,13 +73,11 @@ async def list_team_posts(
             detail="球队不存在",
         )
 
-    stmt = (
-        select(Post)
-        .options(selectinload(Post.author))
-        .where(Post.team_id == team_id)
-    )
+    stmt = select(Post).options(selectinload(Post.author)).where(Post.team_id == team_id)
     if sort == "hot":
-        stmt = stmt.order_by((Post.likes * 3 + Post.comments_count * 5).desc(), Post.created_at.desc())
+        stmt = stmt.order_by(
+            (Post.likes * 3 + Post.comments_count * 5).desc(), Post.created_at.desc()
+        )
     else:
         stmt = stmt.order_by(Post.created_at.desc())
 
@@ -104,7 +104,7 @@ async def create_post(
     if not content_check["is_clean"]:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"内容包含违规词汇，请修改后重试",
+            detail="内容包含违规词汇，请修改后重试",
         )
 
     # Verify team exists
@@ -157,7 +157,9 @@ async def like_post(
     return post
 
 
-@router.post("/posts/{post_id}/comment", response_model=CommentResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/posts/{post_id}/comment", response_model=CommentResponse, status_code=status.HTTP_201_CREATED
+)
 async def create_comment(
     post_id: int,
     payload: CommentCreate,

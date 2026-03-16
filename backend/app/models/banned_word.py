@@ -16,6 +16,4 @@ class BannedWord(Base):
     category: Mapped[str | None] = mapped_column(
         String(50), nullable=True
     )  # profanity/gambling/political/spam
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

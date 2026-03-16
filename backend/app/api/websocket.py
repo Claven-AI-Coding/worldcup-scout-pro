@@ -87,11 +87,13 @@ async def live_score(websocket: WebSocket, match_id: int):
     await manager.connect(websocket, match_id)
 
     # Send initial connection confirmation
-    await websocket.send_json({
-        "type": "connected",
-        "match_id": match_id,
-        "message": "已连接实时比分推送",
-    })
+    await websocket.send_json(
+        {
+            "type": "connected",
+            "match_id": match_id,
+            "message": "已连接实时比分推送",
+        }
+    )
 
     try:
         while True:
@@ -101,19 +103,23 @@ async def live_score(websocket: WebSocket, match_id: int):
             try:
                 message = json.loads(raw)
             except json.JSONDecodeError:
-                await websocket.send_json({
-                    "type": "error",
-                    "message": "无效的 JSON 格式",
-                })
+                await websocket.send_json(
+                    {
+                        "type": "error",
+                        "message": "无效的 JSON 格式",
+                    }
+                )
                 continue
 
             msg_type = message.get("type")
 
             if msg_type == "ping":
-                await websocket.send_json({
-                    "type": "pong",
-                    "match_id": match_id,
-                })
+                await websocket.send_json(
+                    {
+                        "type": "pong",
+                        "match_id": match_id,
+                    }
+                )
             elif msg_type == "subscribe":
                 # Client can switch to watching a different match
                 new_match_id = message.get("match_id")
@@ -121,15 +127,19 @@ async def live_score(websocket: WebSocket, match_id: int):
                     manager.disconnect(websocket, match_id)
                     match_id = new_match_id
                     manager.active_connections[match_id].add(websocket)
-                    await websocket.send_json({
-                        "type": "subscribed",
-                        "match_id": match_id,
-                    })
+                    await websocket.send_json(
+                        {
+                            "type": "subscribed",
+                            "match_id": match_id,
+                        }
+                    )
             else:
-                await websocket.send_json({
-                    "type": "error",
-                    "message": f"未知的消息类型: {msg_type}",
-                })
+                await websocket.send_json(
+                    {
+                        "type": "error",
+                        "message": f"未知的消息类型: {msg_type}",
+                    }
+                )
 
     except WebSocketDisconnect:
         manager.disconnect(websocket, match_id)

@@ -29,8 +29,15 @@ const props = withDefaults(defineProps<Props>(), {
   height: '400px',
 })
 
+interface RadarSeries {
+  name: string
+  type: string
+  data: { value: number[]; name: string }[]
+  areaStyle: { opacity: number }
+}
+
 const option = computed(() => {
-  const series: any[] = [
+  const series: RadarSeries[] = [
     {
       name: props.team1Name,
       type: 'radar',
@@ -125,7 +132,11 @@ const option = computed(() => {
 
 <template>
   <div class="radar-chart-container">
-    <VChart :option="option" :style="{ height: props.height }" autoresize />
+    <VChart
+      :option="option"
+      :style="{ height: props.height }"
+      autoresize
+    />
   </div>
 </template>
 

@@ -20,10 +20,10 @@ DAILY_TASKS = [
 
 # 连续签到奖励
 SIGN_IN_BONUS = {
-    3: 5,   # 连续 3 天 +5
+    3: 5,  # 连续 3 天 +5
     7: 15,  # 连续 7 天 +15
-    14: 30, # 连续 14 天 +30
-    30: 100, # 连续 30 天 +100
+    14: 30,  # 连续 14 天 +30
+    30: 100,  # 连续 30 天 +100
 }
 
 
@@ -64,7 +64,7 @@ async def complete_task(user_id: int, task_type: str, db: AsyncSession) -> UserT
             UserTask.user_id == user_id,
             UserTask.task_type == task_type,
             UserTask.date == today,
-            UserTask.completed == False,
+            UserTask.completed.is_(False),
         )
     )
     task = result.scalar_one_or_none()
@@ -76,7 +76,9 @@ async def complete_task(user_id: int, task_type: str, db: AsyncSession) -> UserT
     task.completed_at = datetime.now(timezone.utc)
 
     # 发放积分
-    await grant_points(user_id, task.points_reward, reason=task_type, detail=f"完成任务: {task_type}", db=db)
+    await grant_points(
+        user_id, task.points_reward, reason=task_type, detail=f"完成任务: {task_type}", db=db
+    )
 
     return task
 
@@ -106,7 +108,9 @@ async def sign_in(user: User, db: AsyncSession) -> dict:
     bonus = SIGN_IN_BONUS.get(consecutive, 0)
     total_points = base_points + bonus
 
-    await grant_points(user.id, total_points, reason="sign_in", detail=f"每日签到（+{base_points}）", db=db)
+    await grant_points(
+        user.id, total_points, reason="sign_in", detail=f"每日签到（+{base_points}）", db=db
+    )
 
     # 完成签到任务
     await complete_task(user.id, "daily_sign_in", db)

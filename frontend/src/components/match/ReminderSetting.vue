@@ -28,8 +28,8 @@ async function handleSubmit() {
     await setReminder(props.matchId, selectedMinutes.value)
     done.value = true
     emit('success')
-  } catch (e: any) {
-    error.value = e?.response?.data?.detail || '设置失败，请重试'
+  } catch (e: unknown) {
+    error.value = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail || '设置失败，请重试'
   } finally {
     loading.value = false
   }
@@ -38,11 +38,20 @@ async function handleSubmit() {
 
 <template>
   <div class="bg-white rounded-xl p-4">
-    <h3 class="text-sm font-bold text-gray-700 mb-3">赛前提醒</h3>
+    <h3 class="text-sm font-bold text-gray-700 mb-3">
+      赛前提醒
+    </h3>
 
-    <div v-if="done" class="text-center py-4">
-      <div class="text-green-500 text-2xl mb-2">✓</div>
-      <p class="text-sm text-gray-600">提醒已设置</p>
+    <div
+      v-if="done"
+      class="text-center py-4"
+    >
+      <div class="text-green-500 text-2xl mb-2">
+        ✓
+      </div>
+      <p class="text-sm text-gray-600">
+        提醒已设置
+      </p>
     </div>
 
     <template v-else>
@@ -68,7 +77,12 @@ async function handleSubmit() {
         {{ loading ? '设置中...' : '设置提醒' }}
       </button>
 
-      <p v-if="error" class="text-xs text-red-500 mt-2 text-center">{{ error }}</p>
+      <p
+        v-if="error"
+        class="text-xs text-red-500 mt-2 text-center"
+      >
+        {{ error }}
+      </p>
     </template>
   </div>
 </template>

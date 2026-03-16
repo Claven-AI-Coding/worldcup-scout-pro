@@ -50,7 +50,7 @@ const option = computed(() => {
       axisPointer: {
         type: 'shadow',
       },
-      formatter: (params: any) => {
+      formatter: (params: { dataIndex: number }[]) => {
         const index = params[0].dataIndex
         const match = props.history[index]
         return `
@@ -126,19 +126,35 @@ const stats = computed(() => {
   <div class="history-chart-container">
     <div class="mb-4 flex justify-center gap-6 text-sm">
       <div class="text-center">
-        <div class="font-bold text-blue-600">{{ stats.team1Wins }}</div>
-        <div class="text-gray-600">{{ team1Name }}胜</div>
+        <div class="font-bold text-blue-600">
+          {{ stats.team1Wins }}
+        </div>
+        <div class="text-gray-600">
+          {{ team1Name }}胜
+        </div>
       </div>
       <div class="text-center">
-        <div class="font-bold text-gray-600">{{ stats.draws }}</div>
-        <div class="text-gray-600">平局</div>
+        <div class="font-bold text-gray-600">
+          {{ stats.draws }}
+        </div>
+        <div class="text-gray-600">
+          平局
+        </div>
       </div>
       <div class="text-center">
-        <div class="font-bold text-red-600">{{ stats.team2Wins }}</div>
-        <div class="text-gray-600">{{ team2Name }}胜</div>
+        <div class="font-bold text-red-600">
+          {{ stats.team2Wins }}
+        </div>
+        <div class="text-gray-600">
+          {{ team2Name }}胜
+        </div>
       </div>
     </div>
-    <VChart :option="option" :style="{ height: props.height }" autoresize />
+    <VChart
+      :option="option"
+      :style="{ height: props.height }"
+      autoresize
+    />
   </div>
 </template>
 

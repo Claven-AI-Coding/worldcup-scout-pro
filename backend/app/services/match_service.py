@@ -3,7 +3,7 @@
 from typing import Any
 
 import redis.asyncio as aioredis
-from sqlalchemy import case, func, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 

@@ -109,8 +109,12 @@ async function handleGenerate() {
     <div class="max-w-screen-lg mx-auto px-4 py-6 space-y-6">
       <!-- Header -->
       <div>
-        <h1 class="text-xl font-bold text-gray-800">AI 壁纸生成</h1>
-        <p class="text-sm text-gray-400 mt-1">选择球队或球员，生成专属世界杯壁纸</p>
+        <h1 class="text-xl font-bold text-gray-800">
+          AI 壁纸生成
+        </h1>
+        <p class="text-sm text-gray-400 mt-1">
+          选择球队或球员，生成专属世界杯壁纸
+        </p>
       </div>
 
       <!-- Selection section -->
@@ -123,8 +127,14 @@ async function handleGenerate() {
             class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent appearance-none"
             @change="onTeamChange"
           >
-            <option :value="undefined">请选择球队</option>
-            <option v-for="team in teamStore.teams" :key="team.id" :value="team.id">
+            <option :value="undefined">
+              请选择球队
+            </option>
+            <option
+              v-for="team in teamStore.teams"
+              :key="team.id"
+              :value="team.id"
+            >
               {{ team.name }} ({{ team.code }})
             </option>
           </select>
@@ -138,12 +148,23 @@ async function handleGenerate() {
             class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent appearance-none disabled:opacity-50"
             :disabled="!selectedTeamId || playersLoading"
           >
-            <option :value="undefined">不指定球员</option>
-            <option v-for="player in players" :key="player.id" :value="player.id">
+            <option :value="undefined">
+              不指定球员
+            </option>
+            <option
+              v-for="player in players"
+              :key="player.id"
+              :value="player.id"
+            >
               {{ player.name }}{{ player.number ? ` #${player.number}` : '' }}
             </option>
           </select>
-          <p v-if="playersLoading" class="text-xs text-gray-400 mt-1">加载球员列表中...</p>
+          <p
+            v-if="playersLoading"
+            class="text-xs text-gray-400 mt-1"
+          >
+            加载球员列表中...
+          </p>
         </div>
 
         <!-- Style selector -->
@@ -158,10 +179,24 @@ async function handleGenerate() {
           :disabled="(!selectedTeamId && !selectedPlayerId) || generating"
           @click="handleGenerate"
         >
-          <svg v-if="!generating" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+          <svg
+            v-if="!generating"
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
+            />
           </svg>
-          <div v-else class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+          <div
+            v-else
+            class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"
+          />
           {{ generating ? '生成中...' : '生成壁纸' }}
         </button>
 
@@ -177,9 +212,14 @@ async function handleGenerate() {
 
       <!-- Gallery -->
       <section>
-        <h2 class="text-lg font-bold text-gray-800 mb-3">壁纸画廊</h2>
+        <h2 class="text-lg font-bold text-gray-800 mb-3">
+          壁纸画廊
+        </h2>
 
-        <LoadingSpinner v-if="galleryLoading" text="加载壁纸画廊..." />
+        <LoadingSpinner
+          v-if="galleryLoading"
+          text="加载壁纸画廊..."
+        />
 
         <div
           v-else-if="gallery.length > 0"
@@ -192,7 +232,10 @@ async function handleGenerate() {
           />
         </div>
 
-        <EmptyState v-else message="暂无壁纸，快来生成第一张吧" />
+        <EmptyState
+          v-else
+          message="暂无壁纸，快来生成第一张吧"
+        />
       </section>
     </div>
   </div>

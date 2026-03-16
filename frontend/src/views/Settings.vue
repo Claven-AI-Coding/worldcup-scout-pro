@@ -27,7 +27,9 @@ function handleLogout() {
 <template>
   <div class="min-h-screen bg-gray-50">
     <div class="max-w-screen-lg mx-auto px-4 py-4">
-      <h2 class="text-lg font-bold text-gray-800 mb-4">设置</h2>
+      <h2 class="text-lg font-bold text-gray-800 mb-4">
+        设置
+      </h2>
 
       <!-- 设置项 -->
       <div class="bg-white rounded-xl overflow-hidden mb-6">
@@ -38,9 +40,21 @@ function handleLogout() {
           :class="idx > 0 ? 'border-t border-gray-50' : ''"
           @click="item.action"
         >
-          <span class="text-sm" :class="item.danger ? 'text-red-500' : 'text-gray-700'">{{ item.label }}</span>
-          <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" d="M9 5l7 7-7 7" />
+          <span
+            class="text-sm"
+            :class="item.danger ? 'text-red-500' : 'text-gray-700'"
+          >{{ item.label }}</span>
+          <svg
+            class="w-4 h-4 text-gray-300"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              d="M9 5l7 7-7 7"
+            />
           </svg>
         </div>
       </div>
@@ -54,7 +68,9 @@ function handleLogout() {
       </button>
 
       <!-- 版本信息 -->
-      <p class="text-xs text-gray-400 text-center mt-6">球探 Pro V1.0 MVP</p>
+      <p class="text-xs text-gray-400 text-center mt-6">
+        球探 Pro V1.0 MVP
+      </p>
     </div>
   </div>
 </template>

@@ -69,7 +69,7 @@ async def check_content(text: str, db: AsyncSession) -> dict:
 
 
 async def filter_content(text: str, db: AsyncSession, replacement: str = "**") -> str:
-    """过滤文本中的违禁词，替换为 ** """
+    """过滤文本中的违禁词，替换为 **"""
     banned = await load_banned_words(db)
     filtered = text
 

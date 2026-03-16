@@ -3,7 +3,17 @@ import axios from 'axios'
 
 // Mock axios
 vi.mock('axios')
-const mockedAxios = axios as any
+const mockedAxios = axios as typeof axios & {
+  get: ReturnType<typeof vi.fn>
+}
+
+interface AxiosError {
+  message?: string
+  response?: {
+    status: number
+    data: { detail: string }
+  }
+}
 
 describe('API Utils', () => {
   beforeEach(() => {
@@ -13,11 +23,11 @@ describe('API Utils', () => {
   describe('Error Handling', () => {
     it('handles network errors', async () => {
       mockedAxios.get.mockRejectedValue(new Error('Network Error'))
-      
+
       try {
         await mockedAxios.get('/api/test')
-      } catch (error: any) {
-        expect(error.message).toBe('Network Error')
+      } catch (error: unknown) {
+        expect((error as AxiosError).message).toBe('Network Error')
       }
     })
 
@@ -28,8 +38,8 @@ describe('API Utils', () => {
 
       try {
         await mockedAxios.get('/api/protected')
-      } catch (error: any) {
-        expect(error.response.status).toBe(401)
+      } catch (error: unknown) {
+        expect((error as AxiosError).response?.status).toBe(401)
       }
     })
 
@@ -40,8 +50,8 @@ describe('API Utils', () => {
 
       try {
         await mockedAxios.get('/api/nonexistent')
-      } catch (error: any) {
-        expect(error.response.status).toBe(404)
+      } catch (error: unknown) {
+        expect((error as AxiosError).response?.status).toBe(404)
       }
     })
   })
@@ -51,14 +61,14 @@ describe('API Utils', () => {
       const token = 'test-token'
       localStorage.setItem('token', token)
 
-      const config = { headers: {} }
+      const config: { headers: Record<string, string> } = { headers: {} }
       // Simulate interceptor
       if (localStorage.getItem('token')) {
         config.headers = { Authorization: `Bearer ${token}` }
       }
 
       expect(config.headers).toHaveProperty('Authorization')
-      expect(config.headers.Authorization).toBe(`Bearer ${token}`)
+      expect(config.headers['Authorization']).toBe(`Bearer ${token}`)
     })
   })
 })
