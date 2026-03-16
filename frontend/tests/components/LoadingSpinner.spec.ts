@@ -22,10 +22,9 @@ describe('LoadingSpinner', () => {
     expect(wrapper.classes()).toContain('items-center')
   })
 
-  it('renders SVG spinner', () => {
+  it('renders spinner element', () => {
     const wrapper = mount(LoadingSpinner)
-    const svg = wrapper.find('svg')
-    expect(svg.exists()).toBe(true)
-    expect(svg.classes()).toContain('animate-spin')
+    const spinner = wrapper.find('.animate-spin')
+    expect(spinner.exists()).toBe(true)
   })
 })

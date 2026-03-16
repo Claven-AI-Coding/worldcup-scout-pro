@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 # ============ 违禁词 ============
@@ -22,8 +22,7 @@ class BannedWordResponse(BaseModel):
     category: str | None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============ 举报 ============
@@ -43,8 +42,7 @@ class ReportResponse(BaseModel):
     reviewed_at: datetime | None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ReportReview(BaseModel):
@@ -76,8 +74,7 @@ class UserViolationResponse(BaseModel):
     notes: str | None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============ 内容检查 ============

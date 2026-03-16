@@ -35,6 +35,7 @@ class User(Base):
     agreed_terms: Mapped[bool] = mapped_column(Boolean, default=False)  # 是否同意协议
     # 封禁相关字段
     is_banned: Mapped[bool] = mapped_column(Boolean, default=False)  # 是否被封禁
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False)  # 是否是管理员
     ban_until: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )  # 封禁到期时间（None 表示永久封禁）
