@@ -33,4 +33,6 @@ redisdata/
 
 # Generated
 backend/app/static/wallpapers/
+backend/.coverage
+backend/coverage.xml
 DEPLOYMENT_SECRETS.md
