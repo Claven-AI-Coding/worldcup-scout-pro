@@ -144,7 +144,9 @@ class ComplianceService:
                     violation_type="reported",
                     severity="serious" if action == "ban_user" else "warning",
                     action_taken="temp_ban" if ban_days else "warned",
-                    ban_until=(datetime.now(timezone.utc) + timedelta(days=ban_days) if ban_days else None),
+                    ban_until=(
+                        datetime.now(timezone.utc) + timedelta(days=ban_days) if ban_days else None
+                    ),
                     notes=notes,
                 )
                 self.db.add(violation)
