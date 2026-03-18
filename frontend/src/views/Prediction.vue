@@ -89,6 +89,15 @@ async function fetchLeaderboard() {
   }
 }
 
+function handleTabChange(tabValue: TabName) {
+  activeTab.value = tabValue
+  if (tabValue === 'my') {
+    fetchMyPredictions()
+  } else if (tabValue === 'leaderboard') {
+    fetchLeaderboard()
+  }
+}
+
 function toggleLeaderboardType(type: 'daily' | 'all') {
   leaderboardType.value = type
   fetchLeaderboard()
@@ -147,11 +156,7 @@ onMounted(() => {
                 ? 'border-primary-500 text-primary-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             "
-            @click="
-              activeTab = tab.value
-              tab.value === 'my' && fetchMyPredictions()
-              tab.value === 'leaderboard' && fetchLeaderboard()
-            "
+            @click="handleTabChange(tab.value)"
           >
             {{ tab.label }}
           </button>
