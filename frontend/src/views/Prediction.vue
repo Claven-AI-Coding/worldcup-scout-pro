@@ -148,9 +148,9 @@ onMounted(() => {
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             "
             @click="
-              activeTab = tab.value;
-              tab.value === 'my' && fetchMyPredictions();
-              tab.value === 'leaderboard' && fetchLeaderboard();
+              activeTab = tab.value
+              tab.value === 'my' && fetchMyPredictions()
+              tab.value === 'leaderboard' && fetchLeaderboard()
             "
           >
             {{ tab.label }}
