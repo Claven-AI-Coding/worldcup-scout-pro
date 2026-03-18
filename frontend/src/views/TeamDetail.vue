@@ -28,7 +28,7 @@ const team = computed(() => teamStore.currentTeam)
 
 const teamMatches = computed(() => {
   return matchStore.matches.filter(
-    (m) => m.home_team?.id === teamId.value || m.away_team?.id === teamId.value
+    m => m.home_team?.id === teamId.value || m.away_team?.id === teamId.value
   )
 })
 
@@ -75,7 +75,10 @@ const infoStats = computed(() => {
 // 球员按位置分组
 const playersByPosition = computed(() => {
   const groups: Record<string, typeof teamStore.teamPlayers> = {
-    GK: [], DF: [], MF: [], FW: [],
+    GK: [],
+    DF: [],
+    MF: [],
+    FW: [],
   }
   for (const p of teamStore.teamPlayers) {
     const pos = p.position || 'FW'
@@ -107,79 +110,65 @@ function goToCommunity() {
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <LoadingSpinner
-      v-if="teamStore.loading && !team"
-      text="加载球队信息..."
-    />
+    <LoadingSpinner v-if="teamStore.loading && !team" text="加载球队信息..." />
 
     <template v-else-if="team">
       <!-- Team header -->
-      <section class="bg-gradient-to-br from-primary-600 to-primary-700 text-white px-4 py-8">
-        <div class="max-w-screen-lg mx-auto">
+      <section class="bg-gradient-to-br from-primary-600 to-primary-700 px-4 py-8 text-white">
+        <div class="mx-auto max-w-screen-lg">
           <button
-            class="mb-4 flex items-center gap-1 text-sm text-primary-200 hover:text-white transition-colors"
+            class="mb-4 flex items-center gap-1 text-sm text-primary-200 transition-colors hover:text-white"
             @click="router.back()"
           >
             <svg
-              class="w-4 h-4"
+              class="h-4 w-4"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
               viewBox="0 0 24 24"
             >
-              <path
-                stroke-linecap="round"
-                d="M15 19l-7-7 7-7"
-              />
+              <path stroke-linecap="round" d="M15 19l-7-7 7-7" />
             </svg>
             返回
           </button>
 
           <div class="flex items-center gap-4">
-            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+            <div
+              class="flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/20"
+            >
               <img
                 v-if="team.flag_url"
                 :src="team.flag_url"
                 :alt="team.name"
-                class="w-full h-full object-cover"
-              >
-              <span
-                v-else
-                class="text-2xl font-bold text-white/60"
-              >{{ team.code }}</span>
+                class="h-full w-full object-cover"
+              />
+              <span v-else class="text-2xl font-bold text-white/60">{{ team.code }}</span>
             </div>
             <div>
               <h1 class="text-2xl font-bold">
                 {{ team.name }}
               </h1>
-              <p
-                v-if="team.name_en"
-                class="text-sm text-primary-200"
-              >
+              <p v-if="team.name_en" class="text-sm text-primary-200">
                 {{ team.name_en }}
               </p>
-              <div class="flex items-center gap-3 mt-2">
-                <span
-                  v-if="team.group_name"
-                  class="text-xs px-2 py-0.5 bg-white/20 rounded-full"
-                >{{ team.group_name }}组</span>
-                <span
-                  v-if="team.coach"
-                  class="text-xs text-primary-200"
-                >主教练: {{ team.coach }}</span>
+              <div class="mt-2 flex items-center gap-3">
+                <span v-if="team.group_name" class="rounded-full bg-white/20 px-2 py-0.5 text-xs"
+                  >{{ team.group_name }}组</span
+                >
+                <span v-if="team.coach" class="text-xs text-primary-200"
+                  >主教练: {{ team.coach }}</span
+                >
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <div class="max-w-screen-lg mx-auto px-4 py-6 space-y-6">
+      <div class="mx-auto max-w-screen-lg space-y-6 px-4 py-6">
         <!-- 球队信息 -->
         <section v-if="infoStats.length > 0">
-          <h2 class="text-lg font-bold text-gray-800 mb-3">
-            球队信息
-          </h2>
-          <div class="bg-white rounded-xl shadow-sm border border-gray-100 divide-y divide-gray-50">
+          <h2 class="mb-3 text-lg font-bold text-gray-800">球队信息</h2>
+          <div class="divide-y divide-gray-50 rounded-xl border border-gray-100 bg-white shadow-sm">
             <div
               v-for="item in infoStats"
               :key="item.key"
@@ -193,21 +182,16 @@ function goToCommunity() {
 
         <!-- 战力数据可视化 -->
         <section v-if="powerStats.length > 0">
-          <h2 class="text-lg font-bold text-gray-800 mb-3">
-            战力数据
-          </h2>
-          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 space-y-3">
-            <div
-              v-for="stat in powerStats"
-              :key="stat.key"
-            >
-              <div class="flex justify-between text-sm mb-1">
+          <h2 class="mb-3 text-lg font-bold text-gray-800">战力数据</h2>
+          <div class="space-y-3 rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+            <div v-for="stat in powerStats" :key="stat.key">
+              <div class="mb-1 flex justify-between text-sm">
                 <span class="text-gray-600">{{ stat.label }}</span>
                 <span class="font-medium text-gray-800">{{ stat.value }}</span>
               </div>
-              <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div class="h-2 overflow-hidden rounded-full bg-gray-100">
                 <div
-                  class="h-full bg-primary-500 rounded-full transition-all"
+                  class="h-full rounded-full bg-primary-500 transition-all"
                   :style="{ width: Math.min(stat.value, 100) + '%' }"
                 />
               </div>
@@ -217,11 +201,9 @@ function goToCommunity() {
 
         <!-- 球队简介 -->
         <section v-if="team.description">
-          <h2 class="text-lg font-bold text-gray-800 mb-3">
-            球队简介
-          </h2>
-          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-            <p class="text-sm text-gray-600 leading-relaxed">
+          <h2 class="mb-3 text-lg font-bold text-gray-800">球队简介</h2>
+          <div class="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+            <p class="text-sm leading-relaxed text-gray-600">
               {{ team.description }}
             </p>
           </div>
@@ -229,20 +211,14 @@ function goToCommunity() {
 
         <!-- 球员名单（按位置分组） -->
         <section>
-          <h2 class="text-lg font-bold text-gray-800 mb-3">
-            球员名单
-          </h2>
+          <h2 class="mb-3 text-lg font-bold text-gray-800">球员名单</h2>
           <template v-if="teamStore.teamPlayers.length > 0">
-            <div
-              v-for="(players, pos) in playersByPosition"
-              :key="pos"
-              class="mb-4"
-            >
+            <div v-for="(players, pos) in playersByPosition" :key="pos" class="mb-4">
               <template v-if="players.length > 0">
-                <h3 class="text-sm font-medium text-gray-500 mb-2">
+                <h3 class="mb-2 text-sm font-medium text-gray-500">
                   {{ positionLabels[pos] || pos }}
                 </h3>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                   <router-link
                     v-for="player in players"
                     :key="player.id"
@@ -254,57 +230,39 @@ function goToCommunity() {
               </template>
             </div>
           </template>
-          <EmptyState
-            v-else
-            message="暂无球员数据"
-          />
+          <EmptyState v-else message="暂无球员数据" />
         </section>
 
         <!-- 相关比赛 -->
         <section>
-          <div class="flex items-center justify-between mb-3">
-            <h2 class="text-lg font-bold text-gray-800">
-              相关比赛
-            </h2>
+          <div class="mb-3 flex items-center justify-between">
+            <h2 class="text-lg font-bold text-gray-800">相关比赛</h2>
             <button
-              class="text-xs px-3 py-1.5 bg-primary-50 text-primary-600 rounded-lg hover:bg-primary-100 transition-colors disabled:opacity-50"
+              class="rounded-lg bg-primary-50 px-3 py-1.5 text-xs text-primary-600 transition-colors hover:bg-primary-100 disabled:opacity-50"
               :disabled="subscribing"
               @click="subscribeAll"
             >
               {{ subscribing ? '订阅中...' : '一键订阅全部提醒' }}
             </button>
           </div>
-          <p
-            v-if="subscribeMsg"
-            class="text-xs text-green-600 mb-2"
-          >
+          <p v-if="subscribeMsg" class="mb-2 text-xs text-green-600">
             {{ subscribeMsg }}
           </p>
 
-          <div
-            v-if="teamMatches.length > 0"
-            class="space-y-3"
-          >
-            <MatchCard
-              v-for="match in teamMatches"
-              :key="match.id"
-              :match="match"
-            />
+          <div v-if="teamMatches.length > 0" class="space-y-3">
+            <MatchCard v-for="match in teamMatches" :key="match.id" :match="match" />
           </div>
-          <EmptyState
-            v-else
-            message="暂无比赛数据"
-          />
+          <EmptyState v-else message="暂无比赛数据" />
         </section>
 
         <!-- 球迷圈入口 -->
         <section class="pb-4">
           <button
-            class="w-full py-3 bg-primary-500 text-white text-sm font-medium rounded-xl hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
+            class="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-500 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-600"
             @click="goToCommunity"
           >
             <svg
-              class="w-5 h-5"
+              class="h-5 w-5"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
@@ -315,15 +273,8 @@ function goToCommunity() {
                 stroke-linejoin="round"
                 d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87"
               />
-              <circle
-                cx="9"
-                cy="7"
-                r="4"
-              /><circle
-                cx="17"
-                cy="7"
-                r="4"
-              />
+              <circle cx="9" cy="7" r="4" />
+              <circle cx="17" cy="7" r="4" />
             </svg>
             进入 {{ team.name }} 球迷圈
           </button>
@@ -331,11 +282,6 @@ function goToCommunity() {
       </div>
     </template>
 
-    <EmptyState
-      v-else
-      message="球队不存在"
-      action-text="返回首页"
-      @action="router.push('/')"
-    />
+    <EmptyState v-else message="球队不存在" action-text="返回首页" @action="router.push('/')" />
   </div>
 </template>

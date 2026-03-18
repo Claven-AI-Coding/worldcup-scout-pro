@@ -20,7 +20,9 @@ const typeIcons: Record<string, string> = {
 
 <template>
   <Teleport to="body">
-    <div class="fixed top-16 left-0 right-0 z-[999] flex flex-col items-center gap-2 pointer-events-none px-4">
+    <div
+      class="pointer-events-none fixed left-0 right-0 top-16 z-[999] flex flex-col items-center gap-2 px-4"
+    >
       <TransitionGroup
         enter-active-class="transition-all duration-300 ease-out"
         leave-active-class="transition-all duration-200 ease-in"
@@ -32,21 +34,17 @@ const typeIcons: Record<string, string> = {
         <div
           v-for="toast in toasts"
           :key="toast.id"
-          class="pointer-events-auto max-w-sm w-full rounded-lg shadow-lg px-4 py-3 flex items-center gap-3"
+          class="pointer-events-auto flex w-full max-w-sm items-center gap-3 rounded-lg px-4 py-3 shadow-lg"
           :class="typeClasses[toast.type]"
         >
           <svg
-            class="w-5 h-5 flex-shrink-0"
+            class="h-5 w-5 flex-shrink-0"
             fill="none"
             stroke="currentColor"
             stroke-width="2"
             viewBox="0 0 24 24"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              :d="typeIcons[toast.type]"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" :d="typeIcons[toast.type]" />
           </svg>
           <span class="text-sm font-medium">{{ toast.message }}</span>
         </div>

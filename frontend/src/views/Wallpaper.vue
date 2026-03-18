@@ -106,35 +106,25 @@ async function handleGenerate() {
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <div class="max-w-screen-lg mx-auto px-4 py-6 space-y-6">
+    <div class="mx-auto max-w-screen-lg space-y-6 px-4 py-6">
       <!-- Header -->
       <div>
-        <h1 class="text-xl font-bold text-gray-800">
-          AI 壁纸生成
-        </h1>
-        <p class="text-sm text-gray-400 mt-1">
-          选择球队或球员，生成专属世界杯壁纸
-        </p>
+        <h1 class="text-xl font-bold text-gray-800">AI 壁纸生成</h1>
+        <p class="mt-1 text-sm text-gray-400">选择球队或球员，生成专属世界杯壁纸</p>
       </div>
 
       <!-- Selection section -->
-      <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 space-y-4">
+      <section class="space-y-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
         <!-- Team selector -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1.5">选择球队</label>
+          <label class="mb-1.5 block text-sm font-medium text-gray-700">选择球队</label>
           <select
             v-model="selectedTeamId"
-            class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent appearance-none"
+            class="w-full appearance-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-700 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary-500"
             @change="onTeamChange"
           >
-            <option :value="undefined">
-              请选择球队
-            </option>
-            <option
-              v-for="team in teamStore.teams"
-              :key="team.id"
-              :value="team.id"
-            >
+            <option :value="undefined">请选择球队</option>
+            <option v-for="team in teamStore.teams" :key="team.id" :value="team.id">
               {{ team.name }} ({{ team.code }})
             </option>
           </select>
@@ -142,46 +132,35 @@ async function handleGenerate() {
 
         <!-- Player selector -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1.5">选择球员 (可选)</label>
+          <label class="mb-1.5 block text-sm font-medium text-gray-700">选择球员 (可选)</label>
           <select
             v-model="selectedPlayerId"
-            class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent appearance-none disabled:opacity-50"
+            class="w-full appearance-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-700 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50"
             :disabled="!selectedTeamId || playersLoading"
           >
-            <option :value="undefined">
-              不指定球员
-            </option>
-            <option
-              v-for="player in players"
-              :key="player.id"
-              :value="player.id"
-            >
+            <option :value="undefined">不指定球员</option>
+            <option v-for="player in players" :key="player.id" :value="player.id">
               {{ player.name }}{{ player.number ? ` #${player.number}` : '' }}
             </option>
           </select>
-          <p
-            v-if="playersLoading"
-            class="text-xs text-gray-400 mt-1"
-          >
-            加载球员列表中...
-          </p>
+          <p v-if="playersLoading" class="mt-1 text-xs text-gray-400">加载球员列表中...</p>
         </div>
 
         <!-- Style selector -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">选择风格</label>
+          <label class="mb-2 block text-sm font-medium text-gray-700">选择风格</label>
           <StyleSelector v-model="selectedStyle" />
         </div>
 
         <!-- Generate button -->
         <button
-          class="w-full py-3 bg-gradient-to-r from-primary-500 to-purple-500 text-white text-sm font-bold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:from-primary-600 hover:to-purple-600 transition-all flex items-center justify-center gap-2"
+          class="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-primary-500 to-purple-500 py-3 text-sm font-bold text-white transition-all hover:from-primary-600 hover:to-purple-600 disabled:cursor-not-allowed disabled:opacity-50"
           :disabled="(!selectedTeamId && !selectedPlayerId) || generating"
           @click="handleGenerate"
         >
           <svg
             v-if="!generating"
-            class="w-5 h-5"
+            class="h-5 w-5"
             fill="none"
             stroke="currentColor"
             stroke-width="2"
@@ -195,7 +174,7 @@ async function handleGenerate() {
           </svg>
           <div
             v-else
-            class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"
+            class="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white"
           />
           {{ generating ? '生成中...' : '生成壁纸' }}
         </button>
@@ -203,7 +182,7 @@ async function handleGenerate() {
         <!-- Generation status -->
         <p
           v-if="generationStatus"
-          class="text-sm text-center font-medium"
+          class="text-center text-sm font-medium"
           :class="generationStatus.includes('失败') ? 'text-red-500' : 'text-green-600'"
         >
           {{ generationStatus }}
@@ -212,30 +191,18 @@ async function handleGenerate() {
 
       <!-- Gallery -->
       <section>
-        <h2 class="text-lg font-bold text-gray-800 mb-3">
-          壁纸画廊
-        </h2>
+        <h2 class="mb-3 text-lg font-bold text-gray-800">壁纸画廊</h2>
 
-        <LoadingSpinner
-          v-if="galleryLoading"
-          text="加载壁纸画廊..."
-        />
+        <LoadingSpinner v-if="galleryLoading" text="加载壁纸画廊..." />
 
         <div
           v-else-if="gallery.length > 0"
-          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
+          class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4"
         >
-          <WallpaperCard
-            v-for="wallpaper in gallery"
-            :key="wallpaper.id"
-            :wallpaper="wallpaper"
-          />
+          <WallpaperCard v-for="wallpaper in gallery" :key="wallpaper.id" :wallpaper="wallpaper" />
         </div>
 
-        <EmptyState
-          v-else
-          message="暂无壁纸，快来生成第一张吧"
-        />
+        <EmptyState v-else message="暂无壁纸，快来生成第一张吧" />
       </section>
     </div>
   </div>

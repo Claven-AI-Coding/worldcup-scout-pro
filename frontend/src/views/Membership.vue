@@ -53,88 +53,62 @@ const isMember = ref(userStore.user?.is_member || false)
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <div class="max-w-screen-lg mx-auto px-4 py-4">
+    <div class="mx-auto max-w-screen-lg px-4 py-4">
       <!-- 会员状态 -->
-      <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-xl p-6 text-white mb-6">
-        <h2 class="text-lg font-bold">
-          球探 Pro 会员
-        </h2>
-        <p class="text-sm text-white/80 mt-1">
+      <div class="mb-6 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-500 p-6 text-white">
+        <h2 class="text-lg font-bold">球探 Pro 会员</h2>
+        <p class="mt-1 text-sm text-white/80">
           {{ isMember ? '您已是会员用户' : '开通会员享受专属权益' }}
         </p>
       </div>
 
       <!-- 会员权益对比 -->
-      <div class="bg-white rounded-xl p-4 mb-6">
-        <h3 class="text-sm font-bold text-gray-700 mb-3">
-          会员权益
-        </h3>
+      <div class="mb-6 rounded-xl bg-white p-4">
+        <h3 class="mb-3 text-sm font-bold text-gray-700">会员权益</h3>
         <div class="grid grid-cols-3 gap-4 text-center">
           <div>
-            <div class="text-2xl mb-1">
-              🚫
-            </div>
-            <p class="text-xs text-gray-600">
-              去广告
-            </p>
+            <div class="mb-1 text-2xl">🚫</div>
+            <p class="text-xs text-gray-600">去广告</p>
           </div>
           <div>
-            <div class="text-2xl mb-1">
-              🎨
-            </div>
-            <p class="text-xs text-gray-600">
-              无水印壁纸
-            </p>
+            <div class="mb-1 text-2xl">🎨</div>
+            <p class="text-xs text-gray-600">无水印壁纸</p>
           </div>
           <div>
-            <div class="text-2xl mb-1">
-              🤖
-            </div>
-            <p class="text-xs text-gray-600">
-              AI 深度分析
-            </p>
+            <div class="mb-1 text-2xl">🤖</div>
+            <p class="text-xs text-gray-600">AI 深度分析</p>
           </div>
           <div>
-            <div class="text-2xl mb-1">
-              🏅
-            </div>
-            <p class="text-xs text-gray-600">
-              专属勋章
-            </p>
+            <div class="mb-1 text-2xl">🏅</div>
+            <p class="text-xs text-gray-600">专属勋章</p>
           </div>
           <div>
-            <div class="text-2xl mb-1">
-              💰
-            </div>
-            <p class="text-xs text-gray-600">
-              额外积分
-            </p>
+            <div class="mb-1 text-2xl">💰</div>
+            <p class="text-xs text-gray-600">额外积分</p>
           </div>
           <div>
-            <div class="text-2xl mb-1">
-              👑
-            </div>
-            <p class="text-xs text-gray-600">
-              专属称号
-            </p>
+            <div class="mb-1 text-2xl">👑</div>
+            <p class="text-xs text-gray-600">专属称号</p>
           </div>
         </div>
       </div>
 
       <!-- 套餐选择 -->
-      <div class="space-y-3 mb-6">
+      <div class="mb-6 space-y-3">
         <div
           v-for="plan in plans"
           :key="plan.type"
-          class="bg-white rounded-xl p-4 border-2 cursor-pointer transition-all relative"
-          :class="selectedPlan === plan.type
-            ? 'border-green-500 shadow-md'
-            : 'border-gray-100 hover:border-gray-200'"
+          class="relative cursor-pointer rounded-xl border-2 bg-white p-4 transition-all"
+          :class="
+            selectedPlan === plan.type
+              ? 'border-green-500 shadow-md'
+              : 'border-gray-100 hover:border-gray-200'
+          "
           @click="selectPlan(plan.type)"
         >
           <div
             v-if="plan.popular"
-            class="absolute -top-2 right-4 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full"
+            class="absolute -top-2 right-4 rounded-full bg-red-500 px-2 py-0.5 text-xs text-white"
           >
             推荐
           </div>
@@ -143,13 +117,13 @@ const isMember = ref(userStore.user?.is_member || false)
               <h4 class="text-sm font-bold text-gray-800">
                 {{ plan.label }}
               </h4>
-              <p class="text-xs text-gray-400 mt-0.5">
+              <p class="mt-0.5 text-xs text-gray-400">
                 {{ plan.perMonth }}
               </p>
             </div>
             <div class="text-right">
               <span class="text-xl font-bold text-green-600">{{ plan.price }}</span>
-              <span class="text-xs text-gray-400 line-through ml-1">{{ plan.originalPrice }}</span>
+              <span class="ml-1 text-xs text-gray-400 line-through">{{ plan.originalPrice }}</span>
             </div>
           </div>
         </div>
@@ -157,13 +131,11 @@ const isMember = ref(userStore.user?.is_member || false)
 
       <!-- 开通按钮 -->
       <button
-        class="w-full py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
+        class="w-full rounded-xl bg-green-600 py-3 font-medium text-white transition-colors hover:bg-green-700"
       >
         立即开通
       </button>
-      <p class="text-xs text-gray-400 text-center mt-2">
-        支付功能将在 V1.1 版本上线
-      </p>
+      <p class="mt-2 text-center text-xs text-gray-400">支付功能将在 V1.1 版本上线</p>
     </div>
   </div>
 </template>

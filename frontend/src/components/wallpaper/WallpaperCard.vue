@@ -31,7 +31,9 @@ const styleBadgeClass: Record<string, string> = {
 }
 
 const styleLabel = computed(() => styleLabelMap[props.wallpaper.style] || props.wallpaper.style)
-const badgeClass = computed(() => styleBadgeClass[props.wallpaper.style] || 'bg-gray-100 text-gray-600')
+const badgeClass = computed(
+  () => styleBadgeClass[props.wallpaper.style] || 'bg-gray-100 text-gray-600'
+)
 
 const displayName = computed(() => {
   return props.wallpaper.player_name || props.wallpaper.team_name || ''
@@ -49,31 +51,33 @@ function handleDownload() {
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group">
+  <div class="group overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
     <!-- Image -->
-    <div class="relative aspect-[9/16] bg-gray-100 overflow-hidden">
+    <div class="relative aspect-[9/16] overflow-hidden bg-gray-100">
       <img
         :src="props.wallpaper.image_url"
         :alt="displayName"
-        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-      >
+        class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+      />
 
       <!-- Style badge -->
       <span
-        class="absolute top-2 left-2 text-xs font-medium px-2 py-0.5 rounded-full backdrop-blur-sm"
+        class="absolute left-2 top-2 rounded-full px-2 py-0.5 text-xs font-medium backdrop-blur-sm"
         :class="badgeClass"
       >
         {{ styleLabel }}
       </span>
 
       <!-- Download overlay -->
-      <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100">
+      <div
+        class="absolute inset-0 flex items-end justify-center bg-black/0 pb-4 opacity-0 transition-colors group-hover:bg-black/20 group-hover:opacity-100"
+      >
         <button
-          class="flex items-center gap-1.5 px-4 py-2 bg-white/90 backdrop-blur-sm text-gray-800 text-sm font-medium rounded-full shadow-lg hover:bg-white transition-colors"
+          class="flex items-center gap-1.5 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-gray-800 shadow-lg backdrop-blur-sm transition-colors hover:bg-white"
           @click.stop="handleDownload"
         >
           <svg
-            class="w-4 h-4"
+            class="h-4 w-4"
             fill="none"
             stroke="currentColor"
             stroke-width="2"
@@ -92,10 +96,7 @@ function handleDownload() {
 
     <!-- Info -->
     <div class="p-3">
-      <p
-        v-if="displayName"
-        class="text-sm font-medium text-gray-700 truncate"
-      >
+      <p v-if="displayName" class="truncate text-sm font-medium text-gray-700">
         {{ displayName }}
       </p>
     </div>

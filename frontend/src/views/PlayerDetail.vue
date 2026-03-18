@@ -48,9 +48,14 @@ const positionClass = computed(() => {
 
 // 世界杯数据中文标签
 const statsLabelMap: Record<string, string> = {
-  goals: '进球', assists: '助攻', appearances: '出场',
-  yellow_cards: '黄牌', red_cards: '红牌',
-  shots: '射门', passes: '传球', minutes_played: '出场时间(分钟)',
+  goals: '进球',
+  assists: '助攻',
+  appearances: '出场',
+  yellow_cards: '黄牌',
+  red_cards: '红牌',
+  shots: '射门',
+  passes: '传球',
+  minutes_played: '出场时间(分钟)',
 }
 
 // 核心数据（进球/助攻/出场）
@@ -89,50 +94,44 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <LoadingSpinner
-      v-if="loading"
-      text="加载球员信息..."
-    />
+    <LoadingSpinner v-if="loading" text="加载球员信息..." />
 
     <template v-else-if="player">
       <!-- Player header -->
-      <section class="bg-gradient-to-br from-gray-800 to-gray-900 text-white px-4 py-8">
-        <div class="max-w-screen-lg mx-auto">
+      <section class="bg-gradient-to-br from-gray-800 to-gray-900 px-4 py-8 text-white">
+        <div class="mx-auto max-w-screen-lg">
           <!-- Back button -->
           <button
-            class="mb-4 flex items-center gap-1 text-sm text-gray-400 hover:text-white transition-colors"
+            class="mb-4 flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-white"
             @click="router.back()"
           >
             <svg
-              class="w-4 h-4"
+              class="h-4 w-4"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
               viewBox="0 0 24 24"
             >
-              <path
-                stroke-linecap="round"
-                d="M15 19l-7-7 7-7"
-              />
+              <path stroke-linecap="round" d="M15 19l-7-7 7-7" />
             </svg>
             返回
           </button>
 
           <div class="flex items-center gap-5">
             <!-- Photo placeholder -->
-            <div class="relative w-24 h-24 flex-shrink-0">
-              <div class="w-24 h-24 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center">
-                <svg
-                  class="w-12 h-12 text-gray-500"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+            <div class="relative h-24 w-24 flex-shrink-0">
+              <div
+                class="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-gray-600 to-gray-700"
+              >
+                <svg class="h-12 w-12 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"
+                  />
                 </svg>
               </div>
               <span
                 v-if="player.number !== null"
-                class="absolute -bottom-1 -right-1 w-10 h-10 bg-primary-500 text-white text-lg font-bold rounded-full flex items-center justify-center shadow-lg"
+                class="absolute -bottom-1 -right-1 flex h-10 w-10 items-center justify-center rounded-full bg-primary-500 text-lg font-bold text-white shadow-lg"
               >
                 {{ player.number }}
               </span>
@@ -142,22 +141,13 @@ onMounted(async () => {
               <h1 class="text-2xl font-bold">
                 {{ player.name }}
               </h1>
-              <div class="flex items-center gap-3 mt-2 flex-wrap">
-                <span
-                  class="text-xs px-2.5 py-1 rounded-full font-medium"
-                  :class="positionClass"
-                >
+              <div class="mt-2 flex flex-wrap items-center gap-3">
+                <span class="rounded-full px-2.5 py-1 text-xs font-medium" :class="positionClass">
                   {{ positionLabel }}
                 </span>
-                <span
-                  v-if="player.age"
-                  class="text-sm text-gray-400"
-                >{{ player.age }} 岁</span>
+                <span v-if="player.age" class="text-sm text-gray-400">{{ player.age }} 岁</span>
               </div>
-              <p
-                v-if="player.club"
-                class="text-sm text-gray-400 mt-1"
-              >
+              <p v-if="player.club" class="mt-1 text-sm text-gray-400">
                 {{ player.club }}
               </p>
             </div>
@@ -165,10 +155,10 @@ onMounted(async () => {
         </div>
       </section>
 
-      <div class="max-w-screen-lg mx-auto px-4 py-6 space-y-6">
+      <div class="mx-auto max-w-screen-lg space-y-6 px-4 py-6">
         <!-- Player info card -->
-        <section class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <h2 class="text-sm font-bold text-gray-700 px-4 py-3 bg-gray-50 border-b border-gray-100">
+        <section class="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
+          <h2 class="border-b border-gray-100 bg-gray-50 px-4 py-3 text-sm font-bold text-gray-700">
             基本信息
           </h2>
           <div class="divide-y divide-gray-50">
@@ -176,10 +166,7 @@ onMounted(async () => {
               <span class="text-sm text-gray-500">姓名</span>
               <span class="text-sm font-medium text-gray-800">{{ player.name }}</span>
             </div>
-            <div
-              v-if="player.number !== null"
-              class="flex items-center justify-between px-4 py-3"
-            >
+            <div v-if="player.number !== null" class="flex items-center justify-between px-4 py-3">
               <span class="text-sm text-gray-500">球衣号码</span>
               <span class="text-sm font-medium text-gray-800">{{ player.number }}</span>
             </div>
@@ -192,17 +179,11 @@ onMounted(async () => {
                 {{ positionLabel }}
               </span>
             </div>
-            <div
-              v-if="player.age"
-              class="flex items-center justify-between px-4 py-3"
-            >
+            <div v-if="player.age" class="flex items-center justify-between px-4 py-3">
               <span class="text-sm text-gray-500">年龄</span>
               <span class="text-sm font-medium text-gray-800">{{ player.age }}</span>
             </div>
-            <div
-              v-if="player.club"
-              class="flex items-center justify-between px-4 py-3"
-            >
+            <div v-if="player.club" class="flex items-center justify-between px-4 py-3">
               <span class="text-sm text-gray-500">所属俱乐部</span>
               <span class="text-sm font-medium text-gray-800">{{ player.club }}</span>
             </div>
@@ -211,25 +192,20 @@ onMounted(async () => {
 
         <!-- 世界杯数据统计 -->
         <section v-if="player.stats && Object.keys(player.stats).length > 0">
-          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <h2 class="text-sm font-bold text-gray-700 px-4 py-3 bg-gray-50 border-b border-gray-100">
+          <div class="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
+            <h2
+              class="border-b border-gray-100 bg-gray-50 px-4 py-3 text-sm font-bold text-gray-700"
+            >
               世界杯数据
             </h2>
 
             <!-- 核心数据卡片 -->
             <div class="grid grid-cols-3 gap-px bg-gray-100">
-              <div
-                v-for="item in coreStats"
-                :key="item.key"
-                class="bg-white p-3 text-center"
-              >
-                <p
-                  class="text-xl font-bold"
-                  :class="item.color"
-                >
+              <div v-for="item in coreStats" :key="item.key" class="bg-white p-3 text-center">
+                <p class="text-xl font-bold" :class="item.color">
                   {{ item.value }}
                 </p>
-                <p class="text-xs text-gray-400 mt-1">
+                <p class="mt-1 text-xs text-gray-400">
                   {{ item.label }}
                 </p>
               </div>
@@ -253,7 +229,7 @@ onMounted(async () => {
         <section class="pb-4">
           <router-link
             :to="{ name: 'team-detail', params: { id: player.team_id } }"
-            class="block w-full py-3 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors text-center"
+            class="block w-full rounded-xl border border-gray-200 bg-white py-3 text-center text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
           >
             查看所属球队
           </router-link>
@@ -261,11 +237,6 @@ onMounted(async () => {
       </div>
     </template>
 
-    <EmptyState
-      v-else
-      message="球员不存在"
-      action-text="返回首页"
-      @action="router.push('/')"
-    />
+    <EmptyState v-else message="球员不存在" action-text="返回首页" @action="router.push('/')" />
   </div>
 </template>

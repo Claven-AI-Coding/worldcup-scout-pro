@@ -5,9 +5,9 @@ defineProps<{
 </script>
 
 <template>
-  <div class="bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2 flex items-start gap-2">
+  <div class="flex items-start gap-2 rounded-lg border border-yellow-200 bg-yellow-50 px-3 py-2">
     <svg
-      class="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5"
+      class="mt-0.5 h-4 w-4 flex-shrink-0 text-yellow-500"
       fill="none"
       stroke="currentColor"
       stroke-width="2"

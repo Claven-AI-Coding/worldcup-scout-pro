@@ -34,7 +34,7 @@ onMounted(() => {
 
 watch(
   () => props.match.status,
-  (status) => {
+  status => {
     if (status === 'live' && !connected.value) {
       connect()
     }
@@ -93,22 +93,19 @@ function eventIcon(type: string): string {
 </script>
 
 <template>
-  <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-5 text-white">
+  <div class="rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 p-5 text-white">
     <!-- Connection status -->
-    <div class="flex items-center justify-between mb-4">
+    <div class="mb-4 flex items-center justify-between">
       <div class="flex items-center gap-2">
         <span
-          class="w-2 h-2 rounded-full"
-          :class="connected ? 'bg-green-400 animate-pulse' : 'bg-gray-500'"
+          class="h-2 w-2 rounded-full"
+          :class="connected ? 'animate-pulse bg-green-400' : 'bg-gray-500'"
         />
         <span class="text-xs text-gray-400">
           {{ connected ? '实时连接中' : '未连接' }}
         </span>
       </div>
-      <span
-        v-if="matchMinute"
-        class="text-xs font-mono text-green-400 animate-pulse"
-      >
+      <span v-if="matchMinute" class="animate-pulse font-mono text-xs text-green-400">
         {{ matchMinute }}'
       </span>
     </div>
@@ -116,18 +113,19 @@ function eventIcon(type: string): string {
     <!-- Score display -->
     <div class="flex items-center justify-between gap-4">
       <!-- Home team -->
-      <div class="flex flex-col items-center flex-1">
-        <div class="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center overflow-hidden mb-2">
+      <div class="flex flex-1 flex-col items-center">
+        <div
+          class="mb-2 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-white/10"
+        >
           <img
             v-if="props.match.home_team.flag_url"
             :src="props.match.home_team.flag_url"
             :alt="props.match.home_team.name"
-            class="w-full h-full object-cover"
-          >
-          <span
-            v-else
-            class="text-lg font-bold text-white/60"
-          >{{ props.match.home_team.code }}</span>
+            class="h-full w-full object-cover"
+          />
+          <span v-else class="text-lg font-bold text-white/60">{{
+            props.match.home_team.code
+          }}</span>
         </div>
         <span class="text-sm font-medium text-gray-300">{{ props.match.home_team.name }}</span>
       </div>
@@ -137,38 +135,34 @@ function eventIcon(type: string): string {
         <span class="text-4xl font-bold tabular-nums transition-all duration-300">
           {{ liveHomeScore }}
         </span>
-        <span class="text-2xl text-gray-500 font-light">-</span>
+        <span class="text-2xl font-light text-gray-500">-</span>
         <span class="text-4xl font-bold tabular-nums transition-all duration-300">
           {{ liveAwayScore }}
         </span>
       </div>
 
       <!-- Away team -->
-      <div class="flex flex-col items-center flex-1">
-        <div class="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center overflow-hidden mb-2">
+      <div class="flex flex-1 flex-col items-center">
+        <div
+          class="mb-2 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-white/10"
+        >
           <img
             v-if="props.match.away_team.flag_url"
             :src="props.match.away_team.flag_url"
             :alt="props.match.away_team.name"
-            class="w-full h-full object-cover"
-          >
-          <span
-            v-else
-            class="text-lg font-bold text-white/60"
-          >{{ props.match.away_team.code }}</span>
+            class="h-full w-full object-cover"
+          />
+          <span v-else class="text-lg font-bold text-white/60">{{
+            props.match.away_team.code
+          }}</span>
         </div>
         <span class="text-sm font-medium text-gray-300">{{ props.match.away_team.name }}</span>
       </div>
     </div>
 
     <!-- Recent events -->
-    <div
-      v-if="recentEvents.length > 0"
-      class="mt-4 pt-4 border-t border-white/10"
-    >
-      <p class="text-xs text-gray-500 mb-2">
-        最近事件
-      </p>
+    <div v-if="recentEvents.length > 0" class="mt-4 border-t border-white/10 pt-4">
+      <p class="mb-2 text-xs text-gray-500">最近事件</p>
       <div class="space-y-1.5">
         <div
           v-for="(event, index) in recentEvents"

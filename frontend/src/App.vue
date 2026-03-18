@@ -12,12 +12,9 @@ const hideChrome = computed(() => route.name === 'login')
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="flex min-h-screen flex-col">
     <NavBar v-if="!hideChrome" />
-    <main
-      class="flex-1"
-      :class="hideChrome ? '' : 'pb-16'"
-    >
+    <main class="flex-1" :class="hideChrome ? '' : 'pb-16'">
       <RouterView />
     </main>
     <TabBar v-if="!hideChrome" />

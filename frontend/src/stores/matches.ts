@@ -27,7 +27,14 @@ export const useMatchStore = defineStore('matches', () => {
   const currentMatch = ref<Match | null>(null)
   const loading = ref(false)
 
-  async function fetchMatches(params?: { stage?: string; group?: string; team_id?: number; date?: string; status?: string; limit?: number }) {
+  async function fetchMatches(params?: {
+    stage?: string
+    group?: string
+    team_id?: number
+    date?: string
+    status?: string
+    limit?: number
+  }) {
     loading.value = true
     try {
       const res = await getMatches(params)

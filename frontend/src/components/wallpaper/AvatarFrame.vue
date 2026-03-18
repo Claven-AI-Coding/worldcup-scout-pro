@@ -23,34 +23,22 @@ const frameClass = computed(() => {
 </script>
 
 <template>
-  <div class="bg-white rounded-xl p-4">
-    <h3 class="text-sm font-bold text-gray-700 mb-3">
-      球队头像框
-    </h3>
+  <div class="rounded-xl bg-white p-4">
+    <h3 class="mb-3 text-sm font-bold text-gray-700">球队头像框</h3>
 
     <!-- 预览 -->
-    <div class="flex justify-center mb-4">
+    <div class="mb-4 flex justify-center">
       <div
-        class="w-24 h-24 rounded-full border-4 ring-4 flex items-center justify-center bg-gray-100 transition-all"
+        class="flex h-24 w-24 items-center justify-center rounded-full border-4 bg-gray-100 ring-4 transition-all"
         :class="frameClass"
       >
-        <img
-          v-if="avatarUrl"
-          :src="avatarUrl"
-          class="w-full h-full rounded-full object-cover"
-        >
-        <span
-          v-else
-          class="text-2xl font-bold text-gray-400"
-        >{{ teamCode || '?' }}</span>
+        <img v-if="avatarUrl" :src="avatarUrl" class="h-full w-full rounded-full object-cover" />
+        <span v-else class="text-2xl font-bold text-gray-400">{{ teamCode || '?' }}</span>
       </div>
     </div>
 
     <!-- 球队名 -->
-    <p
-      v-if="teamName"
-      class="text-xs text-center text-gray-500 mb-3"
-    >
+    <p v-if="teamName" class="mb-3 text-center text-xs text-gray-500">
       {{ teamName }}
     </p>
 
@@ -59,7 +47,7 @@ const frameClass = computed(() => {
       <button
         v-for="frame in frames"
         :key="frame.id"
-        class="w-8 h-8 rounded-full border-2 transition-transform"
+        class="h-8 w-8 rounded-full border-2 transition-transform"
         :class="[
           frame.border,
           selectedFrame === frame.id ? 'scale-125 ring-2 ring-offset-2' : 'hover:scale-110',
@@ -69,7 +57,9 @@ const frameClass = computed(() => {
       />
     </div>
 
-    <button class="w-full mt-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors">
+    <button
+      class="mt-4 w-full rounded-lg bg-green-600 py-2 text-sm text-white transition-colors hover:bg-green-700"
+    >
       保存头像框
     </button>
   </div>

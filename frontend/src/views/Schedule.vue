@@ -26,7 +26,7 @@ const stages: StageTab[] = [
 ]
 
 const activeStage = ref('')
-const activeGroup = ref('')  // 小组筛选 A-L
+const activeGroup = ref('') // 小组筛选 A-L
 const showStandings = ref(false)
 
 // 12 组
@@ -143,17 +143,19 @@ function toggleStandings() {
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <div class="max-w-screen-lg mx-auto">
+    <div class="mx-auto max-w-screen-lg">
       <!-- 阶段筛选 -->
-      <div class="bg-white border-b border-gray-100 sticky top-14 z-40">
-        <div class="flex overflow-x-auto px-4 py-2 gap-1 scrollbar-hide">
+      <div class="sticky top-14 z-40 border-b border-gray-100 bg-white">
+        <div class="scrollbar-hide flex gap-1 overflow-x-auto px-4 py-2">
           <button
             v-for="stage in stages"
             :key="stage.value"
-            class="flex-shrink-0 px-4 py-1.5 text-sm font-medium rounded-full transition-colors"
-            :class="activeStage === stage.value
-              ? 'bg-green-600 text-white'
-              : 'text-gray-500 hover:bg-gray-100'"
+            class="flex-shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
+            :class="
+              activeStage === stage.value
+                ? 'bg-green-600 text-white'
+                : 'text-gray-500 hover:bg-gray-100'
+            "
             @click="activeStage = stage.value"
           >
             {{ stage.label }}
@@ -163,11 +165,13 @@ function toggleStandings() {
         <!-- 小组赛时显示小组筛选 -->
         <div
           v-if="activeStage === 'group'"
-          class="flex overflow-x-auto px-4 pb-2 gap-1 scrollbar-hide"
+          class="scrollbar-hide flex gap-1 overflow-x-auto px-4 pb-2"
         >
           <button
-            class="flex-shrink-0 px-3 py-1 text-xs font-medium rounded-full transition-colors"
-            :class="activeGroup === '' ? 'bg-green-100 text-green-700' : 'text-gray-400 hover:bg-gray-50'"
+            class="flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors"
+            :class="
+              activeGroup === '' ? 'bg-green-100 text-green-700' : 'text-gray-400 hover:bg-gray-50'
+            "
             @click="activeGroup = ''"
           >
             全部
@@ -175,8 +179,10 @@ function toggleStandings() {
           <button
             v-for="g in groups"
             :key="g"
-            class="flex-shrink-0 px-3 py-1 text-xs font-medium rounded-full transition-colors"
-            :class="activeGroup === g ? 'bg-green-100 text-green-700' : 'text-gray-400 hover:bg-gray-50'"
+            class="flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors"
+            :class="
+              activeGroup === g ? 'bg-green-100 text-green-700' : 'text-gray-400 hover:bg-gray-50'
+            "
             @click="activeGroup = g"
           >
             {{ g }}组
@@ -186,7 +192,7 @@ function toggleStandings() {
 
       <div class="px-4 py-4">
         <!-- 日期切换：今日 / 明日 / 全部 -->
-        <div class="flex items-center justify-between mb-4">
+        <div class="mb-4 flex items-center justify-between">
           <div class="flex gap-2">
             <button
               v-for="mode in [
@@ -195,8 +201,12 @@ function toggleStandings() {
                 { value: 'all' as DateMode, label: '全部' },
               ]"
               :key="mode.value"
-              class="px-3 py-1 text-sm rounded-lg transition-colors"
-              :class="dateMode === mode.value ? 'bg-green-600 text-white' : 'bg-white text-gray-600 border border-gray-200'"
+              class="rounded-lg px-3 py-1 text-sm transition-colors"
+              :class="
+                dateMode === mode.value
+                  ? 'bg-green-600 text-white'
+                  : 'border border-gray-200 bg-white text-gray-600'
+              "
               @click="dateMode = mode.value"
             >
               {{ mode.label }}
@@ -206,46 +216,42 @@ function toggleStandings() {
         </div>
 
         <!-- 积分榜切换 -->
-        <div class="flex justify-end mb-4">
+        <div class="mb-4 flex justify-end">
           <button
-            class="text-sm flex items-center gap-1 px-3 py-1.5 rounded-lg transition-colors"
-            :class="showStandings ? 'bg-green-50 text-green-600' : 'text-gray-500 hover:bg-gray-100'"
+            class="flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm transition-colors"
+            :class="
+              showStandings ? 'bg-green-50 text-green-600' : 'text-gray-500 hover:bg-gray-100'
+            "
             @click="toggleStandings"
           >
             <svg
-              class="w-4 h-4"
+              class="h-4 w-4"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
               viewBox="0 0 24 24"
             >
-              <path
-                stroke-linecap="round"
-                d="M3 10h18M3 14h18M3 18h18M3 6h18"
-              />
+              <path stroke-linecap="round" d="M3 10h18M3 14h18M3 18h18M3 6h18" />
             </svg>
             积分榜
           </button>
         </div>
 
         <!-- 积分榜展示（12 组 Tab 切换） -->
-        <div
-          v-if="showStandings"
-          class="mb-6"
-        >
-          <SkeletonLoader
-            v-if="standingsLoading"
-            type="list"
-            :count="4"
-          />
+        <div v-if="showStandings" class="mb-6">
+          <SkeletonLoader v-if="standingsLoading" type="list" :count="4" />
           <template v-else-if="Object.keys(standings).length > 0">
             <!-- 小组 Tab -->
-            <div class="flex overflow-x-auto gap-1 mb-3 scrollbar-hide">
+            <div class="scrollbar-hide mb-3 flex gap-1 overflow-x-auto">
               <button
                 v-for="g in groups"
                 :key="g"
-                class="flex-shrink-0 px-3 py-1 text-xs font-medium rounded-full transition-colors"
-                :class="activeStandingsGroup === g ? 'bg-green-600 text-white' : 'text-gray-400 bg-gray-100'"
+                class="flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors"
+                :class="
+                  activeStandingsGroup === g
+                    ? 'bg-green-600 text-white'
+                    : 'bg-gray-100 text-gray-400'
+                "
                 @click="activeStandingsGroup = g"
               >
                 {{ g }}组
@@ -256,48 +262,27 @@ function toggleStandings() {
               :standings="standings[activeStandingsGroup]"
               :group-name="activeStandingsGroup"
             />
-            <EmptyState
-              v-else
-              message="该组暂无数据"
-            />
+            <EmptyState v-else message="该组暂无数据" />
           </template>
-          <EmptyState
-            v-else
-            message="暂无积分数据"
-          />
+          <EmptyState v-else message="暂无积分数据" />
         </div>
 
         <!-- 比赛列表 -->
         <div v-if="!showStandings">
-          <SkeletonLoader
-            v-if="matchStore.loading"
-            type="card"
-            :count="3"
-          />
+          <SkeletonLoader v-if="matchStore.loading" type="card" :count="3" />
 
           <template v-else-if="Object.keys(groupedMatches).length > 0">
-            <div
-              v-for="(matches, dateKey) in groupedMatches"
-              :key="dateKey"
-              class="mb-6"
-            >
-              <h3 class="text-xs text-gray-400 font-medium mb-2 uppercase">
+            <div v-for="(matches, dateKey) in groupedMatches" :key="dateKey" class="mb-6">
+              <h3 class="mb-2 text-xs font-medium uppercase text-gray-400">
                 {{ dateKey }}
               </h3>
               <div class="space-y-3">
-                <MatchCard
-                  v-for="match in matches"
-                  :key="match.id"
-                  :match="match"
-                />
+                <MatchCard v-for="match in matches" :key="match.id" :match="match" />
               </div>
             </div>
           </template>
 
-          <EmptyState
-            v-else
-            message="暂无比赛"
-          />
+          <EmptyState v-else message="暂无比赛" />
         </div>
       </div>
     </div>

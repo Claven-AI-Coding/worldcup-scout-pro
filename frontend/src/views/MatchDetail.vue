@@ -87,10 +87,14 @@ const allEvents = computed(() => {
 
 const eventIcon = (type: string) => {
   switch (type) {
-    case 'goal': return '⚽'
-    case 'card': return '🟨'
-    case 'substitution': return '🔄'
-    default: return '📋'
+    case 'goal':
+      return '⚽'
+    case 'card':
+      return '🟨'
+    case 'substitution':
+      return '🔄'
+    default:
+      return '📋'
   }
 }
 
@@ -128,26 +132,23 @@ onMounted(loadData)
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <div class="max-w-screen-lg mx-auto">
-      <LoadingSpinner
-        v-if="loading"
-        text="加载比赛详情..."
-      />
+    <div class="mx-auto max-w-screen-lg">
+      <LoadingSpinner v-if="loading" text="加载比赛详情..." />
 
       <template v-else-if="match">
         <!-- 顶部比赛信息 -->
-        <div class="bg-gradient-to-b from-green-600 to-green-700 text-white p-6">
-          <div class="text-center mb-2">
-            <span class="text-xs bg-white/20 px-3 py-1 rounded-full">{{ stageLabel }}</span>
+        <div class="bg-gradient-to-b from-green-600 to-green-700 p-6 text-white">
+          <div class="mb-2 text-center">
+            <span class="rounded-full bg-white/20 px-3 py-1 text-xs">{{ stageLabel }}</span>
           </div>
 
           <!-- 双方球队和比分 -->
-          <div class="flex items-center justify-between mt-4">
+          <div class="mt-4 flex items-center justify-between">
             <div
-              class="flex flex-col items-center flex-1 cursor-pointer"
+              class="flex flex-1 cursor-pointer flex-col items-center"
               @click="goTeam(match.home_team.id)"
             >
-              <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mb-2">
+              <div class="mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
                 <span class="text-2xl font-bold">{{ match.home_team.code }}</span>
               </div>
               <span class="text-sm font-medium">{{ match.home_team.name }}</span>
@@ -165,10 +166,10 @@ onMounted(loadData)
             </div>
 
             <div
-              class="flex flex-col items-center flex-1 cursor-pointer"
+              class="flex flex-1 cursor-pointer flex-col items-center"
               @click="goTeam(match.away_team.id)"
             >
-              <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mb-2">
+              <div class="mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
                 <span class="text-2xl font-bold">{{ match.away_team.code }}</span>
               </div>
               <span class="text-sm font-medium">{{ match.away_team.name }}</span>
@@ -176,14 +177,14 @@ onMounted(loadData)
           </div>
 
           <!-- 时间/场馆/状态 -->
-          <div class="flex items-center justify-center gap-4 mt-4 text-xs text-white/70">
+          <div class="mt-4 flex items-center justify-center gap-4 text-xs text-white/70">
             <span>{{ formattedTime }}</span>
             <span v-if="match.venue">{{ match.venue }}</span>
           </div>
 
-          <div class="text-center mt-3">
+          <div class="mt-3 text-center">
             <span
-              class="inline-flex items-center text-xs px-3 py-1 rounded-full"
+              class="inline-flex items-center rounded-full px-3 py-1 text-xs"
               :class="statusConfig.class"
             >
               {{ statusConfig.label }}
@@ -192,14 +193,10 @@ onMounted(loadData)
         </div>
 
         <!-- 直播比分 -->
-        <LiveScore
-          v-if="match.status === 'live'"
-          :match="match"
-          class="px-4 pt-4"
-        />
+        <LiveScore v-if="match.status === 'live'" :match="match" class="px-4 pt-4" />
 
         <!-- 操作区域 -->
-        <div class="px-4 py-4 space-y-4">
+        <div class="space-y-4 px-4 py-4">
           <!-- 设置提醒 -->
           <ReminderSetting
             v-if="match.status === 'upcoming'"
@@ -211,20 +208,15 @@ onMounted(loadData)
           <AIPrediction :match-id="match.id" />
 
           <!-- 比赛事件时间线 -->
-          <div
-            v-if="allEvents.length > 0"
-            class="bg-white rounded-xl p-4"
-          >
-            <h3 class="text-sm font-bold text-gray-700 mb-3">
-              比赛事件
-            </h3>
+          <div v-if="allEvents.length > 0" class="rounded-xl bg-white p-4">
+            <h3 class="mb-3 text-sm font-bold text-gray-700">比赛事件</h3>
             <div class="space-y-3">
               <div
                 v-for="event in allEvents"
                 :key="event.id"
                 class="flex items-center gap-3 text-sm"
               >
-                <span class="w-8 text-center text-gray-400 font-mono">{{ event.minute }}'</span>
+                <span class="w-8 text-center font-mono text-gray-400">{{ event.minute }}'</span>
                 <span>{{ eventIcon(event.event_type) }}</span>
                 <span class="text-gray-700">{{ event.detail || event.event_type }}</span>
               </div>
@@ -232,10 +224,7 @@ onMounted(loadData)
           </div>
 
           <!-- 暂无事件 -->
-          <div
-            v-else
-            class="bg-white rounded-xl p-6 text-center text-gray-400 text-sm"
-          >
+          <div v-else class="rounded-xl bg-white p-6 text-center text-sm text-gray-400">
             暂无比赛事件
           </div>
         </div>

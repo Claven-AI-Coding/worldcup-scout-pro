@@ -39,30 +39,29 @@ const timeAgo = computed(() => {
 <template>
   <div class="flex gap-3 py-3">
     <!-- Author avatar -->
-    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+    <div
+      class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200"
+    >
       <img
         v-if="props.comment.author.avatar"
         :src="props.comment.author.avatar"
         :alt="props.comment.author.nickname"
-        class="w-full h-full object-cover"
-      >
-      <svg
-        v-else
-        class="w-4 h-4 text-gray-400"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+        class="h-full w-full object-cover"
+      />
+      <svg v-else class="h-4 w-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+        <path
+          d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"
+        />
       </svg>
     </div>
 
     <!-- Content -->
-    <div class="flex-1 min-w-0">
-      <div class="flex items-center gap-2 mb-1">
+    <div class="min-w-0 flex-1">
+      <div class="mb-1 flex items-center gap-2">
         <span class="text-sm font-medium text-gray-700">{{ props.comment.author.nickname }}</span>
         <span class="text-xs text-gray-400">{{ timeAgo }}</span>
       </div>
-      <p class="text-sm text-gray-600 leading-relaxed">
+      <p class="text-sm leading-relaxed text-gray-600">
         {{ props.comment.content }}
       </p>
     </div>

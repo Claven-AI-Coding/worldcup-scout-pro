@@ -10,8 +10,7 @@ export interface MatchFilters {
   limit?: number
 }
 
-export const getMatches = (params?: MatchFilters) =>
-  api.get('/matches', { params })
+export const getMatches = (params?: MatchFilters) => api.get('/matches', { params })
 
 export const getMatch = (id: number) => api.get(`/matches/${id}`)
 
@@ -29,4 +28,6 @@ export const getMatchPreview = (id: number) => api.get(`/matches/${id}/preview`)
 
 // 球队全赛程一键订阅
 export const subscribeTeamMatches = (teamId: number, minutes: number = 30) =>
-  api.post(`/matches/subscribe-team/${teamId}`, null, { params: { remind_before_minutes: minutes } })
+  api.post(`/matches/subscribe-team/${teamId}`, null, {
+    params: { remind_before_minutes: minutes },
+  })

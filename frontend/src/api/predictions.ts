@@ -1,7 +1,6 @@
 import api from '.'
 
-export const getMatchPrediction = (matchId: number) =>
-  api.get(`/predictions/matches/${matchId}`)
+export const getMatchPrediction = (matchId: number) => api.get(`/predictions/matches/${matchId}`)
 
 export const submitPrediction = (data: {
   match_id: number

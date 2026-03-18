@@ -29,7 +29,9 @@ async function handleSubmit() {
     done.value = true
     emit('success')
   } catch (e: unknown) {
-    error.value = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail || '设置失败，请重试'
+    error.value =
+      (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
+      '设置失败，请重试'
   } finally {
     loading.value = false
   }
@@ -37,32 +39,25 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="bg-white rounded-xl p-4">
-    <h3 class="text-sm font-bold text-gray-700 mb-3">
-      赛前提醒
-    </h3>
+  <div class="rounded-xl bg-white p-4">
+    <h3 class="mb-3 text-sm font-bold text-gray-700">赛前提醒</h3>
 
-    <div
-      v-if="done"
-      class="text-center py-4"
-    >
-      <div class="text-green-500 text-2xl mb-2">
-        ✓
-      </div>
-      <p class="text-sm text-gray-600">
-        提醒已设置
-      </p>
+    <div v-if="done" class="py-4 text-center">
+      <div class="mb-2 text-2xl text-green-500">✓</div>
+      <p class="text-sm text-gray-600">提醒已设置</p>
     </div>
 
     <template v-else>
-      <div class="flex gap-2 mb-4">
+      <div class="mb-4 flex gap-2">
         <button
           v-for="opt in options"
           :key="opt.value"
-          class="flex-1 py-2 text-xs rounded-lg border transition-colors"
-          :class="selectedMinutes === opt.value
-            ? 'border-green-500 bg-green-50 text-green-700'
-            : 'border-gray-200 text-gray-500 hover:border-gray-300'"
+          class="flex-1 rounded-lg border py-2 text-xs transition-colors"
+          :class="
+            selectedMinutes === opt.value
+              ? 'border-green-500 bg-green-50 text-green-700'
+              : 'border-gray-200 text-gray-500 hover:border-gray-300'
+          "
           @click="selectedMinutes = opt.value"
         >
           {{ opt.label }}
@@ -70,17 +65,14 @@ async function handleSubmit() {
       </div>
 
       <button
-        class="w-full py-2.5 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+        class="w-full rounded-lg bg-green-600 py-2.5 text-sm font-medium text-white transition-colors hover:bg-green-700 disabled:opacity-50"
         :disabled="loading"
         @click="handleSubmit"
       >
         {{ loading ? '设置中...' : '设置提醒' }}
       </button>
 
-      <p
-        v-if="error"
-        class="text-xs text-red-500 mt-2 text-center"
-      >
+      <p v-if="error" class="mt-2 text-center text-xs text-red-500">
         {{ error }}
       </p>
     </template>

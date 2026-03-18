@@ -26,14 +26,14 @@ const displayAction = props.actionText || defaultActionText[props.type] || ''
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center py-16 px-6">
+  <div class="flex flex-col items-center justify-center px-6 py-16">
     <!-- 无数据图标 -->
     <div
       v-if="type === 'no-data'"
-      class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4"
+      class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100"
     >
       <svg
-        class="w-10 h-10 text-gray-300"
+        class="h-10 w-10 text-gray-300"
         fill="none"
         stroke="currentColor"
         stroke-width="1.5"
@@ -50,10 +50,10 @@ const displayAction = props.actionText || defaultActionText[props.type] || ''
     <!-- 无网络图标 -->
     <div
       v-else-if="type === 'no-network'"
-      class="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center mb-4"
+      class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-50"
     >
       <svg
-        class="w-10 h-10 text-red-300"
+        class="h-10 w-10 text-red-300"
         fill="none"
         stroke="currentColor"
         stroke-width="1.5"
@@ -69,50 +69,35 @@ const displayAction = props.actionText || defaultActionText[props.type] || ''
           stroke-linejoin="round"
           d="M15.536 8.464a5 5 0 010 7.072M8.464 15.536a5 5 0 010-7.072"
         />
-        <circle
-          cx="12"
-          cy="12"
-          r="1"
-          fill="currentColor"
-        />
-        <path
-          stroke-linecap="round"
-          stroke-width="2"
-          d="M4 4l16 16"
-        />
+        <circle cx="12" cy="12" r="1" fill="currentColor" />
+        <path stroke-linecap="round" stroke-width="2" d="M4 4l16 16" />
       </svg>
     </div>
 
     <!-- 无权限图标 -->
     <div
       v-else-if="type === 'no-permission'"
-      class="w-20 h-20 rounded-full bg-yellow-50 flex items-center justify-center mb-4"
+      class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-50"
     >
       <svg
-        class="w-10 h-10 text-yellow-400"
+        class="h-10 w-10 text-yellow-400"
         fill="none"
         stroke="currentColor"
         stroke-width="1.5"
         viewBox="0 0 24 24"
       >
-        <rect
-          x="3"
-          y="11"
-          width="18"
-          height="11"
-          rx="2"
-        />
+        <rect x="3" y="11" width="18" height="11" rx="2" />
         <path d="M7 11V7a5 5 0 0110 0v4" />
       </svg>
     </div>
 
-    <p class="text-sm text-gray-400 text-center">
+    <p class="text-center text-sm text-gray-400">
       {{ props.message }}
     </p>
 
     <button
       v-if="displayAction"
-      class="mt-4 px-6 py-2 bg-primary-500 text-white text-sm font-medium rounded-full hover:bg-primary-600 transition-colors"
+      class="mt-4 rounded-full bg-primary-500 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600"
       @click="emit('action')"
     >
       {{ displayAction }}

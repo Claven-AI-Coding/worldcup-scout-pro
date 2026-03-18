@@ -79,24 +79,21 @@ function goToDetail() {
 
 <template>
   <div
-    class="bg-white rounded-xl shadow-sm border p-4 min-w-[280px] cursor-pointer hover:shadow-md transition-all"
+    class="min-w-[280px] cursor-pointer rounded-xl border bg-white p-4 shadow-sm transition-all hover:shadow-md"
     :class="cardClass"
     @click="goToDetail"
   >
     <!-- 顶部：阶段 + 时间 + 状态 -->
-    <div class="flex items-center justify-between mb-3">
+    <div class="mb-3 flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <span class="text-xs text-gray-500 bg-gray-50 px-2 py-0.5 rounded">{{ stageLabel }}</span>
+        <span class="rounded bg-gray-50 px-2 py-0.5 text-xs text-gray-500">{{ stageLabel }}</span>
         <span class="text-xs text-gray-400">{{ formattedTime }}</span>
       </div>
       <span
-        class="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full"
+        class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
         :class="statusConfig.class"
       >
-        <span
-          v-if="statusConfig.pulse"
-          class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"
-        />
+        <span v-if="statusConfig.pulse" class="h-1.5 w-1.5 animate-pulse rounded-full bg-red-500" />
         {{ statusConfig.label }}
       </span>
     </div>
@@ -104,20 +101,21 @@ function goToDetail() {
     <!-- 双方球队和比分 -->
     <div class="flex items-center justify-between gap-2">
       <!-- 主队 -->
-      <div class="flex flex-col items-center flex-1 min-w-0">
-        <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden mb-1">
+      <div class="flex min-w-0 flex-1 flex-col items-center">
+        <div
+          class="mb-1 flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gray-100"
+        >
           <img
             v-if="props.match.home_team.flag_url"
             :src="props.match.home_team.flag_url"
             :alt="props.match.home_team.name"
-            class="w-full h-full object-cover"
-          >
-          <span
-            v-else
-            class="text-sm font-bold text-gray-400"
-          >{{ props.match.home_team.code }}</span>
+            class="h-full w-full object-cover"
+          />
+          <span v-else class="text-sm font-bold text-gray-400">{{
+            props.match.home_team.code
+          }}</span>
         </div>
-        <span class="text-xs text-gray-700 font-medium truncate w-full text-center">
+        <span class="w-full truncate text-center text-xs font-medium text-gray-700">
           {{ props.match.home_team.name }}
         </span>
       </div>
@@ -145,30 +143,28 @@ function goToDetail() {
       </div>
 
       <!-- 客队 -->
-      <div class="flex flex-col items-center flex-1 min-w-0">
-        <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden mb-1">
+      <div class="flex min-w-0 flex-1 flex-col items-center">
+        <div
+          class="mb-1 flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gray-100"
+        >
           <img
             v-if="props.match.away_team.flag_url"
             :src="props.match.away_team.flag_url"
             :alt="props.match.away_team.name"
-            class="w-full h-full object-cover"
-          >
-          <span
-            v-else
-            class="text-sm font-bold text-gray-400"
-          >{{ props.match.away_team.code }}</span>
+            class="h-full w-full object-cover"
+          />
+          <span v-else class="text-sm font-bold text-gray-400">{{
+            props.match.away_team.code
+          }}</span>
         </div>
-        <span class="text-xs text-gray-700 font-medium truncate w-full text-center">
+        <span class="w-full truncate text-center text-xs font-medium text-gray-700">
           {{ props.match.away_team.name }}
         </span>
       </div>
     </div>
 
     <!-- 场馆 -->
-    <div
-      v-if="props.match.venue"
-      class="mt-3 text-center"
-    >
+    <div v-if="props.match.venue" class="mt-3 text-center">
       <span class="text-xs text-gray-400">{{ props.match.venue }}</span>
     </div>
   </div>

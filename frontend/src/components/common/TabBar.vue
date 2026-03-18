@@ -26,19 +26,21 @@ function isActive(tab: TabItem): boolean {
 </script>
 
 <template>
-  <nav class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 safe-area-bottom">
-    <div class="flex items-center justify-around h-16 max-w-screen-lg mx-auto">
+  <nav
+    class="safe-area-bottom fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white"
+  >
+    <div class="mx-auto flex h-16 max-w-screen-lg items-center justify-around">
       <router-link
         v-for="tab in tabs"
         :key="tab.name"
         :to="tab.path"
-        class="flex flex-col items-center justify-center flex-1 h-full transition-colors"
+        class="flex h-full flex-1 flex-col items-center justify-center transition-colors"
         :class="isActive(tab) ? 'text-green-600' : 'text-gray-400 hover:text-gray-600'"
       >
         <!-- 首页 -->
         <svg
           v-if="tab.icon === 'home'"
-          class="w-6 h-6"
+          class="h-6 w-6"
           fill="none"
           stroke="currentColor"
           stroke-width="1.8"
@@ -49,66 +51,40 @@ function isActive(tab: TabItem): boolean {
             stroke-linejoin="round"
             d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"
           />
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M9 21V12h6v9"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
         </svg>
 
         <!-- 赛程 -->
         <svg
           v-else-if="tab.icon === 'schedule'"
-          class="w-6 h-6"
+          class="h-6 w-6"
           fill="none"
           stroke="currentColor"
           stroke-width="1.8"
           viewBox="0 0 24 24"
         >
-          <rect
-            x="3"
-            y="4"
-            width="18"
-            height="18"
-            rx="2"
-          />
-          <path
-            stroke-linecap="round"
-            d="M16 2v4M8 2v4M3 10h18"
-          />
-          <circle
-            cx="12"
-            cy="16"
-            r="1.5"
-            fill="currentColor"
-          />
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <path stroke-linecap="round" d="M16 2v4M8 2v4M3 10h18" />
+          <circle cx="12" cy="16" r="1.5" fill="currentColor" />
         </svg>
 
         <!-- 数据 -->
         <svg
           v-else-if="tab.icon === 'data'"
-          class="w-6 h-6"
+          class="h-6 w-6"
           fill="none"
           stroke="currentColor"
           stroke-width="1.8"
           viewBox="0 0 24 24"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M3 3v18h18"
-          />
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M7 16l4-5 4 3 5-7"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7 16l4-5 4 3 5-7" />
         </svg>
 
         <!-- 社交 -->
         <svg
           v-else-if="tab.icon === 'social'"
-          class="w-6 h-6"
+          class="h-6 w-6"
           fill="none"
           stroke="currentColor"
           stroke-width="1.8"
@@ -124,17 +100,13 @@ function isActive(tab: TabItem): boolean {
         <!-- 我的 -->
         <svg
           v-else-if="tab.icon === 'profile'"
-          class="w-6 h-6"
+          class="h-6 w-6"
           fill="none"
           stroke="currentColor"
           stroke-width="1.8"
           viewBox="0 0 24 24"
         >
-          <circle
-            cx="12"
-            cy="8"
-            r="4"
-          />
+          <circle cx="12" cy="8" r="4" />
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -142,7 +114,7 @@ function isActive(tab: TabItem): boolean {
           />
         </svg>
 
-        <span class="text-xs mt-1 font-medium">{{ tab.label }}</span>
+        <span class="mt-1 text-xs font-medium">{{ tab.label }}</span>
       </router-link>
     </div>
   </nav>

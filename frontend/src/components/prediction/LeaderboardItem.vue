@@ -31,62 +31,54 @@ const rankStyle = computed(() => {
 </script>
 
 <template>
-  <div class="flex items-center gap-3 py-3 px-4 hover:bg-gray-50 transition-colors rounded-lg">
+  <div class="flex items-center gap-3 rounded-lg px-4 py-3 transition-colors hover:bg-gray-50">
     <!-- Rank -->
     <div
-      class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+      class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold"
       :class="rankStyle"
     >
       {{ props.rank }}
     </div>
 
     <!-- User avatar -->
-    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+    <div
+      class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200"
+    >
       <img
         v-if="props.entry.avatar"
         :src="props.entry.avatar"
         :alt="props.entry.nickname"
-        class="w-full h-full object-cover"
-      >
-      <svg
-        v-else
-        class="w-5 h-5 text-gray-400"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+        class="h-full w-full object-cover"
+      />
+      <svg v-else class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+        <path
+          d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"
+        />
       </svg>
     </div>
 
     <!-- Name and streak -->
-    <div class="flex-1 min-w-0">
-      <p class="text-sm font-medium text-gray-800 truncate">
+    <div class="min-w-0 flex-1">
+      <p class="truncate text-sm font-medium text-gray-800">
         {{ props.entry.nickname }}
       </p>
-      <div
-        v-if="props.entry.win_streak >= 3"
-        class="flex items-center gap-1 mt-0.5"
-      >
+      <div v-if="props.entry.win_streak >= 3" class="mt-0.5 flex items-center gap-1">
         <!-- Flame icon for win streak -->
-        <svg
-          class="w-3.5 h-3.5 text-orange-500"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path d="M12 23c-4.97 0-9-3.58-9-8 0-3.07 2.13-5.64 3.5-7.13.39-.42 1.07-.17 1.1.4.12 2.14 1.23 3.8 2.4 4.46V12c0-4.56 3.93-8.86 5.47-10.37.38-.38 1.03-.14 1.08.39.33 3.7 2.88 6.78 3.95 8.48C21.67 12.4 21 14.81 21 15c0 4.42-4.03 8-9 8z" />
+        <svg class="h-3.5 w-3.5 text-orange-500" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 23c-4.97 0-9-3.58-9-8 0-3.07 2.13-5.64 3.5-7.13.39-.42 1.07-.17 1.1.4.12 2.14 1.23 3.8 2.4 4.46V12c0-4.56 3.93-8.86 5.47-10.37.38-.38 1.03-.14 1.08.39.33 3.7 2.88 6.78 3.95 8.48C21.67 12.4 21 14.81 21 15c0 4.42-4.03 8-9 8z"
+          />
         </svg>
-        <span class="text-xs text-orange-500 font-medium">{{ props.entry.win_streak }}连胜</span>
+        <span class="text-xs font-medium text-orange-500">{{ props.entry.win_streak }}连胜</span>
       </div>
     </div>
 
     <!-- Points -->
-    <div class="text-right flex-shrink-0">
+    <div class="flex-shrink-0 text-right">
       <p class="text-sm font-bold text-gray-800">
         {{ props.entry.total_points }}
       </p>
-      <p class="text-xs text-gray-400">
-        积分
-      </p>
+      <p class="text-xs text-gray-400">积分</p>
     </div>
   </div>
 </template>

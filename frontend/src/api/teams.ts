@@ -1,7 +1,6 @@
 import api from '.'
 
-export const getTeams = (params?: { group?: string }) =>
-  api.get('/teams', { params })
+export const getTeams = (params?: { group?: string }) => api.get('/teams', { params })
 
 export const getTeam = (id: number) => api.get(`/teams/${id}`)
 

@@ -15,13 +15,7 @@ interface ShareCardOptions {
  * 生成分享海报（Canvas）
  */
 export async function generateShareCard(options: ShareCardOptions): Promise<string> {
-  const {
-    title,
-    subtitle = '世界杯球探 Pro',
-    teamCode = '',
-    width = 750,
-    height = 1334,
-  } = options
+  const { title, subtitle = '世界杯球探 Pro', teamCode = '', width = 750, height = 1334 } = options
 
   const canvas = document.createElement('canvas')
   canvas.width = width

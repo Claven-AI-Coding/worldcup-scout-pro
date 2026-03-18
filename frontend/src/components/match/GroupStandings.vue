@@ -46,22 +46,23 @@ onMounted(fetchStandings)
 <template>
   <div>
     <!-- 小组 Tab -->
-    <div class="flex overflow-x-auto gap-1 mb-3 scrollbar-hide">
+    <div class="scrollbar-hide mb-3 flex gap-1 overflow-x-auto">
       <button
         v-for="g in groups"
         :key="g"
-        class="flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-full transition-colors"
-        :class="activeGroup === g ? 'bg-green-600 text-white' : 'text-gray-400 bg-gray-100 hover:bg-gray-200'"
+        class="flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors"
+        :class="
+          activeGroup === g
+            ? 'bg-green-600 text-white'
+            : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+        "
         @click="activeGroup = g"
       >
         {{ g }}组
       </button>
     </div>
 
-    <LoadingSpinner
-      v-if="loading"
-      text="加载积分榜..."
-    />
+    <LoadingSpinner v-if="loading" text="加载积分榜..." />
 
     <template v-else>
       <StandingsTable
@@ -71,22 +72,16 @@ onMounted(fetchStandings)
       />
 
       <!-- 出线标识：前 2 名绿色背景 + 最佳第三 -->
-      <div
-        v-if="standings[activeGroup]"
-        class="mt-2 flex gap-4 text-xs text-gray-400"
-      >
+      <div v-if="standings[activeGroup]" class="mt-2 flex gap-4 text-xs text-gray-400">
         <span class="flex items-center gap-1">
-          <span class="w-2 h-2 rounded-full bg-green-500" /> 出线
+          <span class="h-2 w-2 rounded-full bg-green-500" /> 出线
         </span>
         <span class="flex items-center gap-1">
-          <span class="w-2 h-2 rounded-full bg-yellow-400" /> 待定（最佳第三）
+          <span class="h-2 w-2 rounded-full bg-yellow-400" /> 待定（最佳第三）
         </span>
       </div>
 
-      <EmptyState
-        v-if="!standings[activeGroup]"
-        message="暂无该组数据"
-      />
+      <EmptyState v-if="!standings[activeGroup]" message="暂无该组数据" />
     </template>
   </div>
 </template>

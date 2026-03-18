@@ -48,21 +48,20 @@ function selectStyle(value: string) {
     <div
       v-for="style in styles"
       :key="style.value"
-      class="relative rounded-xl overflow-hidden cursor-pointer transition-all duration-200"
-      :class="props.modelValue === style.value
-        ? 'ring-2 ring-primary-500 ring-offset-2 scale-[1.02]'
-        : 'hover:scale-[1.01]'"
+      class="relative cursor-pointer overflow-hidden rounded-xl transition-all duration-200"
+      :class="
+        props.modelValue === style.value
+          ? 'scale-[1.02] ring-2 ring-primary-500 ring-offset-2'
+          : 'hover:scale-[1.01]'
+      "
       @click="selectStyle(style.value)"
     >
       <!-- Gradient preview -->
-      <div
-        class="h-24 bg-gradient-to-br"
-        :class="style.gradient"
-      />
+      <div class="h-24 bg-gradient-to-br" :class="style.gradient" />
 
       <!-- Label overlay -->
       <div class="absolute inset-0 flex items-end">
-        <div class="w-full px-3 py-2 bg-gradient-to-t from-black/60 to-transparent">
+        <div class="w-full bg-gradient-to-t from-black/60 to-transparent px-3 py-2">
           <span class="text-sm font-medium text-white">{{ style.label }}</span>
         </div>
       </div>
@@ -70,20 +69,16 @@ function selectStyle(value: string) {
       <!-- Check mark -->
       <div
         v-if="props.modelValue === style.value"
-        class="absolute top-2 right-2 w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center"
+        class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-primary-500"
       >
         <svg
-          class="w-4 h-4 text-white"
+          class="h-4 w-4 text-white"
           fill="none"
           stroke="currentColor"
           stroke-width="2.5"
           viewBox="0 0 24 24"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M5 13l4 4L19 7"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
         </svg>
       </div>
     </div>

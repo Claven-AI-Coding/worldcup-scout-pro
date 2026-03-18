@@ -23,9 +23,12 @@ async function handleReport() {
       reason: reason.value || undefined,
     })
     done.value = true
-    setTimeout(() => { showModal.value = false }, 1500)
+    setTimeout(() => {
+      showModal.value = false
+    }, 1500)
   } catch (e: unknown) {
-    error.value = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail || '举报失败'
+    error.value =
+      (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail || '举报失败'
   } finally {
     loading.value = false
   }
@@ -35,7 +38,7 @@ async function handleReport() {
 <template>
   <div>
     <button
-      class="text-xs text-gray-400 hover:text-red-500 transition-colors"
+      class="text-xs text-gray-400 transition-colors hover:text-red-500"
       @click.stop="showModal = true"
     >
       举报
@@ -45,42 +48,33 @@ async function handleReport() {
     <Teleport to="body">
       <div
         v-if="showModal"
-        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
         @click.self="showModal = false"
       >
-        <div class="bg-white rounded-xl p-6 w-full max-w-sm">
-          <h3 class="text-sm font-bold text-gray-800 mb-3">
-            举报内容
-          </h3>
+        <div class="w-full max-w-sm rounded-xl bg-white p-6">
+          <h3 class="mb-3 text-sm font-bold text-gray-800">举报内容</h3>
 
-          <div
-            v-if="done"
-            class="text-center py-4"
-          >
-            <div class="text-green-500 text-2xl mb-2">
-              ✓
-            </div>
-            <p class="text-sm text-gray-600">
-              举报已提交
-            </p>
+          <div v-if="done" class="py-4 text-center">
+            <div class="mb-2 text-2xl text-green-500">✓</div>
+            <p class="text-sm text-gray-600">举报已提交</p>
           </div>
 
           <template v-else>
             <textarea
               v-model="reason"
               placeholder="请描述举报原因（可选）"
-              class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm resize-none h-24 focus:outline-none focus:ring-2 focus:ring-green-500"
+              class="h-24 w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
 
-            <div class="flex gap-2 mt-4">
+            <div class="mt-4 flex gap-2">
               <button
-                class="flex-1 py-2 text-sm border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-50"
+                class="flex-1 rounded-lg border border-gray-200 py-2 text-sm text-gray-500 hover:bg-gray-50"
                 @click="showModal = false"
               >
                 取消
               </button>
               <button
-                class="flex-1 py-2 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50"
+                class="flex-1 rounded-lg bg-red-500 py-2 text-sm text-white hover:bg-red-600 disabled:opacity-50"
                 :disabled="loading"
                 @click="handleReport"
               >
@@ -88,10 +82,7 @@ async function handleReport() {
               </button>
             </div>
 
-            <p
-              v-if="error"
-              class="text-xs text-red-500 mt-2 text-center"
-            >
+            <p v-if="error" class="mt-2 text-center text-xs text-red-500">
               {{ error }}
             </p>
           </template>

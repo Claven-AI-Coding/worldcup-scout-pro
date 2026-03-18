@@ -28,9 +28,9 @@ function positionClass(pos: number): string {
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+  <div class="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
     <!-- Group header -->
-    <div class="px-4 py-3 bg-gray-50 border-b border-gray-100">
+    <div class="border-b border-gray-100 bg-gray-50 px-4 py-3">
       <h3 class="text-sm font-bold text-gray-700">
         {{ props.groupName }}
       </h3>
@@ -40,54 +40,31 @@ function positionClass(pos: number): string {
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
         <thead>
-          <tr class="text-xs text-gray-400 uppercase border-b border-gray-100">
-            <th class="px-3 py-2 text-left w-8">
-              #
-            </th>
-            <th class="px-3 py-2 text-left">
-              球队
-            </th>
-            <th class="px-2 py-2 text-center w-8">
-              场
-            </th>
-            <th class="px-2 py-2 text-center w-8">
-              胜
-            </th>
-            <th class="px-2 py-2 text-center w-8">
-              平
-            </th>
-            <th class="px-2 py-2 text-center w-8">
-              负
-            </th>
-            <th class="px-2 py-2 text-center w-8">
-              进
-            </th>
-            <th class="px-2 py-2 text-center w-8">
-              失
-            </th>
-            <th class="px-2 py-2 text-center w-10">
-              净胜
-            </th>
-            <th class="px-3 py-2 text-center w-10 font-bold">
-              积分
-            </th>
+          <tr class="border-b border-gray-100 text-xs uppercase text-gray-400">
+            <th class="w-8 px-3 py-2 text-left">#</th>
+            <th class="px-3 py-2 text-left">球队</th>
+            <th class="w-8 px-2 py-2 text-center">场</th>
+            <th class="w-8 px-2 py-2 text-center">胜</th>
+            <th class="w-8 px-2 py-2 text-center">平</th>
+            <th class="w-8 px-2 py-2 text-center">负</th>
+            <th class="w-8 px-2 py-2 text-center">进</th>
+            <th class="w-8 px-2 py-2 text-center">失</th>
+            <th class="w-10 px-2 py-2 text-center">净胜</th>
+            <th class="w-10 px-3 py-2 text-center font-bold">积分</th>
           </tr>
         </thead>
         <tbody>
           <tr
             v-for="entry in props.standings"
             :key="entry.team_id"
-            class="border-b border-gray-50 last:border-b-0 hover:bg-gray-50 transition-colors"
+            class="border-b border-gray-50 transition-colors last:border-b-0 hover:bg-gray-50"
           >
-            <td
-              class="px-3 py-2.5"
-              :class="positionClass(entry.position)"
-            >
+            <td class="px-3 py-2.5" :class="positionClass(entry.position)">
               {{ entry.position }}
             </td>
             <td class="px-3 py-2.5">
               <div class="flex items-center gap-2">
-                <span class="text-xs font-mono text-gray-400 w-6">{{ entry.team_code }}</span>
+                <span class="w-6 font-mono text-xs text-gray-400">{{ entry.team_code }}</span>
                 <span class="text-sm font-medium text-gray-700">{{ entry.team_name }}</span>
               </div>
             </td>
@@ -111,7 +88,13 @@ function positionClass(pos: number): string {
             </td>
             <td
               class="px-2 py-2.5 text-center font-medium"
-              :class="entry.goal_difference > 0 ? 'text-green-600' : entry.goal_difference < 0 ? 'text-red-500' : 'text-gray-500'"
+              :class="
+                entry.goal_difference > 0
+                  ? 'text-green-600'
+                  : entry.goal_difference < 0
+                    ? 'text-red-500'
+                    : 'text-gray-500'
+              "
             >
               {{ entry.goal_difference > 0 ? '+' : '' }}{{ entry.goal_difference }}
             </td>

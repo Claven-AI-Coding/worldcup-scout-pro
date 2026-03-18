@@ -45,31 +45,25 @@ onMounted(loadPrediction)
 </script>
 
 <template>
-  <div class="bg-white rounded-xl p-4">
-    <h3 class="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+  <div class="rounded-xl bg-white p-4">
+    <h3 class="mb-3 flex items-center gap-2 text-sm font-bold text-gray-700">
       <span>🤖</span> AI 赛果预测
     </h3>
 
-    <LoadingSpinner
-      v-if="loading"
-      text="AI 分析中..."
-    />
+    <LoadingSpinner v-if="loading" text="AI 分析中..." />
 
-    <div
-      v-else-if="error"
-      class="text-center py-4 text-sm text-gray-400"
-    >
+    <div v-else-if="error" class="py-4 text-center text-sm text-gray-400">
       {{ error }}
     </div>
 
     <template v-else-if="prediction">
       <!-- 胜率环形图（简化为进度条） -->
-      <div class="space-y-2 mb-4">
+      <div class="mb-4 space-y-2">
         <div class="flex items-center gap-2">
-          <span class="text-xs text-gray-500 w-16">{{ homeTeamName || '主队' }}</span>
-          <div class="flex-1 bg-gray-100 rounded-full h-6 overflow-hidden">
+          <span class="w-16 text-xs text-gray-500">{{ homeTeamName || '主队' }}</span>
+          <div class="h-6 flex-1 overflow-hidden rounded-full bg-gray-100">
             <div
-              class="h-full bg-green-500 rounded-full flex items-center justify-center text-xs text-white font-bold"
+              class="flex h-full items-center justify-center rounded-full bg-green-500 text-xs font-bold text-white"
               :style="{ width: prediction.home_win_pct + '%' }"
             >
               {{ prediction.home_win_pct }}%
@@ -77,10 +71,10 @@ onMounted(loadPrediction)
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <span class="text-xs text-gray-500 w-16">平局</span>
-          <div class="flex-1 bg-gray-100 rounded-full h-6 overflow-hidden">
+          <span class="w-16 text-xs text-gray-500">平局</span>
+          <div class="h-6 flex-1 overflow-hidden rounded-full bg-gray-100">
             <div
-              class="h-full bg-yellow-400 rounded-full flex items-center justify-center text-xs text-white font-bold"
+              class="flex h-full items-center justify-center rounded-full bg-yellow-400 text-xs font-bold text-white"
               :style="{ width: prediction.draw_pct + '%' }"
             >
               {{ prediction.draw_pct }}%
@@ -88,10 +82,10 @@ onMounted(loadPrediction)
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <span class="text-xs text-gray-500 w-16">{{ awayTeamName || '客队' }}</span>
-          <div class="flex-1 bg-gray-100 rounded-full h-6 overflow-hidden">
+          <span class="w-16 text-xs text-gray-500">{{ awayTeamName || '客队' }}</span>
+          <div class="h-6 flex-1 overflow-hidden rounded-full bg-gray-100">
             <div
-              class="h-full bg-red-400 rounded-full flex items-center justify-center text-xs text-white font-bold"
+              class="flex h-full items-center justify-center rounded-full bg-red-400 text-xs font-bold text-white"
               :style="{ width: prediction.away_win_pct + '%' }"
             >
               {{ prediction.away_win_pct }}%
@@ -101,18 +95,13 @@ onMounted(loadPrediction)
       </div>
 
       <!-- 比分预测 -->
-      <div
-        v-if="prediction.predicted_scores.length > 0"
-        class="mb-4"
-      >
-        <p class="text-xs text-gray-400 mb-2">
-          预测比分
-        </p>
+      <div v-if="prediction.predicted_scores.length > 0" class="mb-4">
+        <p class="mb-2 text-xs text-gray-400">预测比分</p>
         <div class="flex flex-wrap gap-2">
           <span
             v-for="(s, idx) in prediction.predicted_scores"
             :key="idx"
-            class="inline-flex items-center gap-1 px-3 py-1 bg-gray-50 rounded-full text-xs"
+            class="inline-flex items-center gap-1 rounded-full bg-gray-50 px-3 py-1 text-xs"
           >
             <span class="font-bold text-gray-700">{{ s.score }}</span>
             <span class="text-gray-400">{{ s.probability }}%</span>
@@ -121,10 +110,7 @@ onMounted(loadPrediction)
       </div>
 
       <!-- 分析摘要 -->
-      <p
-        v-if="prediction.analysis"
-        class="text-xs text-gray-500 mb-3"
-      >
+      <p v-if="prediction.analysis" class="mb-3 text-xs text-gray-500">
         {{ prediction.analysis }}
       </p>
 

@@ -26,7 +26,7 @@ const tabs: Tab[] = [
 
 // Upcoming matches for prediction
 const upcomingMatches = computed(() => {
-  return matchStore.matches.filter((m) => m.status === 'upcoming')
+  return matchStore.matches.filter(m => m.status === 'upcoming')
 })
 
 // My predictions
@@ -134,18 +134,24 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <div class="max-w-screen-lg mx-auto">
+    <div class="mx-auto max-w-screen-lg">
       <!-- Tabs -->
-      <div class="bg-white border-b border-gray-100 sticky top-14 z-40">
+      <div class="sticky top-14 z-40 border-b border-gray-100 bg-white">
         <div class="flex">
           <button
             v-for="tab in tabs"
             :key="tab.value"
-            class="flex-1 py-3 text-sm font-medium text-center border-b-2 transition-colors"
-            :class="activeTab === tab.value
-              ? 'border-primary-500 text-primary-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700'"
-            @click="activeTab = tab.value; tab.value === 'my' && fetchMyPredictions(); tab.value === 'leaderboard' && fetchLeaderboard()"
+            class="flex-1 border-b-2 py-3 text-center text-sm font-medium transition-colors"
+            :class="
+              activeTab === tab.value
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            "
+            @click="
+              activeTab = tab.value
+              tab.value === 'my' && fetchMyPredictions()
+              tab.value === 'leaderboard' && fetchLeaderboard()
+            "
           >
             {{ tab.label }}
           </button>
@@ -155,15 +161,9 @@ onMounted(() => {
       <div class="px-4 py-4">
         <!-- Upcoming matches for prediction -->
         <div v-if="activeTab === 'upcoming'">
-          <LoadingSpinner
-            v-if="matchStore.loading"
-            text="加载赛事..."
-          />
+          <LoadingSpinner v-if="matchStore.loading" text="加载赛事..." />
 
-          <div
-            v-else-if="upcomingMatches.length > 0"
-            class="space-y-4"
-          >
+          <div v-else-if="upcomingMatches.length > 0" class="space-y-4">
             <PredictionCard
               v-for="match in upcomingMatches"
               :key="match.id"
@@ -172,38 +172,26 @@ onMounted(() => {
             />
           </div>
 
-          <EmptyState
-            v-else
-            message="暂无可竞猜的比赛"
-          />
+          <EmptyState v-else message="暂无可竞猜的比赛" />
         </div>
 
         <!-- My predictions -->
         <div v-if="activeTab === 'my'">
-          <LoadingSpinner
-            v-if="myPredictionsLoading"
-            text="加载我的竞猜..."
-          />
+          <LoadingSpinner v-if="myPredictionsLoading" text="加载我的竞猜..." />
 
-          <div
-            v-else-if="myPredictions.length > 0"
-            class="space-y-3"
-          >
+          <div v-else-if="myPredictions.length > 0" class="space-y-3">
             <div
               v-for="pred in myPredictions"
               :key="pred.id"
-              class="bg-white rounded-xl shadow-sm border border-gray-100 p-4"
+              class="rounded-xl border border-gray-100 bg-white p-4 shadow-sm"
             >
               <!-- Match info -->
-              <div
-                v-if="pred.match"
-                class="flex items-center justify-between mb-3"
-              >
+              <div v-if="pred.match" class="mb-3 flex items-center justify-between">
                 <span class="text-sm font-medium text-gray-700">
                   {{ pred.match.home_team.name }} vs {{ pred.match.away_team.name }}
                 </span>
                 <span
-                  class="text-xs px-2 py-0.5 rounded-full font-medium"
+                  class="rounded-full px-2 py-0.5 text-xs font-medium"
                   :class="resultBadgeClass(pred.result)"
                 >
                   {{ pred.result === 'win' ? '猜中' : pred.result === 'lose' ? '未中' : '待开奖' }}
@@ -214,11 +202,10 @@ onMounted(() => {
               <div class="flex items-center justify-between text-sm">
                 <div class="flex items-center gap-3">
                   <span class="text-gray-500">预测:</span>
-                  <span class="font-medium text-gray-700">{{ resultLabel(pred.predicted_result) }}</span>
-                  <span
-                    v-if="pred.predicted_home_score !== null"
-                    class="text-gray-400"
-                  >
+                  <span class="font-medium text-gray-700">{{
+                    resultLabel(pred.predicted_result)
+                  }}</span>
+                  <span v-if="pred.predicted_home_score !== null" class="text-gray-400">
                     {{ pred.predicted_home_score }} : {{ pred.predicted_away_score }}
                   </span>
                 </div>
@@ -250,35 +237,36 @@ onMounted(() => {
         <!-- Leaderboard -->
         <div v-if="activeTab === 'leaderboard'">
           <!-- Type toggle -->
-          <div class="flex gap-2 mb-4">
+          <div class="mb-4 flex gap-2">
             <button
-              class="px-4 py-1.5 text-sm font-medium rounded-full transition-colors"
-              :class="leaderboardType === 'all'
-                ? 'bg-primary-500 text-white'
-                : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50'"
+              class="rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
+              :class="
+                leaderboardType === 'all'
+                  ? 'bg-primary-500 text-white'
+                  : 'border border-gray-200 bg-white text-gray-500 hover:bg-gray-50'
+              "
               @click="toggleLeaderboardType('all')"
             >
               总榜
             </button>
             <button
-              class="px-4 py-1.5 text-sm font-medium rounded-full transition-colors"
-              :class="leaderboardType === 'daily'
-                ? 'bg-primary-500 text-white'
-                : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50'"
+              class="rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
+              :class="
+                leaderboardType === 'daily'
+                  ? 'bg-primary-500 text-white'
+                  : 'border border-gray-200 bg-white text-gray-500 hover:bg-gray-50'
+              "
               @click="toggleLeaderboardType('daily')"
             >
               今日
             </button>
           </div>
 
-          <LoadingSpinner
-            v-if="leaderboardLoading"
-            text="加载排行榜..."
-          />
+          <LoadingSpinner v-if="leaderboardLoading" text="加载排行榜..." />
 
           <div
             v-else-if="leaderboard.length > 0"
-            class="bg-white rounded-xl shadow-sm border border-gray-100 divide-y divide-gray-50 overflow-hidden"
+            class="divide-y divide-gray-50 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm"
           >
             <LeaderboardItem
               v-for="(entry, index) in leaderboard"
@@ -288,10 +276,7 @@ onMounted(() => {
             />
           </div>
 
-          <EmptyState
-            v-else
-            message="暂无排行数据"
-          />
+          <EmptyState v-else message="暂无排行数据" />
         </div>
       </div>
     </div>

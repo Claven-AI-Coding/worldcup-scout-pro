@@ -26,51 +26,43 @@ function handleLogout() {
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <div class="max-w-screen-lg mx-auto px-4 py-4">
-      <h2 class="text-lg font-bold text-gray-800 mb-4">
-        设置
-      </h2>
+    <div class="mx-auto max-w-screen-lg px-4 py-4">
+      <h2 class="mb-4 text-lg font-bold text-gray-800">设置</h2>
 
       <!-- 设置项 -->
-      <div class="bg-white rounded-xl overflow-hidden mb-6">
+      <div class="mb-6 overflow-hidden rounded-xl bg-white">
         <div
           v-for="(item, idx) in settings"
           :key="item.label"
-          class="flex items-center justify-between px-4 py-3.5 cursor-pointer hover:bg-gray-50 transition-colors"
+          class="flex cursor-pointer items-center justify-between px-4 py-3.5 transition-colors hover:bg-gray-50"
           :class="idx > 0 ? 'border-t border-gray-50' : ''"
           @click="item.action"
         >
-          <span
-            class="text-sm"
-            :class="item.danger ? 'text-red-500' : 'text-gray-700'"
-          >{{ item.label }}</span>
+          <span class="text-sm" :class="item.danger ? 'text-red-500' : 'text-gray-700'">{{
+            item.label
+          }}</span>
           <svg
-            class="w-4 h-4 text-gray-300"
+            class="h-4 w-4 text-gray-300"
             fill="none"
             stroke="currentColor"
             stroke-width="2"
             viewBox="0 0 24 24"
           >
-            <path
-              stroke-linecap="round"
-              d="M9 5l7 7-7 7"
-            />
+            <path stroke-linecap="round" d="M9 5l7 7-7 7" />
           </svg>
         </div>
       </div>
 
       <!-- 退出登录 -->
       <button
-        class="w-full py-3 bg-white border border-red-200 text-red-500 rounded-xl text-sm font-medium hover:bg-red-50 transition-colors"
+        class="w-full rounded-xl border border-red-200 bg-white py-3 text-sm font-medium text-red-500 transition-colors hover:bg-red-50"
         @click="handleLogout"
       >
         退出登录
       </button>
 
       <!-- 版本信息 -->
-      <p class="text-xs text-gray-400 text-center mt-6">
-        球探 Pro V1.0 MVP
-      </p>
+      <p class="mt-6 text-center text-xs text-gray-400">球探 Pro V1.0 MVP</p>
     </div>
   </div>
 </template>

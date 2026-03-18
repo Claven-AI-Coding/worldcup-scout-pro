@@ -43,7 +43,7 @@ onMounted(() => {
 
 const selectedTeam = computed(() => {
   if (!selectedTeamId.value) return null
-  return teamStore.teams.find((t) => t.id === selectedTeamId.value) || null
+  return teamStore.teams.find(t => t.id === selectedTeamId.value) || null
 })
 
 async function loadPosts() {
@@ -70,7 +70,7 @@ watch(selectedTeamId, () => {
 // Load posts if team is already selected on mount
 watch(
   () => teamStore.teams,
-  (teams) => {
+  teams => {
     if (teams.length > 0 && selectedTeamId.value) {
       loadPosts()
     } else if (teams.length > 0 && !selectedTeamId.value) {
@@ -87,7 +87,7 @@ function selectTeam(teamId: number) {
 async function handleLike(postId: number) {
   try {
     await likePost(postId)
-    const post = posts.value.find((p) => p.id === postId)
+    const post = posts.value.find(p => p.id === postId)
     if (post) {
       post.liked = !post.liked
       post.like_count += post.liked ? 1 : -1
@@ -120,38 +120,40 @@ async function handleSubmitPost(data: { content: string; images: string[] }) {
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <div class="max-w-screen-lg mx-auto">
+    <div class="mx-auto max-w-screen-lg">
       <!-- Team circle selector -->
-      <div class="bg-white border-b border-gray-100 sticky top-14 z-40">
-        <div class="flex overflow-x-auto px-4 py-3 gap-4 scrollbar-hide">
+      <div class="sticky top-14 z-40 border-b border-gray-100 bg-white">
+        <div class="scrollbar-hide flex gap-4 overflow-x-auto px-4 py-3">
           <button
             v-for="team in teamStore.teams"
             :key="team.id"
-            class="flex flex-col items-center gap-1 flex-shrink-0 group"
+            class="group flex flex-shrink-0 flex-col items-center gap-1"
             @click="selectTeam(team.id)"
           >
             <div
-              class="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden border-2 transition-all"
-              :class="selectedTeamId === team.id
-                ? 'border-primary-500 shadow-md'
-                : 'border-transparent group-hover:border-gray-200'"
+              class="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border-2 transition-all"
+              :class="
+                selectedTeamId === team.id
+                  ? 'border-primary-500 shadow-md'
+                  : 'border-transparent group-hover:border-gray-200'
+              "
             >
               <img
                 v-if="team.flag_url"
                 :src="team.flag_url"
                 :alt="team.name"
-                class="w-full h-full object-cover"
-              >
+                class="h-full w-full object-cover"
+              />
               <span
                 v-else
-                class="text-xs font-bold text-gray-400 bg-gray-100 w-full h-full flex items-center justify-center"
+                class="flex h-full w-full items-center justify-center bg-gray-100 text-xs font-bold text-gray-400"
               >
                 {{ team.code }}
               </span>
             </div>
             <span
-              class="text-xs truncate max-w-[48px] transition-colors"
-              :class="selectedTeamId === team.id ? 'text-primary-600 font-medium' : 'text-gray-500'"
+              class="max-w-[48px] truncate text-xs transition-colors"
+              :class="selectedTeamId === team.id ? 'font-medium text-primary-600' : 'text-gray-500'"
             >
               {{ team.name }}
             </span>
@@ -161,25 +163,14 @@ async function handleSubmitPost(data: { content: string; images: string[] }) {
 
       <div class="px-4 py-4">
         <!-- Selected team header -->
-        <div
-          v-if="selectedTeam"
-          class="mb-4"
-        >
-          <h2 class="text-lg font-bold text-gray-800">
-            {{ selectedTeam.name }} 球迷圈
-          </h2>
+        <div v-if="selectedTeam" class="mb-4">
+          <h2 class="text-lg font-bold text-gray-800">{{ selectedTeam.name }} 球迷圈</h2>
         </div>
 
         <!-- Posts feed -->
-        <LoadingSpinner
-          v-if="loading"
-          text="加载中..."
-        />
+        <LoadingSpinner v-if="loading" text="加载中..." />
 
-        <div
-          v-else-if="posts.length > 0"
-          class="space-y-3"
-        >
+        <div v-else-if="posts.length > 0" class="space-y-3">
           <PostCard
             v-for="post in posts"
             :key="post.id"
@@ -196,30 +187,18 @@ async function handleSubmitPost(data: { content: string; images: string[] }) {
           @action="showPostForm = true"
         />
 
-        <EmptyState
-          v-else
-          message="请选择一支球队"
-        />
+        <EmptyState v-else message="请选择一支球队" />
       </div>
     </div>
 
     <!-- Floating create button -->
     <button
       v-if="selectedTeamId && !showPostForm"
-      class="fixed bottom-20 right-4 w-14 h-14 bg-primary-500 text-white rounded-full shadow-lg hover:bg-primary-600 active:scale-95 transition-all flex items-center justify-center z-40"
+      class="fixed bottom-20 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary-500 text-white shadow-lg transition-all hover:bg-primary-600 active:scale-95"
       @click="showPostForm = true"
     >
-      <svg
-        class="w-7 h-7"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          d="M12 5v14m-7-7h14"
-        />
+      <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" d="M12 5v14m-7-7h14" />
       </svg>
     </button>
 
@@ -227,36 +206,30 @@ async function handleSubmitPost(data: { content: string; images: string[] }) {
     <Teleport to="body">
       <div
         v-if="showPostForm"
-        class="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+        class="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
       >
         <!-- Backdrop -->
-        <div
-          class="absolute inset-0 bg-black/40"
-          @click="showPostForm = false"
-        />
+        <div class="absolute inset-0 bg-black/40" @click="showPostForm = false" />
 
         <!-- Modal content -->
-        <div class="relative w-full max-w-lg bg-white rounded-t-2xl sm:rounded-2xl mx-0 sm:mx-4 max-h-[80vh] overflow-y-auto">
+        <div
+          class="relative mx-0 max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-white sm:mx-4 sm:rounded-2xl"
+        >
           <!-- Modal header -->
-          <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-            <h3 class="text-base font-bold text-gray-800">
-              发布帖子
-            </h3>
+          <div class="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+            <h3 class="text-base font-bold text-gray-800">发布帖子</h3>
             <button
-              class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
+              class="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-gray-100"
               @click="showPostForm = false"
             >
               <svg
-                class="w-5 h-5 text-gray-500"
+                class="h-5 w-5 text-gray-500"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
                 viewBox="0 0 24 24"
               >
-                <path
-                  stroke-linecap="round"
-                  d="M18 6L6 18M6 6l12 12"
-                />
+                <path stroke-linecap="round" d="M18 6L6 18M6 6l12 12" />
               </svg>
             </button>
           </div>

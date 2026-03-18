@@ -132,11 +132,7 @@ const option = computed(() => {
 
 <template>
   <div class="radar-chart-container">
-    <VChart
-      :option="option"
-      :style="{ height: props.height }"
-      autoresize
-    />
+    <VChart :option="option" :style="{ height: props.height }" autoresize />
   </div>
 </template>
 

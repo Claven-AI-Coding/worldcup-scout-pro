@@ -13,7 +13,7 @@ export function useWebSocket(matchId: number) {
       connected.value = true
     }
 
-    ws.onmessage = (event) => {
+    ws.onmessage = event => {
       data.value = JSON.parse(event.data)
     }
 

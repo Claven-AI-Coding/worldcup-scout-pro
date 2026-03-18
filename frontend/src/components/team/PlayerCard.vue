@@ -34,46 +34,42 @@ const positionConfig = computed(() => {
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow">
+  <div
+    class="rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
+  >
     <!-- Photo placeholder + number -->
-    <div class="relative w-16 h-16 mx-auto mb-3">
-      <div class="w-16 h-16 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-        <svg
-          class="w-8 h-8 text-gray-300"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+    <div class="relative mx-auto mb-3 h-16 w-16">
+      <div
+        class="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gray-100 to-gray-200"
+      >
+        <svg class="h-8 w-8 text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"
+          />
         </svg>
       </div>
       <span
         v-if="props.player.number !== null"
-        class="absolute -top-1 -right-1 w-6 h-6 bg-gray-800 text-white text-xs font-bold rounded-full flex items-center justify-center"
+        class="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-gray-800 text-xs font-bold text-white"
       >
         {{ props.player.number }}
       </span>
     </div>
 
     <!-- Name -->
-    <h4 class="text-sm font-bold text-gray-800 text-center truncate">
+    <h4 class="truncate text-center text-sm font-bold text-gray-800">
       {{ props.player.name }}
     </h4>
 
     <!-- Position badge -->
     <div class="mt-2 flex justify-center">
-      <span
-        class="text-xs font-medium px-2 py-0.5 rounded-full"
-        :class="positionConfig.class"
-      >
+      <span class="rounded-full px-2 py-0.5 text-xs font-medium" :class="positionConfig.class">
         {{ positionConfig.label }}
       </span>
     </div>
 
     <!-- Club -->
-    <p
-      v-if="props.player.club"
-      class="mt-2 text-xs text-gray-400 text-center truncate"
-    >
+    <p v-if="props.player.club" class="mt-2 truncate text-center text-xs text-gray-400">
       {{ props.player.club }}
     </p>
   </div>

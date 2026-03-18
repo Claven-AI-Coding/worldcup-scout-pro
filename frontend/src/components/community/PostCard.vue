@@ -53,27 +53,26 @@ const imageGridClass = computed(() => {
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+  <div class="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
     <!-- Author header -->
-    <div class="flex items-center gap-3 mb-3">
-      <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+    <div class="mb-3 flex items-center gap-3">
+      <div
+        class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200"
+      >
         <img
           v-if="props.post.author.avatar"
           :src="props.post.author.avatar"
           :alt="props.post.author.nickname"
-          class="w-full h-full object-cover"
-        >
-        <svg
-          v-else
-          class="w-5 h-5 text-gray-400"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+          class="h-full w-full object-cover"
+        />
+        <svg v-else class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"
+          />
         </svg>
       </div>
       <div class="min-w-0 flex-1">
-        <p class="text-sm font-medium text-gray-800 truncate">
+        <p class="truncate text-sm font-medium text-gray-800">
           {{ props.post.author.nickname }}
         </p>
         <p class="text-xs text-gray-400">
@@ -83,31 +82,27 @@ const imageGridClass = computed(() => {
     </div>
 
     <!-- Content -->
-    <p class="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap mb-3">
+    <p class="mb-3 whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
       {{ props.post.content }}
     </p>
 
     <!-- Image grid -->
     <div
       v-if="props.post.images && props.post.images.length > 0"
-      class="grid gap-2 mb-3"
+      class="mb-3 grid gap-2"
       :class="imageGridClass"
     >
       <div
         v-for="(image, index) in props.post.images"
         :key="index"
-        class="aspect-square rounded-lg bg-gray-100 overflow-hidden"
+        class="aspect-square overflow-hidden rounded-lg bg-gray-100"
       >
-        <img
-          :src="image"
-          alt=""
-          class="w-full h-full object-cover"
-        >
+        <img :src="image" alt="" class="h-full w-full object-cover" />
       </div>
     </div>
 
     <!-- Actions -->
-    <div class="flex items-center gap-6 pt-3 border-t border-gray-50">
+    <div class="flex items-center gap-6 border-t border-gray-50 pt-3">
       <!-- Like -->
       <button
         class="flex items-center gap-1.5 text-sm transition-colors"
@@ -115,7 +110,7 @@ const imageGridClass = computed(() => {
         @click="emit('like', props.post.id)"
       >
         <svg
-          class="w-5 h-5"
+          class="h-5 w-5"
           :fill="props.post.liked ? 'currentColor' : 'none'"
           stroke="currentColor"
           stroke-width="2"
@@ -132,16 +127,10 @@ const imageGridClass = computed(() => {
 
       <!-- Comment -->
       <button
-        class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-primary-500 transition-colors"
+        class="flex items-center gap-1.5 text-sm text-gray-400 transition-colors hover:text-primary-500"
         @click="emit('comment', props.post.id)"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-        >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
