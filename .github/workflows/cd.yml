@@ -165,27 +165,30 @@ jobs:
       
       - name: Deploy via SSH
         uses: appleboy/ssh-action@master
+        env:
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
+          envs: DEPLOY_PATH
           script: |
-            cd /root/projects/worldcup-scout-pro
+            cd ${DEPLOY_PATH:-/root/projects/worldcup-scout-pro}
             
             # 拉取最新代码
             git pull origin main
             
             # 更新 Docker 镜像
-            docker-compose pull
+            docker-compose -f docker-compose.prod.yml pull
             
             # 停止旧服务
-            docker-compose down
+            docker-compose -f docker-compose.prod.yml down
             
             # 启动新服务
-            docker-compose up -d
+            docker-compose -f docker-compose.prod.yml up -d
             
             # 运行数据库迁移
-            docker-compose exec -T backend alembic upgrade head
+            docker-compose -f docker-compose.prod.yml exec -T backend alembic upgrade head
             
             # 健康检查
             sleep 10
