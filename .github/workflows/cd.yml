@@ -226,14 +226,18 @@ jobs:
       
       - name: Create Deployment Status
         uses: actions/github-script@v7
-        if: github.event_name == 'deployment'
+        if: github.event_name == 'deployment' && github.event.deployment != null
         with:
           script: |
-            github.rest.repos.createDeploymentStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              deployment_id: context.payload.deployment.id,
-              state: 'success',
-              environment_url: 'http://localhost:5173',
-              description: 'Deployment successful'
-            })
+            if (context.payload.deployment && context.payload.deployment.id) {
+              github.rest.repos.createDeploymentStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                deployment_id: context.payload.deployment.id,
+                state: 'success',
+                environment_url: 'http://localhost:5173',
+                description: 'Deployment successful'
+              })
+            } else {
+              console.log('Skipping deployment status: not triggered by deployment event')
+            }
